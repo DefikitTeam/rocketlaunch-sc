@@ -1,0 +1,13 @@
+{
+    "base": {
+        "platform": "0x242572d685fE1a73760aD288621Ab42dBA77e8A9",
+        "platformFee": "5000000000000000",
+        "feeAddr": "0x2c3b3D7234da35cba00C281e08E3042b9652D486",
+        "fee": 0,
+        "routerV2": "0x4752ba5dbc23f44d87826276bf6fd6b1c372ad24",
+        "blockInterval": 2,
+        "rocket": "0x662C3Bc11750fAD353c1519c49e82a4Ab012277A",
+        "multisend": "0x05a100890ddbe49f1b2edbc90a02cffe2512e344",
+        "tokenFactory": "0xDCe671E3864f43C0dCc3633FDA00e5c65CE85B38"
+    }
+}
