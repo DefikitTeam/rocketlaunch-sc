@@ -30612,6 +30612,2464 @@
           }
         }
       }
+    },
+    "4a52634328b109fdbfab01a4949f5a8d6d97e3f140624c2092e092cb0c7faebc": {
+      "address": "0xb295F7769481176B993AfE35993A3fA38a1353AC",
+      "txHash": "0xdf0a0a479f36f81064ee5c866d29790c815a07f1dc4575aa6b6826c4443aea67",
+      "layout": {
+        "solcVersion": "0.8.13",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "dex",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:24"
+          },
+          {
+            "label": "wBera",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:25"
+          },
+          {
+            "label": "poolIdx",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:27"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:38"
+          },
+          {
+            "label": "rocketLaunch",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:40"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "5286143855eac54168219652f346f7634f3aec861cdd54d1879ab3f1e811b1b5": {
+      "address": "0xd34CC26b6c708A978832857A203f82a79824Af40",
+      "txHash": "0xbb8c703fb122b7998b81bbb57c311cf774416db781dd90692b73fbc46d9a9fcd",
+      "layout": {
+        "solcVersion": "0.8.13",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "dex",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:24"
+          },
+          {
+            "label": "wBera",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:25"
+          },
+          {
+            "label": "poolIdx",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:27"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:38"
+          },
+          {
+            "label": "rocketLaunch",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:40"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "b05956c3cc9808e07ad0ca4e5cc2d3be183057f48df7cbb158ca3e0705df2936": {
+      "address": "0x2f099FCA6cbe572F59aCf5ebA99a84613f76d840",
+      "txHash": "0x2bcf568093e3a25695544076daeb2f7468a8bec6363680f34dac08228ff11451",
+      "layout": {
+        "solcVersion": "0.8.13",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "dex",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:24"
+          },
+          {
+            "label": "wBera",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:25"
+          },
+          {
+            "label": "poolIdx",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:27"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:38"
+          },
+          {
+            "label": "rocketLaunch",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:40"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "495414d604a910fedceb438666676c76718585c433aa3ff565e37eaaf741f0e6": {
+      "address": "0xBf0972433165C33E84f6D3Bf71CCAB1ACDAbF917",
+      "txHash": "0x1c569c6d67d33d4dc07d7b8568d5b6290844425d5250425a4cb10e0aa6810b8d",
+      "layout": {
+        "solcVersion": "0.8.13",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "dex",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:24"
+          },
+          {
+            "label": "wBera",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:25"
+          },
+          {
+            "label": "poolIdx",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:27"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:38"
+          },
+          {
+            "label": "rocketLaunch",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:40"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "094ab81902eecaf29317dad8c73631b21d224e4cd55948c949c7c9c2ffd37941": {
+      "address": "0x11a7791eab70dfecc93EC9b8D33812D423b893E1",
+      "txHash": "0xbd1c07b75dd6a502d088c3d5a70e11b5a9147a3c46c53cb3e9ddb384b4b8f20e",
+      "layout": {
+        "solcVersion": "0.8.13",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "dex",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:24"
+          },
+          {
+            "label": "wBera",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:25"
+          },
+          {
+            "label": "poolIdx",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:27"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:38"
+          },
+          {
+            "label": "rocketLaunch",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:40"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "9464de0e82ec740bc10f010a12973d7ee7219cda780dda0434982ce4faf15a20": {
+      "address": "0xb97420ef5d711435AC86311ecCEB3F80ca0CE462",
+      "txHash": "0x0854003642c1cb549d73c2bd40410bc38220094d76d6487b0fb56334a3b87ce4",
+      "layout": {
+        "solcVersion": "0.8.13",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "dex",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:24"
+          },
+          {
+            "label": "wBera",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:25"
+          },
+          {
+            "label": "poolIdx",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:27"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:38"
+          },
+          {
+            "label": "rocketLaunch",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:40"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "c2318c6bdbcf9ae0fa19f35e5fa4fef96a88c452399cf828e43572710fcdf20a": {
+      "address": "0xE3fD433FBC16c39C47deF1fF1a468a75e932Aa04",
+      "txHash": "0x5bb90e5594823b2e40083c284d1a2abb38f8713fb5c04003cc3bb8a302872714",
+      "layout": {
+        "solcVersion": "0.8.13",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "dex",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:24"
+          },
+          {
+            "label": "wBera",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:25"
+          },
+          {
+            "label": "poolIdx",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:27"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:38"
+          },
+          {
+            "label": "rocketLaunch",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:40"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "57f0b2008726425b36882aebe2f63a92f0f3be8a5371fe5a0ff5a0a7f39f47ad": {
+      "address": "0xa2A23f485fb9c0b0a28Ac22143B7DdE2fdB89679",
+      "txHash": "0x235f2cdeec3b9c169aad0360bd1a71a93549b294daad0713e196a3e9e18719e0",
+      "layout": {
+        "solcVersion": "0.8.13",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "dex",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:24"
+          },
+          {
+            "label": "wBera",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:25"
+          },
+          {
+            "label": "poolIdx",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:27"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:38"
+          },
+          {
+            "label": "rocketLaunch",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:40"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "126653976bb0fac71358fc5b790ec4fc654f347fbe4686e8e813c2d25f461492": {
+      "address": "0x9165cd5e8EF8cb50C9D9b175DC88CB17529feBD7",
+      "txHash": "0x22ba882352ce165d6aaf600f6dea4f235037221b70d0f3ff7b160f88e4fd7b2c",
+      "layout": {
+        "solcVersion": "0.8.13",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "dex",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:24"
+          },
+          {
+            "label": "wBera",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:25"
+          },
+          {
+            "label": "poolIdx",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:27"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:38"
+          },
+          {
+            "label": "rocketLaunch",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:40"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "7db6e886957c49dd65acacd92c658fdade8f7751f1892142ca0bf980f8eeb1b0": {
+      "address": "0xd48E1ecF4cf067006885857dCaBB47B6844163F2",
+      "txHash": "0xb5e497982e89763d6815cc213256dd79932c7d19fa184d850fc278907a20b1e8",
+      "layout": {
+        "solcVersion": "0.8.13",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "dex",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:24"
+          },
+          {
+            "label": "wBera",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:25"
+          },
+          {
+            "label": "poolIdx",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:27"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:38"
+          },
+          {
+            "label": "rocketLaunch",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:40"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "8bd6fc9e5cd0578dbe474e6f61a788ecd57cf1825b192991da97707c4010a29a": {
+      "address": "0xfdc1CF2Fe1cE1D8b42Ff9Fa515B93bDc0169c769",
+      "txHash": "0x19feac1d12a0aa1397bc7025d0e21e6af903aed0c71764e8ec0a864548002e3a",
+      "layout": {
+        "solcVersion": "0.8.13",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "dex",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:24"
+          },
+          {
+            "label": "wBera",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:25"
+          },
+          {
+            "label": "poolIdx",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:27"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:38"
+          },
+          {
+            "label": "rocketLaunch",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:40"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "7f74bcb7b6731fa9c096c5a4a72b73672b6856dfee11199dab24a19c4882168a": {
+      "address": "0x9f4516c8d993A27E8C8e41537951bfe82137885b",
+      "txHash": "0xfb79e18be5e20037471c7ae8d38c964e4443c245c1997c15868010c14b15f773",
+      "layout": {
+        "solcVersion": "0.8.13",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "dex",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:24"
+          },
+          {
+            "label": "wBera",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:25"
+          },
+          {
+            "label": "poolIdx",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:27"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:38"
+          },
+          {
+            "label": "rocketLaunch",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:40"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "2eac4a9cd377382fcb6730bdd18a8ab815fb8aa096a7c0a9d6d433d34f01dd00": {
+      "address": "0xFAB11459D3Aa07178C7De5040485baB5a1FbACb9",
+      "txHash": "0x583bd0947b6f0e7473a0f20dcd7d72bcbee25e78a13d8ccfd0879bf6b219db59",
+      "layout": {
+        "solcVersion": "0.8.13",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "dex",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:24"
+          },
+          {
+            "label": "wBera",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:25"
+          },
+          {
+            "label": "poolIdx",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:27"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:38"
+          },
+          {
+            "label": "rocketLaunch",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:40"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "3e6a8c370249089508094135b4a1a31e2e438c9642aec3dbe740a3ec9582e451": {
+      "address": "0x45972b9f240d8398004a507b020eFFc95a8397aa",
+      "txHash": "0x5c8421b58a8c746186384d47fc5f7190e213806d03a025ab898582cc799df2ac",
+      "layout": {
+        "solcVersion": "0.8.13",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "dex",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:24"
+          },
+          {
+            "label": "wBera",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:25"
+          },
+          {
+            "label": "poolIdx",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:27"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:38"
+          },
+          {
+            "label": "rocketLaunch",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:40"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "d8653d17fccfdb604943d0e7cbaed98abf6e7d9e702101f3378ad647429e1604": {
+      "address": "0x75B8Db02DACac5CfbC56234783d63943b0De84BC",
+      "txHash": "0x779eccefd00ec56018aabf17d7988ca83ca118af137b85d901d9899d8cc8f5cd",
+      "layout": {
+        "solcVersion": "0.8.13",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "dex",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:24"
+          },
+          {
+            "label": "wBera",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:25"
+          },
+          {
+            "label": "poolIdx",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:27"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:38"
+          },
+          {
+            "label": "rocketLaunch",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:40"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "2b5e8676dd79d8a144d4893a03694bdb9555a2af0641ddfc3c6b32a8009830a7": {
+      "address": "0xC6e4767551138c5736f58fC28e853BA8c2574692",
+      "txHash": "0x2d9a5194faabe1a5c4d36ea4186cd223acf321b83771b4aef6b2526b8fd81896",
+      "layout": {
+        "solcVersion": "0.8.13",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC165Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol:41"
+          },
+          {
+            "label": "_roles",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_mapping(t_bytes32,t_struct(RoleData)34_storage)",
+            "contract": "AccessControlUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol:61"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "AccessControlUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol:259"
+          },
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:80"
+          },
+          {
+            "label": "BLOCK_INTERVAL",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_uint256",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:65"
+          },
+          {
+            "label": "pools",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_mapping(t_address,t_struct(Pool)7765_storage)",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:133"
+          },
+          {
+            "label": "poolInfos",
+            "offset": 0,
+            "slot": "203",
+            "type": "t_mapping(t_address,t_struct(PoolInfo)7780_storage)",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:134"
+          },
+          {
+            "label": "farms",
+            "offset": 0,
+            "slot": "204",
+            "type": "t_mapping(t_address,t_struct(Farm)7794_storage)",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:135"
+          },
+          {
+            "label": "users",
+            "offset": 0,
+            "slot": "205",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_struct(User)7815_storage))",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:136"
+          },
+          {
+            "label": "routerV2",
+            "offset": 0,
+            "slot": "206",
+            "type": "t_address",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:138"
+          },
+          {
+            "label": "platformAddress",
+            "offset": 0,
+            "slot": "207",
+            "type": "t_address",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:139"
+          },
+          {
+            "label": "platformFee",
+            "offset": 0,
+            "slot": "208",
+            "type": "t_uint256",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:140"
+          },
+          {
+            "label": "feeAddress",
+            "offset": 0,
+            "slot": "209",
+            "type": "t_address",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:141"
+          },
+          {
+            "label": "fee",
+            "offset": 0,
+            "slot": "210",
+            "type": "t_uint256",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:142"
+          },
+          {
+            "label": "airdropAddress",
+            "offset": 0,
+            "slot": "211",
+            "type": "t_address",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:143"
+          },
+          {
+            "label": "buyerArr",
+            "offset": 0,
+            "slot": "212",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:146"
+          },
+          {
+            "label": "boughtCheck",
+            "offset": 0,
+            "slot": "213",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:147"
+          },
+          {
+            "label": "ownerToken",
+            "offset": 0,
+            "slot": "214",
+            "type": "t_mapping(t_address,t_address)",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:150"
+          },
+          {
+            "label": "counterSoldUsers",
+            "offset": 0,
+            "slot": "215",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:152"
+          },
+          {
+            "label": "totalSellTax",
+            "offset": 0,
+            "slot": "216",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:153"
+          },
+          {
+            "label": "vesting",
+            "offset": 0,
+            "slot": "217",
+            "type": "t_mapping(t_address,t_struct(Vesting)7785_storage)",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:155"
+          },
+          {
+            "label": "completedTransfer",
+            "offset": 0,
+            "slot": "218",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:157"
+          },
+          {
+            "label": "rocketTokenFactory",
+            "offset": 0,
+            "slot": "219",
+            "type": "t_address",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:159"
+          },
+          {
+            "label": "bexOpAddress",
+            "offset": 0,
+            "slot": "220",
+            "type": "t_address",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:161"
+          },
+          {
+            "label": "wBera",
+            "offset": 0,
+            "slot": "221",
+            "type": "t_address",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:162"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_enum(StatusPool)7735": {
+            "label": "enum RocketBera.StatusPool",
+            "members": [
+              "INACTIVE",
+              "ACTIVE",
+              "FULL",
+              "FINISHED",
+              "FAIL",
+              "COMPELETED"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_address)": {
+            "label": "mapping(address => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_array(t_address)dyn_storage)": {
+            "label": "mapping(address => address[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_struct(User)7815_storage))": {
+            "label": "mapping(address => mapping(address => struct RocketBera.User))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(Farm)7794_storage)": {
+            "label": "mapping(address => struct RocketBera.Farm)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(Pool)7765_storage)": {
+            "label": "mapping(address => struct RocketBera.Pool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(PoolInfo)7780_storage)": {
+            "label": "mapping(address => struct RocketBera.PoolInfo)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(User)7815_storage)": {
+            "label": "mapping(address => struct RocketBera.User)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(Vesting)7785_storage)": {
+            "label": "mapping(address => struct RocketBera.Vesting)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_struct(RoleData)34_storage)": {
+            "label": "mapping(bytes32 => struct AccessControlUpgradeable.RoleData)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Farm)7794_storage": {
+            "label": "struct RocketBera.Farm",
+            "members": [
+              {
+                "label": "rewardPerBlock",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "lastRewardBlock",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "accTokenPerShare",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "isDisable",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "3"
+              }
+            ],
+            "numberOfBytes": "128"
+          },
+          "t_struct(Pool)7765_storage": {
+            "label": "struct RocketBera.Pool",
+            "members": [
+              {
+                "label": "tokenPerPurchase",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "maxRepeatPurchase",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "totalBatch",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "startTime",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "endTime",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "minDurationSell",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "maxDurationSell",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "raisedInETH",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "7"
+              },
+              {
+                "label": "soldBatch",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "8"
+              },
+              {
+                "label": "reserveETH",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "9"
+              },
+              {
+                "label": "reserveBatch",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "10"
+              },
+              {
+                "label": "status",
+                "type": "t_enum(StatusPool)7735",
+                "offset": 0,
+                "slot": "11"
+              },
+              {
+                "label": "totalReferrerBond",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "12"
+              },
+              {
+                "label": "totalBatchAvailable",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "13"
+              }
+            ],
+            "numberOfBytes": "448"
+          },
+          "t_struct(PoolInfo)7780_storage": {
+            "label": "struct RocketBera.PoolInfo",
+            "members": [
+              {
+                "label": "fixedCapETH",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "totalSupplyToken",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "tokenForAirdrop",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "tokenForFarm",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "tokenForSale",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "tokenForAddLP",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "metadata",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "6"
+              }
+            ],
+            "numberOfBytes": "224"
+          },
+          "t_struct(RoleData)34_storage": {
+            "label": "struct AccessControlUpgradeable.RoleData",
+            "members": [
+              {
+                "label": "members",
+                "type": "t_mapping(t_address,t_bool)",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "adminRole",
+                "type": "t_bytes32",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_struct(User)7815_storage": {
+            "label": "struct RocketBera.User",
+            "members": [
+              {
+                "label": "balance",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "balanceSold",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "ethBought",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "rewardFarm",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "isClaimed",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "rewardDebt",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "tokenClaimed",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "isClaimedFarm",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "7"
+              },
+              {
+                "label": "referrerReward",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "8"
+              },
+              {
+                "label": "referrerBond",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "9"
+              }
+            ],
+            "numberOfBytes": "320"
+          },
+          "t_struct(Vesting)7785_storage": {
+            "label": "struct RocketBera.Vesting",
+            "members": [
+              {
+                "label": "startTime",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "isExist",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "f334313cc80e1094165481c0075545543a09deac2062b61f8be7c87a7669115f": {
+      "address": "0xaAbD257787469E51f96342232716C0D82910Fcc8",
+      "txHash": "0x1bce6e26cca9b831c7772ee1c176c6e3f3707318414c9624679112d985e6d1ac",
+      "layout": {
+        "solcVersion": "0.8.13",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "dex",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:24"
+          },
+          {
+            "label": "wBera",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:25"
+          },
+          {
+            "label": "poolIdx",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:27"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:38"
+          },
+          {
+            "label": "rocketLaunch",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:40"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "bdf80631fe4e0e4dba20f81b310b4453563c1cddf2552d3844327c7d71430ee1": {
+      "address": "0x35eF3Ac706Ce6A12FeC6De45582708E895ff9256",
+      "txHash": "0x55ec3548d172309b09fde2383973116649c8f0ca7b7360fb026ae61219e93af8",
+      "layout": {
+        "solcVersion": "0.8.13",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "dex",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:24"
+          },
+          {
+            "label": "wBera",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:25"
+          },
+          {
+            "label": "poolIdx",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:27"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:38"
+          },
+          {
+            "label": "rocketLaunch",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:40"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "8fe490e04dc0d110f1228eb7c51c3c3d37bd025be66280b82bb7b3345134845c": {
+      "address": "0x565BF4e63152679319EC2300cA7B699fBAc9466D",
+      "txHash": "0x13ca99291cfcf5db29def3a3cf72c7ca6a1687ed30cee1a6a22fafc5441a221b",
+      "layout": {
+        "solcVersion": "0.8.13",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "dex",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:24"
+          },
+          {
+            "label": "wBera",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:25"
+          },
+          {
+            "label": "poolIdx",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:27"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:39"
+          },
+          {
+            "label": "rocketLaunch",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:41"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "d2ff9eaccee2c6919103e3514d3ffe20c2ae7dfd9d0568eb4c3059d30549ddbd": {
+      "address": "0xbf0f1d297cfda653bE0B8ab87C9d5a8CF427aCB4",
+      "txHash": "0x5065937585bfa39630ae8fb29869916558d684434eeda93748a446cd1bab9cdd",
+      "layout": {
+        "solcVersion": "0.8.13",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "dex",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:24"
+          },
+          {
+            "label": "wBera",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:25"
+          },
+          {
+            "label": "poolIdx",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:27"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:41"
+          },
+          {
+            "label": "rocketLaunch",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:43"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "39e9b4592f78dff7acc6a0cfce3ab819e09a1fb0d61c853aa67a03be7692c02c": {
+      "address": "0x3D1286C6f65f466Ec997D19f31114C3715B5608B",
+      "txHash": "0xdf29f20ddc5bea05229e21c6b125cd67574f150c979e6455e42f685d1e6d9271",
+      "layout": {
+        "solcVersion": "0.8.13",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "dex",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:24"
+          },
+          {
+            "label": "wBera",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:25"
+          },
+          {
+            "label": "poolIdx",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:27"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:41"
+          },
+          {
+            "label": "rocketLaunch",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:43"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "9244f360f94e489a87544e61798ca7dd62c6a6c68b6c41194bfde1d060cf6c51": {
+      "address": "0x911a586E811125d9B86CCE49EB92d651c7774E28",
+      "txHash": "0xf44417814c6c13f20c15f5a8ba9818b8c9fafb28d53d2df34502777cbf042c4b",
+      "layout": {
+        "solcVersion": "0.8.13",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "dex",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:24"
+          },
+          {
+            "label": "wBera",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:25"
+          },
+          {
+            "label": "poolIdx",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:27"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:41"
+          },
+          {
+            "label": "rocketLaunch",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:43"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "4f421d85ac8b8bc64cf0cd2703f18664ef2f2235235bdf730d0f072bfa1e19ed": {
+      "address": "0x53a1086afF264A449D61949096c96d26fe65860A",
+      "txHash": "0xfe8fbf87db390a81f681cd7a79ff936828584806054e62a2855c2382c02d0890",
+      "layout": {
+        "solcVersion": "0.8.13",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "dex",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:24"
+          },
+          {
+            "label": "wBera",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:25"
+          },
+          {
+            "label": "poolIdx",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:27"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:41"
+          },
+          {
+            "label": "rocketLaunch",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:43"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
     }
   }
 }

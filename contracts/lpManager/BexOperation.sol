@@ -33,7 +33,10 @@ contract BexOperation is Initializable {
     uint256 private constant MAX_INT =
         115792089237316195423570985008687907853269984665640564039457584007913129639935;
 
-    address constant public deadAddress = 0x000000000000000000000000000000000000dEaD;
+    address public constant deadAddress =
+        0x000000000000000000000000000000000000dEaD;
+
+    uint256 private constant INIT_AMOUNT_ADD_LP = 13187;
 
     address private owner;
 
@@ -66,11 +69,9 @@ contract BexOperation is Initializable {
         uint256 quoteAmount
     ) public pure returns (uint256) {
         uint256 sqrtFixed = uint256(
-            MathUpgradeable.sqrt((baseAmount * 1e6) / quoteAmount).mul(
-                PRECISION
-            )
+            MathUpgradeable.sqrt((baseAmount * 1e18) / quoteAmount)
         );
-        return sqrtFixed.mul(Q_64).div(PRECISION).div(1e3);
+        return sqrtFixed.mul(Q_64).div(1e9);
     }
 
     function getCrocErc20LpAddress(
@@ -155,25 +156,24 @@ contract BexOperation is Initializable {
         uint256 baseAmount,
         uint256 wBeraAmount
     ) public {
-        uint256 baseAmountWithFee = baseAmount.mul(999).div(1000);
-        uint256 wBeraAmountWithFee = wBeraAmount.mul(999).div(1000);
         uint256 crocPrice = getPriceFromBaseAndQuoteAmount(
-            baseAmountWithFee,
-            wBeraAmountWithFee
+            wBeraAmount,
+            baseAmount
         );
         ERC20Upgradeable(baseToken).approve(dex, MAX_INT);
         ERC20Upgradeable(wBera).approve(dex, MAX_INT);
-        address lpAddress = getCrocErc20LpAddress(baseToken, wBera, dex);
+        address lpAddress = getCrocErc20LpAddress(wBera, baseToken, dex);
         bytes memory initCalldata = encodeInitialize(
-            baseToken,
             wBera,
+            baseToken,
             crocPrice
         );
+        uint256 amountAddLp = wBeraAmount.mul(999).div(1000).sub(INIT_AMOUNT_ADD_LP);
         bytes memory mintCalldata = encodeMintData(
-            baseToken,
             wBera,
+            baseToken,
             crocPrice,
-            baseAmountWithFee,
+            amountAddLp,
             lpAddress
         );
         bytes memory multiCmd = encodeMultiCmd(initCalldata, mintCalldata);
@@ -183,6 +183,34 @@ contract BexOperation is Initializable {
             deadAddress,
             ERC20Upgradeable(lpAddress).balanceOf(address(this))
         );
+    }
+
+    function checkCmd(
+        address baseToken,
+        address quoteToken,
+        uint256 baseAmount,
+        uint256 quoteAmount
+    ) public view returns (bytes memory) {
+        uint256 crocPrice = getPriceFromBaseAndQuoteAmount(
+            baseAmount,
+            quoteAmount
+        );
+        address lpAddress = getCrocErc20LpAddress(baseToken, quoteToken, dex);
+        bytes memory initCalldata = encodeInitialize(
+            baseToken,
+            quoteToken,
+            crocPrice
+        );
+
+        uint256 amount = baseAmount.mul(999).div(1000).sub(INIT_AMOUNT_ADD_LP);
+        bytes memory mintCalldata = encodeMintData(
+            baseToken,
+            quoteToken,
+            crocPrice,
+            amount,
+            lpAddress
+        );
+        return encodeMultiCmd(initCalldata, mintCalldata);
     }
 
     function transferOwnership(address newOwner) public onlyOwner {

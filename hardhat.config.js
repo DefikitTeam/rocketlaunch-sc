@@ -271,6 +271,7 @@ module.exports = {
       accounts: [DEPLOYER_PRIVATE_KEY],
       chainId: 80084,
       url: "https://bartio.rpc.berachain.com/",
+      gasPrice: 150000000000
     },
     iota: {
       accounts: [DEPLOYER_PRIVATE_KEY],

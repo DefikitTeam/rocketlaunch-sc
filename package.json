@@ -54,7 +54,6 @@
     "ts-node": "^10.8.1",
     "typechain-target-ethers-v5": "^5.0.1",
     "typescript": "^4.7.4",
-    "win-node-env": "^0.6.1",
     "zksync-web3": "^0.14.3"
   },
   "engines": {

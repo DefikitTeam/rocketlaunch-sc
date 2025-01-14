@@ -20,7 +20,7 @@
         "apiUrl": "https://api.berabear.io/api/v1/nft/",
         "minter_nft": "0x31Ae2baD6459ab60b0D6a2BEC72b246051237C25",
         "nft": "0x4848DDBbb6Ec03442A7b2B393487d5DdA981F877",
-        "tokenFactory": "0x8Ffd62bD8fa94FAb4be5C21aa53b87E4b78Fc34e",
+        "tokenFactory": "0x0DD8f0807194BDd87252222cBDE34d7BDF8BEE7A",
         "tokenFactoryVictor": "0x0Df77e0Cec9772E88B4B98e28EC550FC308DBcD8"
     }
 }
