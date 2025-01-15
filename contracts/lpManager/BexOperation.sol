@@ -156,22 +156,35 @@ contract BexOperation is Initializable {
         uint256 baseAmount,
         uint256 wBeraAmount
     ) public {
-        uint256 crocPrice = getPriceFromBaseAndQuoteAmount(
-            wBeraAmount,
-            baseAmount
+        if (baseToken < wBera) {
+            executeAddLp(baseToken, wBera, baseAmount, wBeraAmount);
+        } else {
+            executeAddLp(wBera, baseToken, wBeraAmount, baseAmount);
+        }
+    }
+
+    function executeAddLp(
+        address baseToken,
+        address quoteToken,
+        uint256 baseAmount,
+        uint256 quoteAmount
+    ) public {
+       uint256 crocPrice = getPriceFromBaseAndQuoteAmount(
+            baseAmount,
+            quoteAmount
         );
         ERC20Upgradeable(baseToken).approve(dex, MAX_INT);
-        ERC20Upgradeable(wBera).approve(dex, MAX_INT);
-        address lpAddress = getCrocErc20LpAddress(wBera, baseToken, dex);
+        ERC20Upgradeable(quoteToken).approve(dex, MAX_INT);
+        address lpAddress = getCrocErc20LpAddress(baseToken, quoteToken, dex);
         bytes memory initCalldata = encodeInitialize(
-            wBera,
             baseToken,
+            quoteToken,
             crocPrice
         );
-        uint256 amountAddLp = wBeraAmount.mul(999).div(1000).sub(INIT_AMOUNT_ADD_LP);
+        uint256 amountAddLp = baseAmount.mul(999).div(1000).sub(INIT_AMOUNT_ADD_LP);
         bytes memory mintCalldata = encodeMintData(
-            wBera,
             baseToken,
+            quoteToken,
             crocPrice,
             amountAddLp,
             lpAddress

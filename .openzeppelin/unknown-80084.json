@@ -31956,7 +31956,7 @@
             "label": "pools",
             "offset": 0,
             "slot": "202",
-            "type": "t_mapping(t_address,t_struct(Pool)7765_storage)",
+            "type": "t_mapping(t_address,t_struct(Pool)3241_storage)",
             "contract": "RocketBera",
             "src": "contracts/RocketBera.sol:133"
           },
@@ -31964,7 +31964,7 @@
             "label": "poolInfos",
             "offset": 0,
             "slot": "203",
-            "type": "t_mapping(t_address,t_struct(PoolInfo)7780_storage)",
+            "type": "t_mapping(t_address,t_struct(PoolInfo)3256_storage)",
             "contract": "RocketBera",
             "src": "contracts/RocketBera.sol:134"
           },
@@ -31972,7 +31972,7 @@
             "label": "farms",
             "offset": 0,
             "slot": "204",
-            "type": "t_mapping(t_address,t_struct(Farm)7794_storage)",
+            "type": "t_mapping(t_address,t_struct(Farm)3270_storage)",
             "contract": "RocketBera",
             "src": "contracts/RocketBera.sol:135"
           },
@@ -31980,7 +31980,7 @@
             "label": "users",
             "offset": 0,
             "slot": "205",
-            "type": "t_mapping(t_address,t_mapping(t_address,t_struct(User)7815_storage))",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_struct(User)3291_storage))",
             "contract": "RocketBera",
             "src": "contracts/RocketBera.sol:136"
           },
@@ -32076,7 +32076,7 @@
             "label": "vesting",
             "offset": 0,
             "slot": "217",
-            "type": "t_mapping(t_address,t_struct(Vesting)7785_storage)",
+            "type": "t_mapping(t_address,t_struct(Vesting)3261_storage)",
             "contract": "RocketBera",
             "src": "contracts/RocketBera.sol:155"
           },
@@ -32138,7 +32138,7 @@
             "label": "bytes32",
             "numberOfBytes": "32"
           },
-          "t_enum(StatusPool)7735": {
+          "t_enum(StatusPool)3211": {
             "label": "enum RocketBera.StatusPool",
             "members": [
               "INACTIVE",
@@ -32166,27 +32166,27 @@
             "label": "mapping(address => mapping(address => bool))",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_address,t_mapping(t_address,t_struct(User)7815_storage))": {
+          "t_mapping(t_address,t_mapping(t_address,t_struct(User)3291_storage))": {
             "label": "mapping(address => mapping(address => struct RocketBera.User))",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_address,t_struct(Farm)7794_storage)": {
+          "t_mapping(t_address,t_struct(Farm)3270_storage)": {
             "label": "mapping(address => struct RocketBera.Farm)",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_address,t_struct(Pool)7765_storage)": {
+          "t_mapping(t_address,t_struct(Pool)3241_storage)": {
             "label": "mapping(address => struct RocketBera.Pool)",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_address,t_struct(PoolInfo)7780_storage)": {
+          "t_mapping(t_address,t_struct(PoolInfo)3256_storage)": {
             "label": "mapping(address => struct RocketBera.PoolInfo)",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_address,t_struct(User)7815_storage)": {
+          "t_mapping(t_address,t_struct(User)3291_storage)": {
             "label": "mapping(address => struct RocketBera.User)",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_address,t_struct(Vesting)7785_storage)": {
+          "t_mapping(t_address,t_struct(Vesting)3261_storage)": {
             "label": "mapping(address => struct RocketBera.Vesting)",
             "numberOfBytes": "32"
           },
@@ -32202,7 +32202,7 @@
             "label": "string",
             "numberOfBytes": "32"
           },
-          "t_struct(Farm)7794_storage": {
+          "t_struct(Farm)3270_storage": {
             "label": "struct RocketBera.Farm",
             "members": [
               {
@@ -32232,7 +32232,7 @@
             ],
             "numberOfBytes": "128"
           },
-          "t_struct(Pool)7765_storage": {
+          "t_struct(Pool)3241_storage": {
             "label": "struct RocketBera.Pool",
             "members": [
               {
@@ -32303,7 +32303,7 @@
               },
               {
                 "label": "status",
-                "type": "t_enum(StatusPool)7735",
+                "type": "t_enum(StatusPool)3211",
                 "offset": 0,
                 "slot": "11"
               },
@@ -32322,7 +32322,7 @@
             ],
             "numberOfBytes": "448"
           },
-          "t_struct(PoolInfo)7780_storage": {
+          "t_struct(PoolInfo)3256_storage": {
             "label": "struct RocketBera.PoolInfo",
             "members": [
               {
@@ -32388,7 +32388,7 @@
             ],
             "numberOfBytes": "64"
           },
-          "t_struct(User)7815_storage": {
+          "t_struct(User)3291_storage": {
             "label": "struct RocketBera.User",
             "members": [
               {
@@ -32454,7 +32454,7 @@
             ],
             "numberOfBytes": "320"
           },
-          "t_struct(Vesting)7785_storage": {
+          "t_struct(Vesting)3261_storage": {
             "label": "struct RocketBera.Vesting",
             "members": [
               {
@@ -32990,6 +32990,174 @@
     "4f421d85ac8b8bc64cf0cd2703f18664ef2f2235235bdf730d0f072bfa1e19ed": {
       "address": "0x53a1086afF264A449D61949096c96d26fe65860A",
       "txHash": "0xfe8fbf87db390a81f681cd7a79ff936828584806054e62a2855c2382c02d0890",
+      "layout": {
+        "solcVersion": "0.8.13",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "dex",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:24"
+          },
+          {
+            "label": "wBera",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:25"
+          },
+          {
+            "label": "poolIdx",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:27"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:41"
+          },
+          {
+            "label": "rocketLaunch",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:43"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "8b3a0dbab2c90bc361278771c250bbe412a1c3cd7b0ce72367fd37963ba7eb64": {
+      "address": "0x35A489232CB0Dc38e2C8B1938Bf40B13709a874e",
+      "txHash": "0xa83f273dffa82a30260ee526f7b453da96d9282589304fbe9ef8c654b33ecdcd",
+      "layout": {
+        "solcVersion": "0.8.13",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "dex",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:24"
+          },
+          {
+            "label": "wBera",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:25"
+          },
+          {
+            "label": "poolIdx",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:27"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:41"
+          },
+          {
+            "label": "rocketLaunch",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_address",
+            "contract": "BexOperation",
+            "src": "contracts/lpManager/BexOperation.sol:43"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "69b64a15d66210d332b1350a729a1792be9ae357fb0353d942c8f92985118415": {
+      "address": "0x152EBa623eE7fD5057C9417BA4851532c7537e77",
+      "txHash": "0xacfae4a7ad63ba921a6334499f58853ddd0d9057db35e4f9dd334ddc592e7d72",
       "layout": {
         "solcVersion": "0.8.13",
         "storage": [
