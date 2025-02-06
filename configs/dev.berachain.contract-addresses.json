@@ -1,0 +1,31 @@
+{
+  "berachain": {
+      "routerV2": "0x406846114B2A9b65a8A2Ab702C2C57d27784dBA2",
+      "platform": "0xf8332B03e1C0B190a6AE0BbA7f9BEF86Bb2CEdf3",
+      "platformFee": "100000000000000",
+      "blockInterval": 2,
+      "minCap": "20000000000000000",
+      "factory": "0xCc7283a00481de9AdBE379c3c2459691a6ee274a",
+      "dex_bex": "0xAB827b1Cc3535A9e549EE387A6E9C3F02F481B49",
+      "poolIdx_bex": 36000,
+      "feeAddr": "0xB2B8904725eFcB1EEeb40e9FC02fFC3c1d619437",
+      "fee": "40000000000000000",
+      "airdropWallet": "0xEDd3d787C7abecDE82c066b0C99b4d5B3aA69DA4",
+      "weth": "0x7507c1dc16935B82698e4C63f2746A2fCf994dF8",
+      "rocket": "0x20830f96Cff2eD62dc61257BF692a13AcC9755B3",
+      "token_custom": "0xA0a8a2251CCD6a5A69d76Dd82B886C0C167B9fdD",
+      "bex_operation": "0xE62B60Ca21de3AF95C998194e0Dc1666EfBaA006",
+      "checkWbera": "0x27509bbae84A49c5cD80e244f2Cfd3A8359Fa391",
+      "token_rocket": "0x7AEe080671B54D6feac0f8636e6Ad58D054108a9",
+      "multisend": "0x80F944237cACadE110803e5daC9624Dc72F032Bb",
+      "apiUrl": "https://api.berabear.io/api/v1/nft/",
+      "minter_nft": "0x31Ae2baD6459ab60b0D6a2BEC72b246051237C25",
+      "nft": "0x4848DDBbb6Ec03442A7b2B393487d5DdA981F877",
+      "tokenFactory": "0x0DD8f0807194BDd87252222cBDE34d7BDF8BEE7A",
+      "tokenFactoryVictor": "0x0Df77e0Cec9772E88B4B98e28EC550FC308DBcD8",
+      "factoryCreate3": "0xf61A36aE614bB6d0D76fEf2534A61A6f964f0a3e",
+      "deployCreate3": "0xD13A570Dde449478497B80Bc56A102dB3c7c68ba",
+      "saltBytes": "",
+      "salt": "0x0000000000000000000000000000000000000000000000000000000000000078"
+  }
+}
