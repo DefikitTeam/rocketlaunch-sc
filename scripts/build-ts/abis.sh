@@ -1,1 +1,0 @@
-for i in `find artifacts/contracts -type f -name '*.json' ! -name '*.dbg.json'` ; do cp -r $i artifacts/abis/ ; done

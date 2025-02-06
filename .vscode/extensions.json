@@ -1,9 +1,0 @@
-{
-  "recommendations": [
-    "dbaeumer.vscode-eslint",
-    "prisma.prisma",
-    "macabeus.vscode-fluent",
-    "mikestead.dotenv",
-    "yy0931.vscode-sqlite3-editor"
-  ]
-}

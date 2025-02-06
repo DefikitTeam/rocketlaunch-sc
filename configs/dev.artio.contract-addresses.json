@@ -1,8 +1,0 @@
-{
-    "artio": {
-        "routerV2": "0x88d132628ad8ef76dac764bea6f638dd7ffeba4a",
-        "platform": "0x97ca380672c5ea16997caa06c2de41c9ba9e3394",
-        "blockInterval": 2,
-        "rocket": "0x6441bA3be51620a9f322ddd80a8d41a203bd802c"
-    }
-}
