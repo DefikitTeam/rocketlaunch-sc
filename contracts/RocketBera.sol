@@ -54,11 +54,13 @@ contract RocketBera is
     uint256 public constant BASE_DENOMINATOR = 10000;
     address public constant DEAD_ADDR =
         0x000000000000000000000000000000000000dEaD;
-    uint256 public constant MINIMUM_CAP = 2 * 10 ** 16; // 0.02 ETH
+    // uint256 public constant MINIMUM_CAP = 2 * 10 ** 16; // 0.02 ETH
 
     uint256 internal constant DURATION = 1 hours;
     uint256 internal constant PERCENT_RELEASE_AT_TGE = 4000;
     uint256 internal constant PERCENT_RELEASE = 2000;
+    uint256 internal constant MAX_ADDRESS_TO_TRANSFER = 100;
+    uint256 private constant PRECISION_FACTOR = 1e18;
 
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
@@ -113,7 +115,7 @@ contract RocketBera is
     struct Farm {
         uint256 rewardPerBlock; // Reward token per block.
         uint256 lastRewardBlock; // Last block number that XOXs distribution occurs.
-        uint256 accTokenPerShare; // Accumulated token per share, times 1e12. See below.
+        uint256 accTokenPerShare; // Accumulated token per share, times 1e18. See below.
         bool isDisable; // disable farm
     }
 
@@ -160,6 +162,7 @@ contract RocketBera is
 
     address internal bexOpAddress;
     address internal wBera;
+    uint256 internal minCap;
 
     // Event for create new Token
     event CreateToken(
@@ -232,10 +235,10 @@ contract RocketBera is
         address _feeAddress,
         uint256 _fee,
         address _airdropAddress,
-        // address _routerV2,
         address _wBera,
         address _bexOpAddress,
-        uint256 _blockInterval
+        uint256 _blockInterval,
+        uint256 _minCap
     ) public initializer {
         __AccessControl_init();
         __ReentrancyGuard_init();
@@ -254,10 +257,24 @@ contract RocketBera is
         wBera = _wBera;
         bexOpAddress = _bexOpAddress;
         BLOCK_INTERVAL = _blockInterval;
+        minCap = _minCap;
     }
 
     modifier enoughFee() {
         require(msg.value >= platformFee, "plat fee");
+        _;
+    }
+
+    modifier onlyPoolOwner(address poolAddress) {
+        require(ownerToken[poolAddress] == msg.sender, "Not pool owner");
+        _;
+    }
+
+    modifier validPoolState(address poolAddress, StatusPool requiredStatus) {
+        require(
+            pools[poolAddress].status == requiredStatus,
+            "Invalid pool state"
+        );
         _;
     }
 
@@ -280,141 +297,8 @@ contract RocketBera is
         wBera = _wBera;
     }
 
-    // function createToken in RocketLauch
-    function createRocketToken(
-        string memory name,
-        string memory symbol,
-        uint8 decimals,
-        uint256 totalSupply
-    ) external {
-        address newToken = IRocketTokenFactory(rocketTokenFactory)
-            .createNewToken(name, symbol, totalSupply);
-        ownerToken[newToken] = msg.sender;
-        emit CreateToken(
-            newToken,
-            msg.sender,
-            name,
-            symbol,
-            decimals,
-            totalSupply
-        );
-    }
-
-    struct ActivePoolParams {
-        address token;
-        uint256 fixedCapETH;
-        uint256 tokenForAirdrop;
-        uint256 tokenForFarm;
-        uint256 tokenForSale;
-        uint256 tokenForAddLP;
-        // batch purchase
-        uint256 tokenPerPurchase;
-        uint256 maxRepeatPurchase;
-        // limit time
-        uint256 startTime;
-        uint256 minDurationSell;
-        uint256 maxDurationSell;
-        // metadata
-        string metadata;
-    }
-
-    // Function to active Pool
-    function activePool(
-        ActivePoolParams memory params
-    ) public payable enoughFee {
-        require(ownerToken[params.token] == msg.sender, "Invalid owner token");
-        Pool storage pool = pools[params.token];
-        require(params.startTime > block.timestamp, "Invalid startTime");
-        require(
-            params.maxDurationSell > params.minDurationSell,
-            "Invalid time"
-        );
-        require(pool.status == StatusPool.INACTIVE, "Pool already active");
-        uint256 balanceToken = IERC20Upgradeable(params.token).balanceOf(
-            address(this)
-        );
-        uint256 totalSupply = IERC20Upgradeable(params.token).totalSupply();
-        require(
-            balanceToken == totalSupply,
-            "Contract need to have all token."
-        );
-        require(
-            totalSupply ==
-                params.tokenForAirdrop +
-                    params.tokenForFarm +
-                    params.tokenForSale +
-                    params.tokenForAddLP,
-            "Invalid totalSupplyToken"
-        );
-        require(
-            params.fixedCapETH >= MINIMUM_CAP,
-            "Invalid fixedCapETH, must be greater than 2 ETH"
-        );
-        require(
-            params.tokenForSale >= totalSupply.mul(70).div(100),
-            "Invalid tokenForSale, must be greater than 70% of totalSupply"
-        );
-        require(
-            params.tokenForAddLP >= totalSupply.mul(10).div(100),
-            "Invalid tokenForAddLP, must be greater than 10% of totalSupply"
-        );
-        require(
-            params.tokenForAirdrop <= totalSupply.mul(5).div(100),
-            "Invalid tokenForAirdrop, must be less than 5% of totalSupply"
-        );
-        require(
-            params.tokenForFarm <= totalSupply.mul(5).div(100),
-            "Invalid tokenForFarm, must be less than 5% of totalSupply"
-        );
-
-        // setup PoolInfo
-        PoolInfo storage poolInfo = poolInfos[params.token];
-        poolInfo.fixedCapETH = params.fixedCapETH;
-        poolInfo.totalSupplyToken = totalSupply;
-        poolInfo.tokenForAirdrop = params.tokenForAirdrop;
-        poolInfo.tokenForFarm = params.tokenForFarm;
-        poolInfo.tokenForSale = params.tokenForSale;
-        poolInfo.tokenForAddLP = params.tokenForAddLP;
-        poolInfo.metadata = params.metadata;
-
-        // limit purchase of Pool
-        pool.tokenPerPurchase = params.tokenPerPurchase;
-        pool.maxRepeatPurchase = params.maxRepeatPurchase;
-        pool.totalBatch = params.tokenForSale.div(params.tokenPerPurchase);
-        pool.totalBatchAvailable = pool.totalBatch;
-        // limit time
-        pool.startTime = params.startTime;
-        pool.endTime = params.startTime.add(params.maxDurationSell);
-        pool.minDurationSell = params.minDurationSell;
-        pool.maxDurationSell = params.maxDurationSell;
-        // current status
-        pool.raisedInETH = 0;
-        pool.soldBatch = 0;
-        pool.reserveETH = params.fixedCapETH;
-        pool.reserveBatch = pool.totalBatch.mul(2); // need multiply 2 for fomula
-        pool.status = StatusPool.ACTIVE;
-        // setup farm
-        Farm storage farm = farms[params.token];
-        farm.rewardPerBlock = params.tokenForFarm.div(
-            params.maxDurationSell.mul(BASE_DENOMINATOR).div(BLOCK_INTERVAL)
-        ); // = tokenForFarm / durationBlock
-        farm.lastRewardBlock = block.number;
-        farm.accTokenPerShare = 0;
-
-        payable(platformAddress).transfer(platformFee);
-        emit ActivePool(
-            params.token,
-            params.tokenForAirdrop,
-            params.tokenForFarm,
-            params.tokenForSale,
-            params.tokenForAddLP,
-            params.fixedCapETH,
-            pool.totalBatch,
-            params.metadata,
-            params.startTime,
-            pool.endTime,
-            pool.minDurationSell
-        );
+    function setMinCap(uint256 _minCap) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        minCap = _minCap;
     }
 
     // Function to buy Token with ETH
@@ -465,7 +349,7 @@ contract RocketBera is
             uint256 reward = user
                 .balance
                 .mul(farms[poolAddress].accTokenPerShare)
-                .div(1e12)
+                .div(PRECISION_FACTOR)
                 .sub(user.rewardDebt);
             if (reward > 0) {
                 user.rewardFarm = user.rewardFarm.add(reward);
@@ -483,7 +367,7 @@ contract RocketBera is
         user.rewardDebt = user
             .balance
             .mul(farms[poolAddress].accTokenPerShare)
-            .div(1e12);
+            .div(PRECISION_FACTOR);
         // need add user to array
         if (!boughtCheck[poolAddress][msg.sender]) {
             buyerArr[poolAddress].push(msg.sender);
@@ -567,8 +451,8 @@ contract RocketBera is
             "Invalid totalSupplyToken"
         );
         require(
-            params.fixedCapETH >= MINIMUM_CAP,
-            "Invalid fixedCapETH, must be greater than 2 ETH"
+            params.fixedCapETH >= minCap,
+            "Invalid fixedCapETH, must be greater than minCap"
         );
         require(
             params.tokenForSale >= totalSupply.mul(70).div(100),
@@ -586,6 +470,10 @@ contract RocketBera is
             params.tokenForFarm <= totalSupply.mul(5).div(100),
             "Invalid tokenForFarm, must be less than 5% of totalSupply"
         );
+        require(
+            params.tokenForSale.mod(params.tokenPerPurchase) == 0,
+            "Invalid tokenForSale"
+        );
 
         // setup PoolInfo
         PoolInfo storage poolInfo = poolInfos[newToken];
@@ -596,6 +484,7 @@ contract RocketBera is
         poolInfo.tokenForSale = params.tokenForSale;
         poolInfo.tokenForAddLP = params.tokenForAddLP;
         poolInfo.metadata = params.metadata;
+        // check Token Divisibility, tokenForSale % tokenPerPurchase == 0
 
         // limit purchase of Pool
         pool.tokenPerPurchase = params.tokenPerPurchase;
@@ -671,7 +560,7 @@ contract RocketBera is
         user.rewardDebt = user
             .balance
             .mul(farms[newToken].accTokenPerShare)
-            .div(1e12);
+            .div(PRECISION_FACTOR);
         // need add user to array
         if (!boughtCheck[newToken][msg.sender]) {
             buyerArr[newToken].push(msg.sender);
@@ -713,20 +602,19 @@ contract RocketBera is
             pool.reserveBatch,
             pool.reserveETH
         );
-        // require(amountETH <= user.ethBought, "Exceed 100% of bought");
+        require(amountETH <= user.ethBought, "Exceed 100% of bought");
         // updateFarmingPool
         updateFarmingPool(poolAddress);
         // reward for user
         uint256 reward = user
             .balance
             .mul(farms[poolAddress].accTokenPerShare)
-            .div(1e12)
+            .div(PRECISION_FACTOR)
             .sub(user.rewardDebt);
         if (reward > 0) {
             user.rewardFarm = user.rewardFarm.add(reward);
         }
-        // reward for defi-team
-        payable(feeAddress).transfer(amountETH.div(100)); // take 1% for platform
+
         uint256 sellTaxForLP = amountETH.mul(4).div(100); // take 4% for LP
         uint256 amountForUser = amountETH.mul(95).div(100); // fee 5%
         // update pool info
@@ -741,10 +629,11 @@ contract RocketBera is
         user.rewardDebt = user
             .balance
             .mul(farms[poolAddress].accTokenPerShare)
-            .div(1e12);
+            .div(PRECISION_FACTOR);
         totalSellTax[poolAddress] = totalSellTax[poolAddress].add(sellTaxForLP);
 
         // Transfer ETH to seller
+        payable(feeAddress).transfer(amountETH.div(100)); // take 1% for platform
         payable(msg.sender).transfer(amountForUser);
 
         emit Sold(poolAddress, msg.sender, batchNumber, amountForUser);
@@ -755,60 +644,32 @@ contract RocketBera is
      * @param poolAddress The address of the pool to be finalized.
      * @notice This function can only be called by an account with the ADMIN_ROLE.
      */
-    function finalize(address poolAddress) public {
-        require(
-            hasRole(ADMIN_ROLE, msg.sender) ||
-                msg.sender == ownerToken[poolAddress],
-            "Caller is not an admin or owner"
-        );
+    function finalize(
+        address poolAddress
+    ) public validPoolState(poolAddress, StatusPool.FULL) onlyRole(ADMIN_ROLE) {
         Pool storage pool = pools[poolAddress];
-        require(pool.status == StatusPool.FULL, "Not reach target");
+        // check raisedInETH > fixedCapETH
+        require(
+            pool.raisedInETH >= poolInfos[poolAddress].fixedCapETH,
+            "Invalid raisedInETH"
+        );
         uint256 amountTokenForAddLP = poolInfos[poolAddress].tokenForAddLP;
         uint256 ethForAddLP = pool.raisedInETH.add(totalSellTax[poolAddress]);
         // transfer reward to platform
         payable(feeAddress).transfer(fee);
         ethForAddLP = ethForAddLP.sub(fee);
 
-        if (pool.startTime < 1736496722) {
-            // need approve token for contract
-            IERC20Upgradeable(poolAddress).approve(
-                routerV2,
-                amountTokenForAddLP
-            );
-            // addLiquidtyETH on Uniswap V2
-            IUniRouterV2(routerV2).addLiquidityETH{value: ethForAddLP}(
-                poolAddress,
-                amountTokenForAddLP,
-                amountTokenForAddLP,
-                ethForAddLP,
-                address(this),
-                block.timestamp
-            );
-            // burn LP token
-            address pairAddress = IUniFactoryV2(
-                IUniRouterV2(routerV2).factory()
-            ).getPair(poolAddress, IUniRouterV2(routerV2).WETH());
-            IERC20Upgradeable(pairAddress).transfer(
-                DEAD_ADDR,
-                IERC20Upgradeable(pairAddress).balanceOf(address(this))
-            );
-        } else {
-            // need approve token for contract
-            // ADD LP
-            // need transfer token and funds to bexOP
-            WBERA(wBera).deposit{value: ethForAddLP}();
-            IERC20Upgradeable(wBera).transfer(bexOpAddress, ethForAddLP);
-            IERC20Upgradeable(poolAddress).transfer(
-                bexOpAddress,
-                amountTokenForAddLP
-            );
-            BexOperation bexOP = BexOperation(bexOpAddress);
-            bexOP.createPoolAndAddLP(
-                poolAddress,
-                amountTokenForAddLP,
-                ethForAddLP
-            );
-        }
+        // need approve token for contract
+        // ADD LP
+        // need transfer token and funds to bexOP
+        WBERA(wBera).deposit{value: ethForAddLP}();
+        IERC20Upgradeable(wBera).transfer(bexOpAddress, ethForAddLP);
+        IERC20Upgradeable(poolAddress).transfer(
+            bexOpAddress,
+            amountTokenForAddLP
+        );
+        BexOperation bexOP = BexOperation(bexOpAddress);
+        bexOP.createPoolAndAddLP(poolAddress, amountTokenForAddLP, ethForAddLP);
 
         pool.status = StatusPool.FINISHED;
 
@@ -837,10 +698,15 @@ contract RocketBera is
             !completedTransfer[tokenAddress],
             "All users have been transferred"
         );
-        if (lengthBuyer > counterSoldUsers[tokenAddress].add(100)) {
-            lengthBuyer = counterSoldUsers[tokenAddress].add(100);
+        if (
+            lengthBuyer >
+            counterSoldUsers[tokenAddress].add(MAX_ADDRESS_TO_TRANSFER)
+        ) {
+            lengthBuyer = counterSoldUsers[tokenAddress].add(
+                MAX_ADDRESS_TO_TRANSFER
+            );
         }
-        uint256 percent = caculateUnlockedPercent(tokenAddress);
+        uint256 percent = calculateUnlockedPercent(tokenAddress);
         require(percent == BASE_DENOMINATOR, "Not reach unlock time");
         for (uint256 i = counterSoldUsers[tokenAddress]; i < lengthBuyer; i++) {
             _claimTokenByUser(buyerArr[tokenAddress][i], tokenAddress);
@@ -893,13 +759,13 @@ contract RocketBera is
     }
 
     // Function to claim token by user
-    function claimToken(address pool) external {
+    function claimToken(address pool) external nonReentrant {
         User storage user = users[msg.sender][pool];
         require(user.balance > 0, "User not bought");
         Vesting storage vest = vesting[pool];
         require(vest.isExist, "Vesting not exist");
         require(!user.isClaimed, "User already claimed");
-        uint256 percent = caculateUnlockedPercent(pool);
+        uint256 percent = calculateUnlockedPercent(pool);
         uint256 tokenAmount = user.balance.mul(pools[pool].tokenPerPurchase);
         tokenAmount = tokenAmount.mul(percent).div(BASE_DENOMINATOR);
         tokenAmount = tokenAmount.sub(user.tokenClaimed);
@@ -910,7 +776,7 @@ contract RocketBera is
             uint256 reward = user
                 .balance
                 .mul(farms[pool].accTokenPerShare)
-                .div(1e12)
+                .div(PRECISION_FACTOR)
                 .sub(user.rewardDebt);
             if (reward > 0) {
                 user.rewardFarm = user.rewardFarm.add(reward);
@@ -951,7 +817,7 @@ contract RocketBera is
                     uint256 reward = user
                         .balance
                         .mul(farms[pool].accTokenPerShare)
-                        .div(1e12)
+                        .div(PRECISION_FACTOR)
                         .sub(user.rewardDebt);
                     if (reward > 0) {
                         user.rewardFarm = user.rewardFarm.add(reward);
@@ -1054,11 +920,13 @@ contract RocketBera is
             uint256 multiplier = currentBlock.sub(lastRewardBlock);
             uint256 reward = multiplier.mul(rewardPerBlock);
             accTokenPerShare = accTokenPerShare.add(
-                reward.mul(1e12).div(pools[poolAddress].soldBatch)
+                reward.mul(PRECISION_FACTOR).div(pools[poolAddress].soldBatch)
             );
         }
         return
-            user.balance.mul(accTokenPerShare).div(1e12).sub(user.rewardDebt);
+            user.balance.mul(accTokenPerShare).div(PRECISION_FACTOR).sub(
+                user.rewardDebt
+            );
     }
 
     function pendingReferrerReward(
@@ -1082,7 +950,7 @@ contract RocketBera is
         if (user.isClaimed) return 0;
         Vesting storage vest = vesting[poolAddress];
         if (!vest.isExist) return 0;
-        uint256 percent = caculateUnlockedPercent(poolAddress);
+        uint256 percent = calculateUnlockedPercent(poolAddress);
         uint256 tokenAmount = user.balance.mul(
             pools[poolAddress].tokenPerPurchase
         );
@@ -1091,7 +959,7 @@ contract RocketBera is
             uint256 reward = user
                 .balance
                 .mul(farms[poolAddress].accTokenPerShare)
-                .div(1e12)
+                .div(PRECISION_FACTOR)
                 .sub(user.rewardDebt);
             tokenAmount = tokenAmount.add(user.rewardFarm.add(reward));
         }
@@ -1113,7 +981,7 @@ contract RocketBera is
         uint256 multiplier = block.number.sub(farm.lastRewardBlock);
         uint256 reward = multiplier.mul(farm.rewardPerBlock);
         farm.accTokenPerShare = farm.accTokenPerShare.add(
-            reward.mul(1e12).div(supply)
+            reward.mul(PRECISION_FACTOR).div(supply)
         );
         farm.lastRewardBlock = block.number;
     }
@@ -1122,7 +990,7 @@ contract RocketBera is
      * @dev Pre function to caculate how long has pass since round unlocked
      * @notice Current set is 10% each hours
      */
-    function caculateUnlockedPercent(
+    function calculateUnlockedPercent(
         address pool
     ) public view returns (uint256) {
         Vesting storage vest = vesting[pool];

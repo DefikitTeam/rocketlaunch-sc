@@ -68,9 +68,9 @@ contract BexOperation is Initializable {
         uint256 baseAmount,
         uint256 quoteAmount
     ) public pure returns (uint256) {
-        uint256 sqrtFixed = uint256(
-            MathUpgradeable.sqrt((baseAmount * 1e18) / quoteAmount)
-        );
+        require(quoteAmount > 0, "Division by zero");
+        uint256 price = baseAmount.mul(1e18).div(quoteAmount);
+        uint256 sqrtFixed = MathUpgradeable.sqrt(price);
         return sqrtFixed.mul(Q_64).div(1e9);
     }
 
@@ -181,7 +181,9 @@ contract BexOperation is Initializable {
             quoteToken,
             crocPrice
         );
-        uint256 amountAddLp = baseAmount.mul(999).div(1000).sub(INIT_AMOUNT_ADD_LP);
+        uint256 amountAddLp = baseAmount.mul(999).div(1000).sub(
+            INIT_AMOUNT_ADD_LP
+        );
         bytes memory mintCalldata = encodeMintData(
             baseToken,
             quoteToken,
@@ -228,17 +230,5 @@ contract BexOperation is Initializable {
 
     function transferOwnership(address newOwner) public onlyOwner {
         owner = newOwner;
-    }
-
-    // emergency withdraw
-    function emergencyWithdraw(address token) public onlyOwner {
-        if (token == address(0)) {
-            payable(owner).transfer(address(this).balance);
-        } else {
-            IERC20Upgradeable(token).transfer(
-                owner,
-                IERC20Upgradeable(token).balanceOf(address(this))
-            );
-        }
     }
 }
