@@ -5,11 +5,9 @@ import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
-import {BexOperation} from "./lpManager/BexOperation.sol";
 
-interface WBERA {
-    function deposit() external payable;
-}
+// import {BexOperation} from "./lpManager/BexOperation.sol";
+
 
 interface IUniRouterV2 {
     function addLiquidityETH(
@@ -142,7 +140,7 @@ contract RocketBera is
     uint256 internal platformFee;
     address internal feeAddress;
     uint256 internal fee;
-    address internal airdropAddress;
+    address public rocketTokenFactory;
 
     // counter buyer by pool
     mapping(address => address[]) public buyerArr;
@@ -158,10 +156,7 @@ contract RocketBera is
 
     mapping(address => bool) public completedTransfer;
 
-    address public rocketTokenFactory;
 
-    address internal bexOpAddress;
-    address internal wBera;
     uint256 internal minCap;
 
     // Event for create new Token
@@ -234,11 +229,10 @@ contract RocketBera is
         uint256 _platformFee,
         address _feeAddress,
         uint256 _fee,
-        address _airdropAddress,
-        address _wBera,
-        address _bexOpAddress,
+        address _routerV2,
         uint256 _blockInterval,
-        uint256 _minCap
+        uint256 _minCap,
+        address _rocketTokenFactory
     ) public initializer {
         __AccessControl_init();
         __ReentrancyGuard_init();
@@ -252,12 +246,10 @@ contract RocketBera is
         platformFee = _platformFee;
         feeAddress = _feeAddress;
         fee = _fee;
-        airdropAddress = _airdropAddress;
-        // routerV2 = _routerV2;
-        wBera = _wBera;
-        bexOpAddress = _bexOpAddress;
+        routerV2 = _routerV2;
         BLOCK_INTERVAL = _blockInterval;
         minCap = _minCap;
+        rocketTokenFactory = _rocketTokenFactory;
     }
 
     modifier enoughFee() {
@@ -289,15 +281,17 @@ contract RocketBera is
         rocketTokenFactory = _rocketTokenFactory;
     }
 
-    function updateBexOpAddress(
-        address _bexOpAddress,
-        address _wBera
+    function setupAdmin(
+        address _platformAddress,
+        uint256 _platformFee,
+        address _feeAddress,
+        uint256 _fee,
+        uint256 _minCap
     ) public onlyRole(DEFAULT_ADMIN_ROLE) {
-        bexOpAddress = _bexOpAddress;
-        wBera = _wBera;
-    }
-
-    function setMinCap(uint256 _minCap) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        platformAddress = _platformAddress;
+        platformFee = _platformFee;
+        feeAddress = _feeAddress;
+        fee = _fee;
         minCap = _minCap;
     }
 
@@ -633,7 +627,7 @@ contract RocketBera is
         totalSellTax[poolAddress] = totalSellTax[poolAddress].add(sellTaxForLP);
 
         // Transfer ETH to seller
-        payable(feeAddress).transfer(amountETH.div(100)); // take 1% for platform
+        payable(feeAddress).transfer(amountETH.div(100)); // take fee for platform
         payable(msg.sender).transfer(amountForUser);
 
         emit Sold(poolAddress, msg.sender, batchNumber, amountForUser);
@@ -656,21 +650,29 @@ contract RocketBera is
         uint256 amountTokenForAddLP = poolInfos[poolAddress].tokenForAddLP;
         uint256 ethForAddLP = pool.raisedInETH.add(totalSellTax[poolAddress]);
         // transfer reward to platform
-        payable(feeAddress).transfer(fee);
-        ethForAddLP = ethForAddLP.sub(fee);
+        if (fee > 0) {
+            payable(feeAddress).transfer(fee);
+            ethForAddLP = ethForAddLP.sub(fee);
+        }
 
         // need approve token for contract
-        // ADD LP
-        // need transfer token and funds to bexOP
-        WBERA(wBera).deposit{value: ethForAddLP}();
-        IERC20Upgradeable(wBera).transfer(bexOpAddress, ethForAddLP);
-        IERC20Upgradeable(poolAddress).transfer(
-            bexOpAddress,
-            amountTokenForAddLP
+        IERC20Upgradeable(poolAddress).approve(routerV2, amountTokenForAddLP);
+        // addLiquidtyETH on Uniswap V2
+        IUniRouterV2(routerV2).addLiquidityETH{value: ethForAddLP}(
+            poolAddress,
+            amountTokenForAddLP,
+            amountTokenForAddLP,
+            ethForAddLP,
+            address(this),
+            block.timestamp
         );
-        BexOperation bexOP = BexOperation(bexOpAddress);
-        bexOP.createPoolAndAddLP(poolAddress, amountTokenForAddLP, ethForAddLP);
-
+        // burn LP token
+        address pairAddress = IUniFactoryV2(IUniRouterV2(routerV2).factory())
+            .getPair(poolAddress, IUniRouterV2(routerV2).WETH());
+        IERC20Upgradeable(pairAddress).transfer(
+            DEAD_ADDR,
+            IERC20Upgradeable(pairAddress).balanceOf(address(this))
+        );
         pool.status = StatusPool.FINISHED;
 
         // disable farm

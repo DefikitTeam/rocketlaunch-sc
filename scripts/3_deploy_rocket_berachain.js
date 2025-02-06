@@ -16,9 +16,10 @@ async function main() {
     contracts.platformFee,
     contracts.feeAddr,
     contracts.fee,
-    contracts.airdropWallet,
     contracts.routerV2,
-    contracts.blockInterval
+    contracts.blockInterval,
+    contracts.minCap,
+    contracts.tokenFactory
   ]);
   await rocket.deployed();
   await saveContract(network, "rocket", rocket.address);
@@ -27,12 +28,12 @@ async function main() {
     rocket.address
   );
   console.log("Implementation contract address:", implementationAddress);
-  await sleep(20000);
-  await hre.run("verify:verify", {
-    address: implementationAddress,
-    constructorArguments: [],
-    contract: "contracts/RocketBera.sol:RocketBera"
-  });
+  // await sleep(20000);
+  // await hre.run("verify:verify", {
+  //   address: implementationAddress,
+  //   constructorArguments: [],
+  //   contract: "contracts/RocketBera.sol:RocketBera"
+  // });
 
   console.log("Completed!");
 }

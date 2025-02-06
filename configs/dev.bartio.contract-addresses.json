@@ -1,8 +1,8 @@
 {
-    "berachain": {
+    "bartio": {
         "routerV2": "0x406846114B2A9b65a8A2Ab702C2C57d27784dBA2",
         "platform": "0xf8332B03e1C0B190a6AE0BbA7f9BEF86Bb2CEdf3",
-        "platformFee": "100000000000000",
+        "platformFee": "100000000000000000",
         "blockInterval": 2,
         "factory": "0xCc7283a00481de9AdBE379c3c2459691a6ee274a",
         "dex_bex": "0xAB827b1Cc3535A9e549EE387A6E9C3F02F481B49",
@@ -21,6 +21,6 @@
         "minter_nft": "0x31Ae2baD6459ab60b0D6a2BEC72b246051237C25",
         "nft": "0x4848DDBbb6Ec03442A7b2B393487d5DdA981F877",
         "tokenFactory": "0x0DD8f0807194BDd87252222cBDE34d7BDF8BEE7A",
-        "tokenFactoryVictor": "0x0Df77e0Cec9772E88B4B98e28EC550FC308DBcD8"
+        "minCap": "100000000000000000000"
     }
 }

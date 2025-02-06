@@ -85,7 +85,7 @@ module.exports = {
     // apiKey: "EAVMJDUUXV2BRJ2XV5TRVTD3HFBA2W11TJ",
     apiKey: {
       // base_sepolia: BASE_KEY,
-      berachain: "bartio_testnet",
+      bartio: "bartio_testnet",
       // base: BASE_KEY,
       // iota: 'empty',
       // unichain_sepolia: 'empty'
@@ -114,19 +114,12 @@ module.exports = {
 
 
 
-        network: "berachain",
+        network: "bartio",
         chainId: 80084,
         urls: {
           apiURL: "https://api.routescan.io/v2/network/testnet/evm/80084/etherscan",
           browserURL: "https://bartio.beratrail.io"
         },
-
-        // network: "berachain",
-        // chainId: 80084,
-        // urls: {
-        //   apiURL: "https://api.routescan.io/v2/network/testnet/evm/80084/etherscan",
-        //   browserURL: "https://bartio.beratrail.io"
-        // },
 
         // network: "iota",
         // chainId: 8822,
@@ -267,11 +260,16 @@ module.exports = {
       chainId: 84532,
       url: "https://sepolia.base.org",
     },
-    berachain: {
+    bartio: {
       accounts: [DEPLOYER_PRIVATE_KEY],
       chainId: 80084,
       url: "https://bartio.rpc.berachain.com/",
       gasPrice: 150000000000
+    },
+    berachain: {
+      accounts: [DEPLOYER_PRIVATE_KEY],
+      chainId: 80094,
+      url: "https://rpc.berachain.com/"
     },
     iota: {
       accounts: [DEPLOYER_PRIVATE_KEY],

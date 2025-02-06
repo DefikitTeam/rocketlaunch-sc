@@ -20,12 +20,12 @@ async function main() {
 
     console.log("tokenFactory address:", tokenFactory.address);
     await saveContract(network, "tokenFactory", tokenFactory.address);
-    await sleep(5000);
-    await hre.run("verify:verify", {
-        address: tokenFactory.address,
-        constructorArguments: [],
-    });
-    console.log("Completed!");
+    // await sleep(5000);
+    // await hre.run("verify:verify", {
+    //     address: tokenFactory.address,
+    //     constructorArguments: [],
+    // });
+    // console.log("Completed!");
 }
 
 main()

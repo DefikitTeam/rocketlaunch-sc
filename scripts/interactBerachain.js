@@ -7,16 +7,18 @@ async function main() {
     const network = hre.network.name;
     const [deployer] = await ethers.getSigners();
     const contracts = await getContracts(network)[network];
+    // console.log("contracts", contracts);
+    
 
-    const rocketFactory = await ethers.getContractFactory("RocketBera");
-    const rocketSC = await rocketFactory.attach(
-        contracts.rocket
-    );
-    await rocketSC.setRocketTokenFactory( // set rocket token factory
-        contracts.tokenFactory
-    )
-    console.log("done set rocket token factory");
-    sleep(10000);
+    // const rocketFactory = await ethers.getContractFactory("RocketBera");
+    // const rocketSC = await rocketFactory.attach(
+    //     contracts.rocket
+    // );
+    // await rocketSC.setRocketTokenFactory( // set rocket token factory
+    //     contracts.tokenFactory
+    // )
+    // console.log("done set rocket token factory");
+    // sleep(10000);
     const tokenFactory = await ethers.getContractFactory("RocketTokenFactory");
     const tokenFactorySC = await tokenFactory.attach(
         contracts.tokenFactory
