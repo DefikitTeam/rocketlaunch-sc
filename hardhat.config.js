@@ -8,6 +8,7 @@ require("@openzeppelin/hardhat-upgrades");
 require("hardhat-contract-sizer");
 require("hardhat-typechain");
 require("hardhat-contract-sizer");
+require("@nomicfoundation/hardhat-ignition-ethers");
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -297,6 +298,14 @@ module.exports = {
     imports: "imports",
     sources: "contracts",
     tests: "test",
+  },
+  ignition: {
+    strategyConfig: {
+      create2: {
+        // To learn more about salts, see the CreateX documentation
+        salt: "0x0000000000000000000000000000000000000000000000000000000000000078",
+      },
+    },
   },
 };
 

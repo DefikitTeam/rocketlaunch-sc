@@ -142,7 +142,6 @@ contract RocketBera is
     uint256 internal platformFee;
     address internal feeAddress;
     uint256 internal fee;
-    address internal airdropAddress;
 
     // counter buyer by pool
     mapping(address => address[]) public buyerArr;
@@ -234,7 +233,6 @@ contract RocketBera is
         uint256 _platformFee,
         address _feeAddress,
         uint256 _fee,
-        address _airdropAddress,
         address _wBera,
         address _bexOpAddress,
         uint256 _blockInterval,
@@ -252,7 +250,6 @@ contract RocketBera is
         platformFee = _platformFee;
         feeAddress = _feeAddress;
         fee = _fee;
-        airdropAddress = _airdropAddress;
         // routerV2 = _routerV2;
         wBera = _wBera;
         bexOpAddress = _bexOpAddress;

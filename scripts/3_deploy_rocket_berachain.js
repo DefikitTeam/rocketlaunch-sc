@@ -10,16 +10,20 @@ async function main() {
   console.log("Deploying contracts with the account:", deployer.address);
 
   console.log("Account balance:", (await deployer.getBalance()).toString());
+  const saltBytes = ethers.utils.id("120");
   const Rocket = await hre.ethers.getContractFactory("RocketBera");
   const rocket = await upgrades.deployProxy(Rocket, [
     contracts.platform,
     contracts.platformFee,
     contracts.feeAddr,
     contracts.fee,
-    contracts.airdropWallet,
     contracts.routerV2,
-    contracts.blockInterval
-  ]);
+    contracts.blockInterval,
+    contracts.minCap
+  ], {
+    salt: saltBytes,
+    initializer: 'initialize'
+  });
   await rocket.deployed();
   await saveContract(network, "rocket", rocket.address);
   console.log("Rocket deployed to:", rocket.address);
