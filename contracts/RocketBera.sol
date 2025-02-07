@@ -643,8 +643,9 @@ contract RocketBera is
     ) public validPoolState(poolAddress, StatusPool.FULL) onlyRole(ADMIN_ROLE) {
         Pool storage pool = pools[poolAddress];
         // check raisedInETH > fixedCapETH
+        uint256 minRequired = poolInfos[poolAddress].fixedCapETH.mul(9999).div(10000);
         require(
-            pool.raisedInETH >= poolInfos[poolAddress].fixedCapETH,
+            pool.raisedInETH >= minRequired,
             "Invalid raisedInETH"
         );
         uint256 amountTokenForAddLP = poolInfos[poolAddress].tokenForAddLP;

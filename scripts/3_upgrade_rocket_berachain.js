@@ -20,12 +20,12 @@ async function main() {
     contracts.rocket
   );
   console.log("Implementation contract address:", implementationAddress);
-  await sleep(10000)
-  await hre.run("verify:verify", {
-    address: implementationAddress,
-    constructorArguments: [
-    ]
-  });
+  // await sleep(10000)
+  // await hre.run("verify:verify", {
+  //   address: implementationAddress,
+  //   constructorArguments: [
+  //   ]
+  // });
   console.log("Completed!");
 }
 
