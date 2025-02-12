@@ -1,7 +1,7 @@
 {
     "berachain": {
         "routerV2": "0xd91dd58387Ccd9B66B390ae2d7c66dBD46BC6022",
-        "platform": "0xf8332B03e1C0B190a6AE0BbA7f9BEF86Bb2CEdf3",
+        "platform": "0x242572d685fE1a73760aD288621Ab42dBA77e8A9",
         "platformFee": "100000000000000000",
         "blockInterval": 2,
         "feeAddr": "0x42e9d46d0ac951f301a1587844e9269d1701bcba",

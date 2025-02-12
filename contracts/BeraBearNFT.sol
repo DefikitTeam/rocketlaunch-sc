@@ -88,7 +88,7 @@ contract BeraBearNFT is
         }
     }
 
-    function activeNewNFT(uint256 number) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function activeNewNFT(uint256 number) public onlyRole(MINTER_ROLE) {
         totalSupply += number;
     }
 

@@ -12,7 +12,7 @@ async function main() {
     contracts.nft,
     BeraBearNFT
   );
-  await rocket.deployed();
+  await nft.deployed();
   await saveContract(network, "nft", nft.address);
   console.log(`Deployed NFT to ${nft.address}`);
   // Get the implementation contract address from the proxy
@@ -20,12 +20,12 @@ async function main() {
     contracts.nft
   );
   console.log("Implementation contract address:", implementationAddress);
-  await sleep(10000)
-  await hre.run("verify:verify", {
-    address: implementationAddress,
-    constructorArguments: [
-    ]
-  });
+  // await sleep(10000)
+  // await hre.run("verify:verify", {
+  //   address: implementationAddress,
+  //   constructorArguments: [
+  //   ]
+  // });
   console.log("Completed!");
 }
 
