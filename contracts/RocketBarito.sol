@@ -41,7 +41,7 @@ interface IRocketTokenFactory {
     ) external returns (address);
 }
 
-contract RocketBera is
+contract RocketBarito is
     Initializable,
     AccessControlUpgradeable,
     ReentrancyGuardUpgradeable
