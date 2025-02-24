@@ -1171,6 +1171,10 @@ contract RocketBarito is
                 pool.reserveBatch
             );
 
+            if (amountETH == 0) {
+                continue;
+            }
+
             if (amountETH > lottery.lotteryParticipants[winner].ethAmount) {
                 continue;
             }
