@@ -1,116 +1,297 @@
-const Web3 = require("web3");
-const web3 = new Web3(
-    new Web3.providers.HttpProvider("https://bartio.rpc.berachain.com")
-);
-const ABI = require("./ABI.json");
-const ABI_TOKEN = require("../abi/ABI_TOKEN.json");
+const { expect } = require("chai");
+const { ethers, upgrades } = require("hardhat");
+const { BigNumber } = require("ethers");
+const { time } = require("@nomicfoundation/hardhat-network-helpers");
 
-const pkey = ""; // Private Key 
-const addressWallet = "0x1043987a09D87C13d42c7a62A0b0f4546e60Fc8F";
-const ROCKET = "0x288020c23215a2472BcE3788764Cbc8E4E0aDbAE"
-const BEX = "0x3eb0227CEc10245b29b9E5A6F0dA30221781Ae21"
-const BEX_NEW = "0xe0928dAA95bD34E948e0d0E15Fa27C46E6888981"
-const ADDRESS_TOKEN = '0x39dc7f297c921bcddea7ce4612a74db754dfd2c1'
-const WETH = "0x7507c1dc16935B82698e4C63f2746A2fCf994dF8"
+describe("RocketBera", function () {
+    let owner;
+    let platformAddr;
+    let feeAddr;
+    let routerAddr;
+    let factoryAddr;
+    let addr1;
+    let addr2;
+    let addr3;
+    let addr4;
+    let tokenFactory;
+    let rocketBera;
+    let mockToken;
+    let mockRouter;
+    let mockFactory;
+    let startTime;
 
-const activePool = async () => {
-    const SC = new web3.eth.Contract(
-        ABI,
-        ROCKET
-    );
+    const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
+    const BASE_DENOMINATOR = 10000;
+    const PLATFORM_FEE = ethers.utils.parseEther("0.1");
+    const FEE = ethers.utils.parseEther("0.01");
+    const BLOCK_INTERVAL = 2;
+    const MIN_CAP = ethers.utils.parseEther("0.02");
 
-    const params = {
-        token: ADDRESS_TOKEN,
-        fixedCapETH: "5000000000000000000",
-        tokenForAirdrop: "10000000000000000000000",
-        tokenForFarm: "40000000000000000000000",
-        tokenForSale: "750000000000000000000000",
-        tokenForAddLP: "200000000000000000000000",
-        tokenPerPurchase: "100000000000000000000",
-        maxRepeatPurchase: 100,
-        startTime: 1714669800,
-        endTime: 1715274600, // 1 week
-        minDurationSell: 86400,
-        maxDurationSell: 604800
-    }
-    const estGas = await SC.methods
-        .activePool(
-            params
-        )
-        .estimateGas({ from: addressWallet });
+    beforeEach(async () => {
+        [owner, platformAddr, feeAddr, routerAddr, factoryAddr, addr1, addr2, addr3, addr4] = await ethers.getSigners();
 
+        // Deploy Mock Router
+        const MockRouter = await ethers.getContractFactory("MockUniswapV2Router02");
+        mockRouter = await MockRouter.deploy();
+        await mockRouter.deployed();
 
+        // Deploy Mock Factory
+        const MockFactory = await ethers.getContractFactory("MockUniswapV2Factory");
+        mockFactory = await MockFactory.deploy();
+        await mockFactory.deployed();
 
-        
-    console.log("estGas: ", estGas);
-    web3.eth.accounts.wallet.add(pkey);
-    const resultTransaction = await SC.methods.activePool(
-        params
-    ).send({
-        from: addressWallet,
-        gas: estGas
+        // Deploy Token Factory
+        const TokenFactory = await ethers.getContractFactory("RocketTokenFactory");
+        tokenFactory = await TokenFactory.deploy();
+        await tokenFactory.deployed();
+
+        // Deploy RocketBera
+        const RocketBera = await ethers.getContractFactory("RocketBartio");
+        rocketBera = await upgrades.deployProxy(RocketBera, [
+            platformAddr.address,
+            PLATFORM_FEE,
+            feeAddr.address,
+            FEE,
+            mockRouter.address,
+            BLOCK_INTERVAL,
+            MIN_CAP,
+            tokenFactory.address
+        ]);
+        await rocketBera.deployed();
+
+        // Set up mock router and factory
+        await mockRouter.setFactory(mockFactory.address);
+        await mockFactory.setRouter(mockRouter.address);
+
+        // Get current timestamp
+        startTime = (await ethers.provider.getBlock("latest")).timestamp;
     });
-    console.log("resultTransaction: ", resultTransaction);
-};
 
+    describe("Pool Creation and Lottery Setup", function () {
+        let poolParams;
 
-const Buy = async () => {
-    const SC = new web3.eth.Contract(
-        ABI,
-        ROCKET
-    );
-    const getAmountETH = '1000000000000000000'
-    const estGas = await SC.methods
-        .buy(
-            ADDRESS_TOKEN,
-            100,
-            getAmountETH
-        )
-        .estimateGas({ from: addressWallet, value: getAmountETH });
-    console.log("estGas: ", estGas);
-    await SC.methods.buy(
-        ADDRESS_TOKEN,
-        100,
-        getAmountETH
-    ).send({
-        from: addressWallet,
-        gas: estGas,
-        value: getAmountETH
+        beforeEach(async () => {
+            poolParams = {
+                name: "Test Token",
+                symbol: "TEST",
+                decimals: 18,
+                totalSupply: ethers.utils.parseEther("1000000"),
+                fixedCapETH: ethers.utils.parseEther("5"),
+                tokenForAirdrop: ethers.utils.parseEther("10000"),
+                tokenForFarm: ethers.utils.parseEther("40000"),
+                tokenForSale: ethers.utils.parseEther("750000"),
+                tokenForAddLP: ethers.utils.parseEther("200000"),
+                tokenPerPurchase: ethers.utils.parseEther("100"),
+                maxRepeatPurchase: 100,
+                startTime: startTime + 3600,
+                minDurationSell: 86400,
+                maxDurationSell: 604800,
+                metadata: "Test Pool",
+                numberBatch: 0,
+                maxAmountETH: 0,
+                referrer: ZERO_ADDRESS
+            };
+        });
+
+        it("Should create pool and initialize lottery correctly", async function () {
+            await rocketBera.launchPool(poolParams, { value: PLATFORM_FEE });
+            
+            const tokenAddress = await tokenFactory.getLastToken();
+            const lottery = await rocketBera.lotteries(tokenAddress);
+            
+            expect(lottery.fundDeposit).to.equal(0);
+            expect(lottery.participants).to.be.empty;
+        });
+
+        it("Should not allow pool creation without platform fee", async function () {
+            await expect(
+                rocketBera.launchPool(poolParams)
+            ).to.be.revertedWith("plat fee");
+        });
     });
-}
 
-const finalize = async (pool) => {
-    const SC = new web3.eth.Contract(
-        ABI,
-        ROCKET
-    );
-    const estGas = await SC.methods
-        .finalize(
-            pool
-        )
-        .estimateGas({ from: addressWallet });
-    console.log("estGas: ", estGas);
-    // web3.eth.accounts.wallet.add(pkey);
-    // const resultTransaction = await SC.methods.finalize(
-    //     pool
-    // ).send({
-    //     from: addressWallet,
-    //     gas: 8000000
-    // });
-    // console.log("resultTransaction: ", resultTransaction);
-}
+    describe("Lottery Deposits", function () {
+        let tokenAddress;
 
+        beforeEach(async () => {
+            // Create pool first
+            await rocketBera.launchPool(poolParams, { value: PLATFORM_FEE });
+            tokenAddress = await tokenFactory.getLastToken();
+            
+            // Move time to start time
+            await time.increaseTo(poolParams.startTime);
+        });
 
-function sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-}
+        it("Should accept deposits during lottery period", async function () {
+            const depositAmount = ethers.utils.parseEther("1");
+            await rocketBera.connect(addr1).depositForLottery(
+                tokenAddress,
+                depositAmount,
+                ZERO_ADDRESS,
+                { value: depositAmount }
+            );
 
-const loopBuy = async () => {
-    for (let i = 0; i < 9; i++) {
-        web3.eth.accounts.wallet.add(pkey);
-        await Buy()
-        await sleep(10000)
-    }
-}
+            const lottery = await rocketBera.lotteries(tokenAddress);
+            expect(lottery.fundDeposit).to.equal(depositAmount);
 
-// finalize("0x39dc7f297c921bcddea7ce4612a74db754dfd2c1")
+            const userLottery = await rocketBera.lotteryParticipants(tokenAddress, addr1.address);
+            expect(userLottery.ethAmount).to.equal(depositAmount);
+        });
+
+        it("Should track multiple deposits from same user", async function () {
+            const deposit1 = ethers.utils.parseEther("1");
+            const deposit2 = ethers.utils.parseEther("2");
+
+            await rocketBera.connect(addr1).depositForLottery(
+                tokenAddress,
+                deposit1,
+                ZERO_ADDRESS,
+                { value: deposit1 }
+            );
+
+            await rocketBera.connect(addr1).depositForLottery(
+                tokenAddress,
+                deposit2,
+                ZERO_ADDRESS,
+                { value: deposit2 }
+            );
+
+            const userLottery = await rocketBera.lotteryParticipants(tokenAddress, addr1.address);
+            expect(userLottery.ethAmount).to.equal(deposit1.add(deposit2));
+        });
+
+        it("Should not accept deposits after lottery period", async function () {
+            await time.increaseTo(poolParams.startTime + poolParams.minDurationSell + 1);
+
+            const depositAmount = ethers.utils.parseEther("1");
+            await expect(
+                rocketBera.connect(addr1).depositForLottery(
+                    tokenAddress,
+                    depositAmount,
+                    ZERO_ADDRESS,
+                    { value: depositAmount }
+                )
+            ).to.be.revertedWith("Not in lottery period");
+        });
+    });
+
+    describe("Lottery Spin", function () {
+        let tokenAddress;
+
+        beforeEach(async () => {
+            // Create pool
+            await rocketBera.launchPool(poolParams, { value: PLATFORM_FEE });
+            tokenAddress = await tokenFactory.getLastToken();
+            
+            // Move to start time
+            await time.increaseTo(poolParams.startTime);
+
+            // Make deposits
+            const deposit1 = ethers.utils.parseEther("1");
+            const deposit2 = ethers.utils.parseEther("2");
+            
+            await rocketBera.connect(addr1).depositForLottery(
+                tokenAddress,
+                deposit1,
+                ZERO_ADDRESS,
+                { value: deposit1 }
+            );
+
+            await rocketBera.connect(addr2).depositForLottery(
+                tokenAddress,
+                deposit2,
+                ZERO_ADDRESS,
+                { value: deposit2 }
+            );
+        });
+
+        it("Should successfully spin lottery and allocate batches", async function () {
+            await rocketBera.connect(owner).spinLottery(tokenAddress);
+
+            // Check if batches were allocated
+            const pool = await rocketBera.pools(tokenAddress);
+            expect(pool.soldBatch).to.be.gt(0);
+
+            // Check if deposits were processed
+            const lottery = await rocketBera.lotteries(tokenAddress);
+            expect(lottery.fundDeposit).to.be.lt(ethers.utils.parseEther("3")); // Some funds should be used
+        });
+
+        it("Should allocate batches proportionally to deposits", async function () {
+            await rocketBera.connect(owner).spinLottery(tokenAddress);
+
+            const user1Info = await rocketBera.users(addr1.address, tokenAddress);
+            const user2Info = await rocketBera.users(addr2.address, tokenAddress);
+
+            // User2 should have more chance to win due to larger deposit
+            expect(user2Info.balance).to.be.gte(user1Info.balance);
+        });
+
+        it("Should emit correct events during spin", async function () {
+            await expect(rocketBera.connect(owner).spinLottery(tokenAddress))
+                .to.emit(rocketBera, "LotteryWinner");
+        });
+    });
+
+    describe("Integration Tests", function () {
+        it("Should handle full lifecycle of lottery", async function () {
+            // 1. Create pool
+            await rocketBera.launchPool(poolParams, { value: PLATFORM_FEE });
+            const tokenAddress = await tokenFactory.getLastToken();
+
+            // 2. Move to start time
+            await time.increaseTo(poolParams.startTime);
+
+            // 3. Multiple users deposit
+            const deposits = [
+                ethers.utils.parseEther("1"),
+                ethers.utils.parseEther("2"),
+                ethers.utils.parseEther("1.5")
+            ];
+
+            await rocketBera.connect(addr1).depositForLottery(
+                tokenAddress,
+                deposits[0],
+                ZERO_ADDRESS,
+                { value: deposits[0] }
+            );
+
+            await rocketBera.connect(addr2).depositForLottery(
+                tokenAddress,
+                deposits[1],
+                ZERO_ADDRESS,
+                { value: deposits[1] }
+            );
+
+            await rocketBera.connect(addr3).depositForLottery(
+                tokenAddress,
+                deposits[2],
+                ZERO_ADDRESS,
+                { value: deposits[2] }
+            );
+
+            // 4. Spin lottery multiple times
+            await rocketBera.spinLottery(tokenAddress);
+            await rocketBera.spinLottery(tokenAddress);
+
+            // 5. Verify final state
+            const pool = await rocketBera.pools(tokenAddress);
+            const lottery = await rocketBera.lotteries(tokenAddress);
+
+            expect(pool.soldBatch).to.be.gt(0);
+            expect(lottery.fundDeposit).to.be.lt(deposits[0].add(deposits[1]).add(deposits[2]));
+
+            // 6. Check user states
+            const users = [addr1, addr2, addr3];
+            for (const user of users) {
+                const userInfo = await rocketBera.users(user.address, tokenAddress);
+                const userLottery = await rocketBera.lotteryParticipants(tokenAddress, user.address);
+                
+                // Either user won some batches or still has their deposit
+                expect(
+                    userInfo.balance.gt(0) || userLottery.ethAmount.gt(0)
+                ).to.be.true;
+            }
+        });
+    });
+});
