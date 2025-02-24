@@ -16,9 +16,10 @@ async function main() {
     contracts.platformFee,
     contracts.feeAddr,
     contracts.fee,
-    contracts.airdropWallet,
     contracts.routerV2,
-    contracts.blockInterval
+    contracts.blockInterval,
+    contracts.minCap,
+    contracts.tokenFactory
   ]);
   await rocket.deployed();
   await saveContract(network, "rocket", rocket.address);
@@ -30,7 +31,8 @@ async function main() {
   await sleep(20000);
   await hre.run("verify:verify", {
     address: implementationAddress,
-    constructorArguments: []
+    constructorArguments: [],
+    contract: "contracts/Rocket.sol:Rocket"
   });
 
   console.log("Completed!");

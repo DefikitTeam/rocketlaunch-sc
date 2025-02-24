@@ -84,8 +84,8 @@ module.exports = {
   etherscan: {
     // apiKey: "EAVMJDUUXV2BRJ2XV5TRVTD3HFBA2W11TJ",
     apiKey: {
-      // base_sepolia: BASE_KEY,
-      bartio: "bartio_testnet",
+      base_sepolia: BASE_KEY,
+      // bartio: "bartio_testnet",
       // base: BASE_KEY,
       // iota: 'empty',
       // unichain_sepolia: 'empty'
@@ -99,12 +99,12 @@ module.exports = {
         //   browserURL: "https://basescan.org"
         // },
 
-        // network: "base_sepolia",
-        // chainId: 84532,
-        // urls: {
-        //   apiURL: "https://api-sepolia.basescan.org/api", // https://api.basescan.org/api
-        //   browserURL: "https://sepolia.basescan.org"
-        // },
+        network: "base_sepolia",
+        chainId: 84532,
+        urls: {
+          apiURL: "https://api-sepolia.basescan.org/api", // https://api.basescan.org/api
+          browserURL: "https://sepolia.basescan.org"
+        },
         // network: "hyperliquid",
         // chainId: 998,
         // urls: {
@@ -114,12 +114,12 @@ module.exports = {
 
 
 
-        network: "bartio",
-        chainId: 80084,
-        urls: {
-          apiURL: "https://api.routescan.io/v2/network/testnet/evm/80084/etherscan",
-          browserURL: "https://bartio.beratrail.io"
-        },
+        // network: "bartio",
+        // chainId: 80084,
+        // urls: {
+        //   apiURL: "https://api.routescan.io/v2/network/testnet/evm/80084/etherscan",
+        //   browserURL: "https://bartio.beratrail.io"
+        // },
 
         // network: "iota",
         // chainId: 8822,

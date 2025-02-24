@@ -1,14 +1,14 @@
 {
     "base_sepolia": {
+        "routerV2": "0x88d132628ad8ef76dac764bea6f638dd7ffeba4a",
         "platform": "0xf8332B03e1C0B190a6AE0BbA7f9BEF86Bb2CEdf3",
         "platformFee": "5000000000000000",
         "feeAddr": "0xB2B8904725eFcB1EEeb40e9FC02fFC3c1d619437",
         "fee": "40000000000000000",
-        "airdropWallet": "0xEDd3d787C7abecDE82c066b0C99b4d5B3aA69DA4",
-        "routerV2": "0x88d132628ad8ef76dac764bea6f638dd7ffeba4a",
+        "minCap": "50000000000000000",
         "blockInterval": 2,
-        "rocket": "0x43233D8767Ab7D52D83c44031DFe2049E29310C6",
+        "rocket": "0x414FfF08a1b5EDe20a0f88B1667a2Fbc59069c70",
         "multisend": "0xd1adfa4be7b5064b4cbb7fee7e61b7b1fc98ce28",
-        "tokenFactory": "0x8493dd18C20081771BdD9fc203B13DEF67e562e5"
+        "tokenFactory": "0x14924f76468353B09bFd7c17340fdd2EF831d262"
     }
 }
