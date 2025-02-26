@@ -12,6 +12,7 @@ async function main() {
 
     const network = hre.network.name;
     const contracts = await getContracts(network)[network];
+    console.log(contracts);
 
     const RocketTokenFactory = await hre.ethers.getContractFactory("RocketTokenFactory");
     const tokenFactory = await RocketTokenFactory.deploy();

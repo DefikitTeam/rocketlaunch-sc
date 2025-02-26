@@ -153,7 +153,6 @@ contract Rocket is
 
     mapping(address => bool) public completedTransfer;
 
-
     uint256 internal minCap;
 
     // Event for create new Token
@@ -640,11 +639,10 @@ contract Rocket is
     ) public validPoolState(poolAddress, StatusPool.FULL) onlyRole(ADMIN_ROLE) {
         Pool storage pool = pools[poolAddress];
         // check raisedInETH > fixedCapETH
-        uint256 minRequired = poolInfos[poolAddress].fixedCapETH.mul(9999).div(10000);
-        require(
-            pool.raisedInETH >= minRequired,
-            "Invalid raisedInETH"
+        uint256 minRequired = poolInfos[poolAddress].fixedCapETH.mul(9999).div(
+            10000
         );
+        require(pool.raisedInETH >= minRequired, "Invalid raisedInETH");
         uint256 amountTokenForAddLP = poolInfos[poolAddress].tokenForAddLP;
         uint256 ethForAddLP = pool.raisedInETH.add(totalSellTax[poolAddress]);
         // transfer reward to platform
@@ -821,6 +819,14 @@ contract Rocket is
                         .sub(user.rewardDebt);
                     if (reward > 0) {
                         user.rewardFarm = user.rewardFarm.add(reward);
+                    }
+                    // calculate referrer reward
+                    if (user.referrerBond > 0) {
+                        uint256 referrerReward = user
+                            .referrerBond
+                            .mul(poolInfos[pool].tokenForAirdrop)
+                            .div(pools[pool].totalReferrerBond);
+                        tokenAmount = tokenAmount.add(referrerReward);
                     }
                     tokenAmount = tokenAmount.add(user.rewardFarm);
                     user.isClaimedFarm = true;

@@ -24,7 +24,9 @@
     "deploy:prod_base": "NODE_ENV=prod hardhat run --network base",
     "verify:prod_base": "NODE_ENV=prod hardhat verify --network base",
     "deploy:prod_iota": "NODE_ENV=prod hardhat run --network iota",
-    "verify:prod_iota": "NODE_ENV=prod hardhat verify --network iota"
+    "verify:prod_iota": "NODE_ENV=prod hardhat verify --network iota",
+    "deploy:dev_monad_testnet": "NODE_ENV=dev hardhat run --network monad_testnet",
+    "verify:dev_monad_testnet": "NODE_ENV=dev hardhat verify --network monad_testnet"
   },
   "author": "DeFiKit",
   "license": "MIT",
