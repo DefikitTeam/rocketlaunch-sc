@@ -34640,6 +34640,1310 @@
             "offset": 0,
             "slot": "201",
             "type": "t_uint256",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:64"
+          },
+          {
+            "label": "pools",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_mapping(t_address,t_struct(Pool)10944_storage)",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:143"
+          },
+          {
+            "label": "poolInfos",
+            "offset": 0,
+            "slot": "203",
+            "type": "t_mapping(t_address,t_struct(PoolInfo)10959_storage)",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:144"
+          },
+          {
+            "label": "farms",
+            "offset": 0,
+            "slot": "204",
+            "type": "t_mapping(t_address,t_struct(Farm)10973_storage)",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:145"
+          },
+          {
+            "label": "users",
+            "offset": 0,
+            "slot": "205",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_struct(User)10994_storage))",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:146"
+          },
+          {
+            "label": "lotteries",
+            "offset": 0,
+            "slot": "206",
+            "type": "t_mapping(t_address,t_struct(Lottery)11010_storage)",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:147"
+          },
+          {
+            "label": "routerV2",
+            "offset": 0,
+            "slot": "207",
+            "type": "t_address",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:149"
+          },
+          {
+            "label": "platformAddress",
+            "offset": 0,
+            "slot": "208",
+            "type": "t_address",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:150"
+          },
+          {
+            "label": "platformFee",
+            "offset": 0,
+            "slot": "209",
+            "type": "t_uint256",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:151"
+          },
+          {
+            "label": "feeAddress",
+            "offset": 0,
+            "slot": "210",
+            "type": "t_address",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:152"
+          },
+          {
+            "label": "fee",
+            "offset": 0,
+            "slot": "211",
+            "type": "t_uint256",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:153"
+          },
+          {
+            "label": "rocketTokenFactory",
+            "offset": 0,
+            "slot": "212",
+            "type": "t_address",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:154"
+          },
+          {
+            "label": "buyerArr",
+            "offset": 0,
+            "slot": "213",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:157"
+          },
+          {
+            "label": "boughtCheck",
+            "offset": 0,
+            "slot": "214",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:158"
+          },
+          {
+            "label": "ownerToken",
+            "offset": 0,
+            "slot": "215",
+            "type": "t_mapping(t_address,t_address)",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:161"
+          },
+          {
+            "label": "counterSoldUsers",
+            "offset": 0,
+            "slot": "216",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:163"
+          },
+          {
+            "label": "totalSellTax",
+            "offset": 0,
+            "slot": "217",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:164"
+          },
+          {
+            "label": "vesting",
+            "offset": 0,
+            "slot": "218",
+            "type": "t_mapping(t_address,t_struct(Vesting)10964_storage)",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:166"
+          },
+          {
+            "label": "completedTransfer",
+            "offset": 0,
+            "slot": "219",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:168"
+          },
+          {
+            "label": "minCap",
+            "offset": 0,
+            "slot": "220",
+            "type": "t_uint256",
+            "contract": "RocketBera",
+            "src": "contracts/RocketBera.sol:170"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_enum(StatusPool)10914": {
+            "label": "enum RocketBera.StatusPool",
+            "members": [
+              "INACTIVE",
+              "ACTIVE",
+              "FULL",
+              "FINISHED",
+              "FAIL",
+              "COMPELETED"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_address)": {
+            "label": "mapping(address => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_array(t_address)dyn_storage)": {
+            "label": "mapping(address => address[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_struct(User)10994_storage))": {
+            "label": "mapping(address => mapping(address => struct RocketBera.User))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(Farm)10973_storage)": {
+            "label": "mapping(address => struct RocketBera.Farm)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(Lottery)11010_storage)": {
+            "label": "mapping(address => struct RocketBera.Lottery)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(Pool)10944_storage)": {
+            "label": "mapping(address => struct RocketBera.Pool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(PoolInfo)10959_storage)": {
+            "label": "mapping(address => struct RocketBera.PoolInfo)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(User)10994_storage)": {
+            "label": "mapping(address => struct RocketBera.User)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(UserLottery)10999_storage)": {
+            "label": "mapping(address => struct RocketBera.UserLottery)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(Vesting)10964_storage)": {
+            "label": "mapping(address => struct RocketBera.Vesting)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_struct(RoleData)34_storage)": {
+            "label": "mapping(bytes32 => struct AccessControlUpgradeable.RoleData)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Farm)10973_storage": {
+            "label": "struct RocketBera.Farm",
+            "members": [
+              {
+                "label": "rewardPerBlock",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "lastRewardBlock",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "accTokenPerShare",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "isDisable",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "3"
+              }
+            ],
+            "numberOfBytes": "128"
+          },
+          "t_struct(Lottery)11010_storage": {
+            "label": "struct RocketBera.Lottery",
+            "members": [
+              {
+                "label": "fundDeposit",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "lotteryParticipants",
+                "type": "t_mapping(t_address,t_struct(UserLottery)10999_storage)",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "participants",
+                "type": "t_array(t_address)dyn_storage",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(Pool)10944_storage": {
+            "label": "struct RocketBera.Pool",
+            "members": [
+              {
+                "label": "tokenPerPurchase",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "maxRepeatPurchase",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "totalBatch",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "startTime",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "endTime",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "minDurationSell",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "maxDurationSell",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "raisedInETH",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "7"
+              },
+              {
+                "label": "soldBatch",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "8"
+              },
+              {
+                "label": "reserveETH",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "9"
+              },
+              {
+                "label": "reserveBatch",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "10"
+              },
+              {
+                "label": "status",
+                "type": "t_enum(StatusPool)10914",
+                "offset": 0,
+                "slot": "11"
+              },
+              {
+                "label": "totalReferrerBond",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "12"
+              },
+              {
+                "label": "totalBatchAvailable",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "13"
+              }
+            ],
+            "numberOfBytes": "448"
+          },
+          "t_struct(PoolInfo)10959_storage": {
+            "label": "struct RocketBera.PoolInfo",
+            "members": [
+              {
+                "label": "fixedCapETH",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "totalSupplyToken",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "tokenForAirdrop",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "tokenForFarm",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "tokenForSale",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "tokenForAddLP",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "metadata",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "6"
+              }
+            ],
+            "numberOfBytes": "224"
+          },
+          "t_struct(RoleData)34_storage": {
+            "label": "struct AccessControlUpgradeable.RoleData",
+            "members": [
+              {
+                "label": "members",
+                "type": "t_mapping(t_address,t_bool)",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "adminRole",
+                "type": "t_bytes32",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_struct(User)10994_storage": {
+            "label": "struct RocketBera.User",
+            "members": [
+              {
+                "label": "balance",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "balanceSold",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "ethBought",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "rewardFarm",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "isClaimed",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "rewardDebt",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "tokenClaimed",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "isClaimedFarm",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "7"
+              },
+              {
+                "label": "referrerReward",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "8"
+              },
+              {
+                "label": "referrerBond",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "9"
+              }
+            ],
+            "numberOfBytes": "320"
+          },
+          "t_struct(UserLottery)10999_storage": {
+            "label": "struct RocketBera.UserLottery",
+            "members": [
+              {
+                "label": "ethAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "referrer",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_struct(Vesting)10964_storage": {
+            "label": "struct RocketBera.Vesting",
+            "members": [
+              {
+                "label": "startTime",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "isExist",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "58b47880c35944d6a0987e6bfb530e36ca5e727c2f2567d2f7108c90a220aecb": {
+      "address": "0xDBbf5eE870Cd904c31Afe88e74B02C7AAAD8d712",
+      "txHash": "0x1b0258ecc6ea06c0771926ae2a806eb180011f26a1a463750209bbcdf87b3f7d",
+      "layout": {
+        "solcVersion": "0.8.13",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC165Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol:41"
+          },
+          {
+            "label": "_roles",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_mapping(t_bytes32,t_struct(RoleData)34_storage)",
+            "contract": "AccessControlUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol:61"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "AccessControlUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol:259"
+          },
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:80"
+          },
+          {
+            "label": "BLOCK_INTERVAL",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_uint256",
+            "contract": "RocketBarito",
+            "src": "contracts/RocketBarito.sol:64"
+          },
+          {
+            "label": "pools",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_mapping(t_address,t_struct(Pool)2597_storage)",
+            "contract": "RocketBarito",
+            "src": "contracts/RocketBarito.sol:143"
+          },
+          {
+            "label": "poolInfos",
+            "offset": 0,
+            "slot": "203",
+            "type": "t_mapping(t_address,t_struct(PoolInfo)2612_storage)",
+            "contract": "RocketBarito",
+            "src": "contracts/RocketBarito.sol:144"
+          },
+          {
+            "label": "farms",
+            "offset": 0,
+            "slot": "204",
+            "type": "t_mapping(t_address,t_struct(Farm)2626_storage)",
+            "contract": "RocketBarito",
+            "src": "contracts/RocketBarito.sol:145"
+          },
+          {
+            "label": "users",
+            "offset": 0,
+            "slot": "205",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_struct(User)2647_storage))",
+            "contract": "RocketBarito",
+            "src": "contracts/RocketBarito.sol:146"
+          },
+          {
+            "label": "lotteries",
+            "offset": 0,
+            "slot": "206",
+            "type": "t_mapping(t_address,t_struct(Lottery)2663_storage)",
+            "contract": "RocketBarito",
+            "src": "contracts/RocketBarito.sol:147"
+          },
+          {
+            "label": "routerV2",
+            "offset": 0,
+            "slot": "207",
+            "type": "t_address",
+            "contract": "RocketBarito",
+            "src": "contracts/RocketBarito.sol:149"
+          },
+          {
+            "label": "platformAddress",
+            "offset": 0,
+            "slot": "208",
+            "type": "t_address",
+            "contract": "RocketBarito",
+            "src": "contracts/RocketBarito.sol:150"
+          },
+          {
+            "label": "platformFee",
+            "offset": 0,
+            "slot": "209",
+            "type": "t_uint256",
+            "contract": "RocketBarito",
+            "src": "contracts/RocketBarito.sol:151"
+          },
+          {
+            "label": "feeAddress",
+            "offset": 0,
+            "slot": "210",
+            "type": "t_address",
+            "contract": "RocketBarito",
+            "src": "contracts/RocketBarito.sol:152"
+          },
+          {
+            "label": "fee",
+            "offset": 0,
+            "slot": "211",
+            "type": "t_uint256",
+            "contract": "RocketBarito",
+            "src": "contracts/RocketBarito.sol:153"
+          },
+          {
+            "label": "rocketTokenFactory",
+            "offset": 0,
+            "slot": "212",
+            "type": "t_address",
+            "contract": "RocketBarito",
+            "src": "contracts/RocketBarito.sol:154"
+          },
+          {
+            "label": "buyerArr",
+            "offset": 0,
+            "slot": "213",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "RocketBarito",
+            "src": "contracts/RocketBarito.sol:157"
+          },
+          {
+            "label": "boughtCheck",
+            "offset": 0,
+            "slot": "214",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "RocketBarito",
+            "src": "contracts/RocketBarito.sol:158"
+          },
+          {
+            "label": "ownerToken",
+            "offset": 0,
+            "slot": "215",
+            "type": "t_mapping(t_address,t_address)",
+            "contract": "RocketBarito",
+            "src": "contracts/RocketBarito.sol:161"
+          },
+          {
+            "label": "counterSoldUsers",
+            "offset": 0,
+            "slot": "216",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "RocketBarito",
+            "src": "contracts/RocketBarito.sol:163"
+          },
+          {
+            "label": "totalSellTax",
+            "offset": 0,
+            "slot": "217",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "RocketBarito",
+            "src": "contracts/RocketBarito.sol:164"
+          },
+          {
+            "label": "vesting",
+            "offset": 0,
+            "slot": "218",
+            "type": "t_mapping(t_address,t_struct(Vesting)2617_storage)",
+            "contract": "RocketBarito",
+            "src": "contracts/RocketBarito.sol:166"
+          },
+          {
+            "label": "completedTransfer",
+            "offset": 0,
+            "slot": "219",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "RocketBarito",
+            "src": "contracts/RocketBarito.sol:168"
+          },
+          {
+            "label": "minCap",
+            "offset": 0,
+            "slot": "220",
+            "type": "t_uint256",
+            "contract": "RocketBarito",
+            "src": "contracts/RocketBarito.sol:170"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_enum(StatusPool)2567": {
+            "label": "enum RocketBarito.StatusPool",
+            "members": [
+              "INACTIVE",
+              "ACTIVE",
+              "FULL",
+              "FINISHED",
+              "FAIL",
+              "COMPELETED"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_address)": {
+            "label": "mapping(address => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_array(t_address)dyn_storage)": {
+            "label": "mapping(address => address[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_struct(User)2647_storage))": {
+            "label": "mapping(address => mapping(address => struct RocketBarito.User))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(Farm)2626_storage)": {
+            "label": "mapping(address => struct RocketBarito.Farm)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(Lottery)2663_storage)": {
+            "label": "mapping(address => struct RocketBarito.Lottery)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(Pool)2597_storage)": {
+            "label": "mapping(address => struct RocketBarito.Pool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(PoolInfo)2612_storage)": {
+            "label": "mapping(address => struct RocketBarito.PoolInfo)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(User)2647_storage)": {
+            "label": "mapping(address => struct RocketBarito.User)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(UserLottery)2652_storage)": {
+            "label": "mapping(address => struct RocketBarito.UserLottery)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(Vesting)2617_storage)": {
+            "label": "mapping(address => struct RocketBarito.Vesting)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_struct(RoleData)34_storage)": {
+            "label": "mapping(bytes32 => struct AccessControlUpgradeable.RoleData)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Farm)2626_storage": {
+            "label": "struct RocketBarito.Farm",
+            "members": [
+              {
+                "label": "rewardPerBlock",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "lastRewardBlock",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "accTokenPerShare",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "isDisable",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "3"
+              }
+            ],
+            "numberOfBytes": "128"
+          },
+          "t_struct(Lottery)2663_storage": {
+            "label": "struct RocketBarito.Lottery",
+            "members": [
+              {
+                "label": "fundDeposit",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "lotteryParticipants",
+                "type": "t_mapping(t_address,t_struct(UserLottery)2652_storage)",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "participants",
+                "type": "t_array(t_address)dyn_storage",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(Pool)2597_storage": {
+            "label": "struct RocketBarito.Pool",
+            "members": [
+              {
+                "label": "tokenPerPurchase",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "maxRepeatPurchase",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "totalBatch",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "startTime",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "endTime",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "minDurationSell",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "maxDurationSell",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "raisedInETH",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "7"
+              },
+              {
+                "label": "soldBatch",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "8"
+              },
+              {
+                "label": "reserveETH",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "9"
+              },
+              {
+                "label": "reserveBatch",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "10"
+              },
+              {
+                "label": "status",
+                "type": "t_enum(StatusPool)2567",
+                "offset": 0,
+                "slot": "11"
+              },
+              {
+                "label": "totalReferrerBond",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "12"
+              },
+              {
+                "label": "totalBatchAvailable",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "13"
+              }
+            ],
+            "numberOfBytes": "448"
+          },
+          "t_struct(PoolInfo)2612_storage": {
+            "label": "struct RocketBarito.PoolInfo",
+            "members": [
+              {
+                "label": "fixedCapETH",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "totalSupplyToken",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "tokenForAirdrop",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "tokenForFarm",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "tokenForSale",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "tokenForAddLP",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "metadata",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "6"
+              }
+            ],
+            "numberOfBytes": "224"
+          },
+          "t_struct(RoleData)34_storage": {
+            "label": "struct AccessControlUpgradeable.RoleData",
+            "members": [
+              {
+                "label": "members",
+                "type": "t_mapping(t_address,t_bool)",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "adminRole",
+                "type": "t_bytes32",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_struct(User)2647_storage": {
+            "label": "struct RocketBarito.User",
+            "members": [
+              {
+                "label": "balance",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "balanceSold",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "ethBought",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "rewardFarm",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "isClaimed",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "rewardDebt",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "tokenClaimed",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "isClaimedFarm",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "7"
+              },
+              {
+                "label": "referrerReward",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "8"
+              },
+              {
+                "label": "referrerBond",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "9"
+              }
+            ],
+            "numberOfBytes": "320"
+          },
+          "t_struct(UserLottery)2652_storage": {
+            "label": "struct RocketBarito.UserLottery",
+            "members": [
+              {
+                "label": "ethAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "referrer",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_struct(Vesting)2617_storage": {
+            "label": "struct RocketBarito.Vesting",
+            "members": [
+              {
+                "label": "startTime",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "isExist",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "8656e4a2be5f4395f657276be830c95a47b5569f8f39612222277a719d7781b7": {
+      "address": "0x4D1036Bf2FA31A534680CFf897a81CB329fE29f7",
+      "txHash": "0x4b110de7765e2edc8db8a410efa04d18092a744184cd4b8e4cf2c609775fd021",
+      "layout": {
+        "solcVersion": "0.8.13",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC165Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol:41"
+          },
+          {
+            "label": "_roles",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_mapping(t_bytes32,t_struct(RoleData)34_storage)",
+            "contract": "AccessControlUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol:61"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "AccessControlUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol:259"
+          },
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:80"
+          },
+          {
+            "label": "BLOCK_INTERVAL",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_uint256",
             "contract": "RocketBarito",
             "src": "contracts/RocketBarito.sol:64"
           },

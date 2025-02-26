@@ -334,17 +334,29 @@ contract RocketBarito is
         address referrer
     ) public payable nonReentrant {
         Pool storage pool = pools[poolAddress];
+        Lottery storage lottery = lotteries[poolAddress];
+        uint256 batchAvailable = getMaxBatchCurrent(poolAddress);
+        require(lottery.fundDeposit == 0, "Lottery is running, you can't buy bond");
+        require(
+            batchAvailable > 0,
+            "No batches available, you can deposit for lottery"
+        );
+        require(
+            numberBatch <= batchAvailable,
+            "Exceed max bond current, please wait for next bond"
+        );
         require(numberBatch > 0, "Invalid number bond, can't be 0");
+        require(
+            numberBatch <= pool.maxRepeatPurchase,
+            "Exceed max repeat purchase"
+        );
         require(
             pool.status == StatusPool.ACTIVE,
             "Pool not active or full or finished"
         );
         require(referrer != msg.sender, "Invalid referrer");
         require(maxAmountETH == msg.value, "maxAmountETH != msg.value");
-        require(
-            numberBatch <= pool.maxRepeatPurchase,
-            "Exceed max repeat purchase"
-        );
+
         // check timestamp
         require(
             block.timestamp >= pool.startTime.add(pool.minDurationSell) &&
@@ -359,13 +371,6 @@ contract RocketBarito is
         );
 
         require(maxAmountETH >= amountETH, "Insufficient output ETH");
-
-        uint256 maxBatchCurrent = getMaxBatchCurrent(poolAddress);
-
-        require(
-            numberBatch <= maxBatchCurrent.sub(pool.soldBatch),
-            "Exceed max bond current, please wait for next bond"
-        );
 
         _buyBatch(
             poolAddress,
@@ -394,6 +399,15 @@ contract RocketBarito is
                 block.timestamp <= pool.startTime.add(pool.minDurationSell),
             "Not in lottery period"
         );
+
+        if (lottery.fundDeposit == 0) {
+            uint256 batchAvailable = getMaxBatchCurrent(poolAddress);
+            require(
+                batchAvailable == 0,
+                "There are batches available, you can buy bond"
+            );
+        }
+
         require(amountETH == msg.value, "amountETH != msg.value");
 
         UserLottery storage userLottery = lottery.lotteryParticipants[
@@ -415,7 +429,9 @@ contract RocketBarito is
         Lottery storage lottery = lotteries[poolAddress];
         // require(block.timestamp >= pool.startTime.add(pool.minDurationSell), "Not in lottery period");
         require(lottery.fundDeposit > 0, "No fund to claim");
-        UserLottery storage userLottery = lottery.lotteryParticipants[msg.sender];
+        UserLottery storage userLottery = lottery.lotteryParticipants[
+            msg.sender
+        ];
         require(userLottery.ethAmount > 0, "No deposit to claim");
         payable(msg.sender).transfer(userLottery.ethAmount);
         userLottery.ethAmount = 0;
@@ -435,9 +451,7 @@ contract RocketBarito is
         );
 
         // Get available batches
-        uint256 availableBatches = getMaxBatchCurrent(poolAddress).sub(
-            pool.soldBatch
-        );
+        uint256 availableBatches = getMaxBatchCurrent(poolAddress);
         require(availableBatches > 0, "No batches available");
 
         _processBatchWinners(poolAddress, availableBatches);
@@ -563,7 +577,6 @@ contract RocketBarito is
         ); // = tokenForFarm / durationBlock
         farm.lastRewardBlock = block.number;
         farm.accTokenPerShare = 0;
-
 
         payable(platformAddress).transfer(platformFee);
         emit ActivePool(
@@ -951,20 +964,15 @@ contract RocketBarito is
         address poolAddress
     ) public view returns (uint256) {
         Pool storage pool = pools[poolAddress];
-        uint256 totalBatch = pool.totalBatchAvailable == 0
-            ? pool.totalBatch
-            : pool.totalBatchAvailable;
-        uint256 batchBuyFirst = pool.totalBatchAvailable == 0
-            ? 0
-            : pool.totalBatch.sub(pool.totalBatchAvailable);
+        uint256 batchBuyFirst = pool.totalBatch.sub(pool.totalBatchAvailable);
         if (block.timestamp >= pool.startTime.add(pool.minDurationSell)) {
-            return totalBatch;
+            return pool.totalBatch.sub(pool.soldBatch);
         }
         uint256 timePassed = block.timestamp.sub(pool.startTime);
         return
-            batchBuyFirst.add(
-                timePassed.mul(totalBatch).div(pool.minDurationSell)
-            );
+            batchBuyFirst
+                .add(timePassed.mul(pool.totalBatch).div(pool.minDurationSell))
+                .sub(pool.soldBatch);
     }
 
     function pendingRewardFarming(
@@ -1028,6 +1036,15 @@ contract RocketBarito is
         }
         tokenAmount = tokenAmount.sub(user.tokenClaimed);
         return tokenAmount;
+    }
+
+    /**
+     * @notice Returns the total ETH deposited in a lottery pool
+     * @param poolAddress The address of the pool to check
+     * @return The total amount of ETH deposited in the lottery pool
+     */
+    function fundLottery(address poolAddress) public view returns (uint256) {
+        return lotteries[poolAddress].fundDeposit;
     }
 
     function updateFarmingPool(address poolAddress) private {
@@ -1119,7 +1136,10 @@ contract RocketBarito is
         }
     }
 
-    function _processBatchWinners(address poolAddress, uint256 availableBatches) internal {
+    function _processBatchWinners(
+        address poolAddress,
+        uint256 availableBatches
+    ) internal {
         Pool storage pool = pools[poolAddress];
         Lottery storage lottery = lotteries[poolAddress];
         // Process each available batch
