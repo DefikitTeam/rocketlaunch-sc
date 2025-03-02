@@ -85,7 +85,7 @@ module.exports = {
     // apiKey: "EAVMJDUUXV2BRJ2XV5TRVTD3HFBA2W11TJ",
     apiKey: {
       // base_sepolia: BASE_KEY,
-      bartio: "bartio_testnet",
+      // bartio: "bartio_testnet",
       // base: BASE_KEY,
       // iota: 'empty',
       // unichain_sepolia: 'empty'
@@ -105,6 +105,12 @@ module.exports = {
         //   apiURL: "https://api-sepolia.basescan.org/api", // https://api.basescan.org/api
         //   browserURL: "https://sepolia.basescan.org"
         // },
+        network: "monad_testnet",
+        chainId: 10143,
+        urls: {
+          apiUrl: "https://sourcify-api-monad.blockvision.org",
+          browserUrl: "https://testnet.monadexplorer.com/"
+        },
         // network: "hyperliquid",
         // chainId: 998,
         // urls: {
@@ -114,12 +120,12 @@ module.exports = {
 
 
 
-        network: "bartio",
-        chainId: 80084,
-        urls: {
-          apiURL: "https://api.routescan.io/v2/network/testnet/evm/80084/etherscan",
-          browserURL: "https://bartio.beratrail.io"
-        },
+        // network: "bartio",
+        // chainId: 80084,
+        // urls: {
+        //   apiURL: "https://api.routescan.io/v2/network/testnet/evm/80084/etherscan",
+        //   browserURL: "https://bartio.beratrail.io"
+        // },
 
         // network: "iota",
         // chainId: 8822,
@@ -281,6 +287,13 @@ module.exports = {
       chainId: 998,
       url: "https://api.hyperliquid-testnet.xyz/evm",
     },
+    monad_testnet: {
+      accounts: [DEPLOYER_PRIVATE_KEY],
+      chainId: 10143,
+      url: "https://testnet-rpc.monad.xyz",
+      gasPrice: 53000000000,
+      timeout: 600000
+    }
   },
   namedAccounts: {
     deployer: {

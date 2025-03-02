@@ -24,7 +24,8 @@ async function main() {
   await hre.run("verify:verify", {
     address: implementationAddress,
     constructorArguments: [
-    ]
+    ],
+    contract: "contracts/Rocket.sol:Rocket"
   });
   console.log("Completed!");
 }

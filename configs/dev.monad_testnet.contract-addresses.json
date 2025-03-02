@@ -1,0 +1,14 @@
+{
+    "monad_testnet": {
+        "platform": "0x1043987a09D87C13d42c7a62A0b0f4546e60Fc8F",
+        "platformFee": "10000000000000000",
+        "feeAddr": "0x1043987a09D87C13d42c7a62A0b0f4546e60Fc8F",
+        "fee": "100000000000000000",
+        "blockInterval": 1000,
+        "weth": "0x760AfE86e5de5fa0Ee542fc7B7B713e1c5425701",
+        "routerV2": "0xfb8e1c3b833f9e67a71c859a132cf783b645e436",
+        "minCap": "100000000000000000",
+        "tokenFactory": "0x985c7865d1c525b2937acff711a61a826bd01139",
+        "rocket": "0xce221120F145B456ba41b370F11D5E536eCD2BcB"
+    }
+}
