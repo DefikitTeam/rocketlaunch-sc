@@ -646,10 +646,10 @@ contract Rocket is
         uint256 amountTokenForAddLP = poolInfos[poolAddress].tokenForAddLP;
         uint256 ethForAddLP = pool.raisedInETH.add(totalSellTax[poolAddress]);
         // transfer reward to platform
-        if (fee > 0) {
-            payable(feeAddress).transfer(fee);
-            ethForAddLP = ethForAddLP.sub(fee);
-        }
+        // if (fee > 0) {
+        //     payable(feeAddress).transfer(fee);
+        //     ethForAddLP = ethForAddLP.sub(fee);
+        // }
 
         // need approve token for contract
         IERC20Upgradeable(poolAddress).approve(routerV2, amountTokenForAddLP);
