@@ -1,13 +1,13 @@
 {
     "base_sepolia": {
         "routerV2": "0x88d132628ad8ef76dac764bea6f638dd7ffeba4a",
-        "platform": "0xf8332B03e1C0B190a6AE0BbA7f9BEF86Bb2CEdf3",
+        "platform": "0x1043987a09D87C13d42c7a62A0b0f4546e60Fc8F",
         "platformFee": "5000000000000000",
-        "feeAddr": "0xB2B8904725eFcB1EEeb40e9FC02fFC3c1d619437",
+        "feeAddr": "0x1043987a09D87C13d42c7a62A0b0f4546e60Fc8F",
         "fee": "40000000000000000",
         "minCap": "50000000000000000",
-        "blockInterval": 2,
-        "rocket": "0x414FfF08a1b5EDe20a0f88B1667a2Fbc59069c70",
+        "blockInterval": 20000,
+        "rocket": "0x8BB2033C0874514eE39900c8aF3B94F5ac895968",
         "multisend": "0xd1adfa4be7b5064b4cbb7fee7e61b7b1fc98ce28",
         "tokenFactory": "0x14924f76468353B09bFd7c17340fdd2EF831d262"
     }

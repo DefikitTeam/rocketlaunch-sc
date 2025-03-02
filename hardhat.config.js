@@ -84,7 +84,7 @@ module.exports = {
   etherscan: {
     // apiKey: "EAVMJDUUXV2BRJ2XV5TRVTD3HFBA2W11TJ",
     apiKey: {
-      // base_sepolia: BASE_KEY,
+      base_sepolia: BASE_KEY,
       // bartio: "bartio_testnet",
       // base: BASE_KEY,
       // iota: 'empty',
@@ -99,18 +99,18 @@ module.exports = {
         //   browserURL: "https://basescan.org"
         // },
 
-        // network: "base_sepolia",
-        // chainId: 84532,
-        // urls: {
-        //   apiURL: "https://api-sepolia.basescan.org/api", // https://api.basescan.org/api
-        //   browserURL: "https://sepolia.basescan.org"
-        // },
-        network: "monad_testnet",
-        chainId: 10143,
+        network: "base_sepolia",
+        chainId: 84532,
         urls: {
-          apiUrl: "https://sourcify-api-monad.blockvision.org",
-          browserUrl: "https://testnet.monadexplorer.com/"
+          apiURL: "https://api-sepolia.basescan.org/api", // https://api.basescan.org/api
+          browserURL: "https://sepolia.basescan.org"
         },
+        // network: "monad_testnet",
+        // chainId: 10143,
+        // urls: {
+        //   apiUrl: "https://sourcify-api-monad.blockvision.org",
+        //   browserUrl: "https://testnet.monadexplorer.com/"
+        // },
         // network: "hyperliquid",
         // chainId: 998,
         // urls: {

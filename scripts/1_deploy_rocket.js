@@ -10,7 +10,7 @@ async function main() {
   console.log("Deploying contracts with the account:", deployer.address);
 
   console.log("Account balance:", (await deployer.getBalance()).toString());
-  const Rocket = await hre.ethers.getContractFactory("RocketBarito");
+  const Rocket = await hre.ethers.getContractFactory("Rocket");
   const rocket = await upgrades.deployProxy(Rocket, [
     contracts.platform,
     contracts.platformFee,

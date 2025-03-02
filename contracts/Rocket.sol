@@ -6,6 +6,8 @@ import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 
+// import {BexOperation} from "./lpManager/BexOperation.sol";
+
 interface IUniRouterV2 {
     function addLiquidityETH(
         address token,
@@ -127,10 +129,22 @@ contract Rocket is
         uint256 referrerBond;
     }
 
+    struct UserLottery {
+        uint256 ethAmount;
+        address referrer;
+    }
+
+    struct Lottery {
+        uint256 fundDeposit; // Total ETH deposited for the lottery
+        mapping(address => UserLottery) lotteryParticipants; // Requested number of batches for each participant
+        address[] participants; // Array to track all participants
+    }
+
     mapping(address => Pool) public pools;
     mapping(address => PoolInfo) public poolInfos;
     mapping(address => Farm) public farms;
     mapping(address => mapping(address => User)) public users;
+    mapping(address => Lottery) public lotteries; // Mapping to store lottery data for each pool
 
     address internal routerV2;
     address internal platformAddress;
@@ -220,6 +234,27 @@ contract Rocket is
     // Event COMPLETED pool
     event CompletedPool(address indexed pool);
 
+    event DepositForLottery(
+        address indexed pool,
+        address indexed user,
+        uint256 ethAmount
+    );
+
+    event LotteryWinner(
+        address indexed pool,
+        address indexed winner,
+        uint256 batchesWon,
+        uint256 ethAmount
+    );
+
+    event ClaimFundLottery(
+        address indexed pool,
+        address indexed user,
+        uint256 ethAmount
+    );
+
+    event LotteryCompleted(address indexed pool);
+
     function initialize(
         address _platformAddress,
         uint256 _platformFee,
@@ -299,84 +334,120 @@ contract Rocket is
         address referrer
     ) public payable nonReentrant {
         Pool storage pool = pools[poolAddress];
+        Lottery storage lottery = lotteries[poolAddress];
+        uint256 batchAvailable = getMaxBatchCurrent(poolAddress);
+        require(lottery.fundDeposit == 0, "Lottery is running, you can't buy bond");
+        require(
+            batchAvailable > 0,
+            "No batches available, you can deposit for lottery"
+        );
+        require(
+            numberBatch <= batchAvailable,
+            "Exceed max bond current, please wait for next bond"
+        );
         require(numberBatch > 0, "Invalid number bond, can't be 0");
+        require(
+            numberBatch <= pool.maxRepeatPurchase,
+            "Exceed max repeat purchase"
+        );
         require(
             pool.status == StatusPool.ACTIVE,
             "Pool not active or full or finished"
         );
         require(referrer != msg.sender, "Invalid referrer");
         require(maxAmountETH == msg.value, "maxAmountETH != msg.value");
-        require(
-            numberBatch <= pool.maxRepeatPurchase,
-            "Exceed max repeat purchase"
-        );
-        require(
-            block.timestamp >= pool.startTime &&
-                block.timestamp <= pool.endTime,
-            "Invalid time"
-        );
-        uint256 maxBatchCurrent = getMaxBatchCurrent(poolAddress);
-        require(
-            maxBatchCurrent >= pool.soldBatch.add(numberBatch),
-            "Exceed max bond current, please wait for next bond"
-        );
-        require(
-            numberBatch <= pool.totalBatch.sub(pool.soldBatch),
-            "Exceed total batch"
-        );
 
         uint256 amountETH = getAmountIn(
             numberBatch,
             pool.reserveETH,
             pool.reserveBatch
         );
-        require(maxAmountETH >= amountETH, "Insufficient output ETH");
-        // updateFarmingPool
-        updateFarmingPool(poolAddress);
-        User storage user = users[msg.sender][poolAddress];
-        if (user.balance > 0) {
-            // Calculate farming reward
-            uint256 reward = user
-                .balance
-                .mul(farms[poolAddress].accTokenPerShare)
-                .div(PRECISION_FACTOR)
-                .sub(user.rewardDebt);
-            if (reward > 0) {
-                user.rewardFarm = user.rewardFarm.add(reward);
-            }
-        }
 
-        // update pool info
-        pool.reserveETH = pool.reserveETH.add(amountETH);
-        pool.reserveBatch = pool.reserveBatch.sub(numberBatch);
-        pool.soldBatch = pool.soldBatch.add(numberBatch);
-        pool.raisedInETH = pool.raisedInETH.add(amountETH);
-        // update user info
-        user.balance = user.balance.add(numberBatch);
-        user.ethBought = user.ethBought.add(amountETH);
-        user.rewardDebt = user
-            .balance
-            .mul(farms[poolAddress].accTokenPerShare)
-            .div(PRECISION_FACTOR);
-        // need add user to array
-        if (!boughtCheck[poolAddress][msg.sender]) {
-            buyerArr[poolAddress].push(msg.sender);
-            boughtCheck[poolAddress][msg.sender] = true;
-        }
-        if (referrer != address(0)) {
-            users[referrer][poolAddress].referrerBond = users[referrer][
-                poolAddress
-            ].referrerBond.add(numberBatch);
-            pool.totalReferrerBond = pool.totalReferrerBond.add(numberBatch);
-        }
-        emit Bought(poolAddress, msg.sender, numberBatch, amountETH, referrer);
-        if (pool.soldBatch == pool.totalBatch) {
-            pool.status = StatusPool.FULL;
-            emit FullPool(poolAddress);
-        }
+        require(maxAmountETH >= amountETH, "Insufficient output ETH");
+
+        _buyBatch(
+            poolAddress,
+            msg.sender,
+            numberBatch,
+            amountETH,
+            referrer,
+            pool
+        );
+
         if (maxAmountETH > amountETH) {
             payable(msg.sender).transfer(maxAmountETH.sub(amountETH));
         }
+    }
+
+    function depositForLottery(
+        address poolAddress,
+        uint256 amountETH,
+        address referrer
+    ) public payable nonReentrant {
+        Pool storage pool = pools[poolAddress];
+        Lottery storage lottery = lotteries[poolAddress];
+
+        require(
+            block.timestamp >= pool.startTime &&
+                block.timestamp <= pool.startTime.add(pool.minDurationSell),
+            "Not in lottery period"
+        );
+
+        if (lottery.fundDeposit == 0) {
+            uint256 batchAvailable = getMaxBatchCurrent(poolAddress);
+            require(
+                batchAvailable == 0,
+                "There are batches available, you can buy bond"
+            );
+        }
+
+        require(amountETH == msg.value, "amountETH != msg.value");
+
+        UserLottery storage userLottery = lottery.lotteryParticipants[
+            msg.sender
+        ];
+
+        // Add participant to lottery
+        if (userLottery.ethAmount == 0) {
+            userLottery.referrer = referrer;
+            lottery.participants.push(msg.sender);
+        }
+        userLottery.ethAmount = userLottery.ethAmount.add(amountETH);
+        lottery.fundDeposit = lottery.fundDeposit.add(amountETH);
+
+        emit DepositForLottery(poolAddress, msg.sender, amountETH);
+    }
+
+    function claimFundLottery(address poolAddress) public nonReentrant {
+        Lottery storage lottery = lotteries[poolAddress];
+        // require(block.timestamp >= pool.startTime.add(pool.minDurationSell), "Not in lottery period");
+        require(lottery.fundDeposit > 0, "No fund to claim");
+        UserLottery storage userLottery = lottery.lotteryParticipants[
+            msg.sender
+        ];
+        require(userLottery.ethAmount > 0, "No deposit to claim");
+        payable(msg.sender).transfer(userLottery.ethAmount);
+        userLottery.ethAmount = 0;
+        lottery.fundDeposit = lottery.fundDeposit.sub(userLottery.ethAmount);
+        emit ClaimFundLottery(poolAddress, msg.sender, userLottery.ethAmount);
+    }
+
+    function spinLottery(address poolAddress) public nonReentrant {
+        Pool storage pool = pools[poolAddress];
+        Lottery storage lottery = lotteries[poolAddress];
+
+        require(lottery.participants.length > 0, "No participants");
+        require(
+            block.timestamp <= pool.startTime.add(pool.minDurationSell) &&
+                block.timestamp >= pool.startTime,
+            "Lottery period not ended"
+        );
+
+        // Get available batches
+        uint256 availableBatches = getMaxBatchCurrent(poolAddress);
+        require(availableBatches > 0, "No batches available");
+
+        _processBatchWinners(poolAddress, availableBatches);
     }
 
     struct LaunchPoolParams {
@@ -820,14 +891,6 @@ contract Rocket is
                     if (reward > 0) {
                         user.rewardFarm = user.rewardFarm.add(reward);
                     }
-                    // calculate referrer reward
-                    if (user.referrerBond > 0) {
-                        uint256 referrerReward = user
-                            .referrerBond
-                            .mul(poolInfos[pool].tokenForAirdrop)
-                            .div(pools[pool].totalReferrerBond);
-                        tokenAmount = tokenAmount.add(referrerReward);
-                    }
                     tokenAmount = tokenAmount.add(user.rewardFarm);
                     user.isClaimedFarm = true;
                 }
@@ -894,20 +957,15 @@ contract Rocket is
         address poolAddress
     ) public view returns (uint256) {
         Pool storage pool = pools[poolAddress];
-        uint256 totalBatch = pool.totalBatchAvailable == 0
-            ? pool.totalBatch
-            : pool.totalBatchAvailable;
-        uint256 batchBuyFirst = pool.totalBatchAvailable == 0
-            ? 0
-            : pool.totalBatch.sub(pool.totalBatchAvailable);
+        uint256 batchBuyFirst = pool.totalBatch.sub(pool.totalBatchAvailable);
         if (block.timestamp >= pool.startTime.add(pool.minDurationSell)) {
-            return totalBatch;
+            return pool.totalBatch.sub(pool.soldBatch);
         }
         uint256 timePassed = block.timestamp.sub(pool.startTime);
         return
-            batchBuyFirst.add(
-                timePassed.mul(totalBatch).div(pool.minDurationSell)
-            );
+            batchBuyFirst
+                .add(timePassed.mul(pool.totalBatch).div(pool.minDurationSell))
+                .sub(pool.soldBatch);
     }
 
     function pendingRewardFarming(
@@ -973,6 +1031,15 @@ contract Rocket is
         return tokenAmount;
     }
 
+    /**
+     * @notice Returns the total ETH deposited in a lottery pool
+     * @param poolAddress The address of the pool to check
+     * @return The total amount of ETH deposited in the lottery pool
+     */
+    function fundLottery(address poolAddress) public view returns (uint256) {
+        return lotteries[poolAddress].fundDeposit;
+    }
+
     function updateFarmingPool(address poolAddress) private {
         Farm storage farm = farms[poolAddress];
         if (farm.isDisable) return;
@@ -1007,5 +1074,146 @@ contract Rocket is
         );
         if (percent > BASE_DENOMINATOR) return BASE_DENOMINATOR;
         return percent;
+    }
+
+    function _buyBatch(
+        address poolAddress,
+        address buyer,
+        uint256 numberBatch,
+        uint256 amountETH,
+        address referrer,
+        Pool storage pool
+    ) internal {
+        // updateFarmingPool
+        updateFarmingPool(poolAddress);
+        User storage user = users[buyer][poolAddress];
+        if (user.balance > 0) {
+            // Calculate farming reward
+            uint256 reward = user
+                .balance
+                .mul(farms[poolAddress].accTokenPerShare)
+                .div(PRECISION_FACTOR)
+                .sub(user.rewardDebt);
+            if (reward > 0) {
+                user.rewardFarm = user.rewardFarm.add(reward);
+            }
+        }
+
+        // update pool info
+        pool.reserveETH = pool.reserveETH.add(amountETH);
+        pool.reserveBatch = pool.reserveBatch.sub(numberBatch);
+        pool.soldBatch = pool.soldBatch.add(numberBatch);
+        pool.raisedInETH = pool.raisedInETH.add(amountETH);
+        // update user info
+        user.balance = user.balance.add(numberBatch);
+        user.ethBought = user.ethBought.add(amountETH);
+        user.rewardDebt = user
+            .balance
+            .mul(farms[poolAddress].accTokenPerShare)
+            .div(PRECISION_FACTOR);
+        // need add user to array
+        if (!boughtCheck[poolAddress][buyer]) {
+            buyerArr[poolAddress].push(buyer);
+            boughtCheck[poolAddress][buyer] = true;
+        }
+        if (referrer != address(0)) {
+            users[referrer][poolAddress].referrerBond = users[referrer][
+                poolAddress
+            ].referrerBond.add(numberBatch);
+            pool.totalReferrerBond = pool.totalReferrerBond.add(numberBatch);
+        }
+        emit Bought(poolAddress, buyer, numberBatch, amountETH, referrer);
+        if (pool.soldBatch == pool.totalBatch) {
+            pool.status = StatusPool.FULL;
+            emit FullPool(poolAddress);
+        }
+    }
+
+    function _processBatchWinners(
+        address poolAddress,
+        uint256 availableBatches
+    ) internal {
+        Pool storage pool = pools[poolAddress];
+        Lottery storage lottery = lotteries[poolAddress];
+        // Process each available batch
+        for (uint256 i = 0; i < availableBatches; i++) {
+            uint256 seed = uint256(
+                keccak256(
+                    abi.encodePacked(
+                        block.timestamp,
+                        block.difficulty,
+                        block.number,
+                        lottery.fundDeposit,
+                        i
+                    )
+                )
+            );
+
+            // Select winner based on weighted probability
+            uint256 totalDeposit = lottery.fundDeposit;
+            uint256 randomNumber = seed % totalDeposit;
+            uint256 cumulativeAmount = 0;
+            address winner;
+
+            // Find winner based on their deposit amount weight
+            for (uint256 j = 0; j < lottery.participants.length; j++) {
+                address participant = lottery.participants[j];
+                UserLottery storage userLottery = lottery.lotteryParticipants[
+                    participant
+                ];
+
+                if (userLottery.ethAmount > 0) {
+                    cumulativeAmount = cumulativeAmount.add(
+                        userLottery.ethAmount
+                    );
+                    if (randomNumber < cumulativeAmount) {
+                        winner = participant;
+                        break;
+                    }
+                }
+            }
+
+            if (winner == address(0)) {
+                continue;
+            }
+
+            // Calculate ETH amount for one batch
+            uint256 amountETH = getAmountIn(
+                1,
+                pool.reserveETH,
+                pool.reserveBatch
+            );
+
+            if (amountETH == 0) {
+                continue;
+            }
+
+            if (amountETH > lottery.lotteryParticipants[winner].ethAmount) {
+                continue;
+            }
+
+            // Execute buy for winner
+            _buyBatch(
+                poolAddress,
+                winner,
+                1, // buy 1 batch
+                amountETH,
+                lottery.lotteryParticipants[winner].referrer,
+                pool
+            );
+
+            // Update winner's lottery deposit
+            UserLottery storage winnerLottery = lottery.lotteryParticipants[
+                winner
+            ];
+            if (winnerLottery.ethAmount >= amountETH) {
+                winnerLottery.ethAmount = winnerLottery.ethAmount.sub(
+                    amountETH
+                );
+                lottery.fundDeposit = lottery.fundDeposit.sub(amountETH);
+            }
+
+            emit LotteryWinner(poolAddress, winner, 1, amountETH);
+        }
     }
 }

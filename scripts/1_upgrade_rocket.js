@@ -7,7 +7,7 @@ async function main() {
   const network = hre.network.name;
   const contracts = await getContracts(network)[network];
 
-  const Rocket = await hre.ethers.getContractFactory("RocketBarito");
+  const Rocket = await hre.ethers.getContractFactory("Rocket");
   const rocket = await upgrades.upgradeProxy(
     contracts.rocket,
     Rocket
