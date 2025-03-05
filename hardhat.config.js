@@ -22,6 +22,7 @@ const OPTIMISM_KEY = process.env.OPTIMISM_KEY;
 const BLAST_KEY = process.env.BLAST_KEY;
 const BASE_KEY = process.env.BASE_KEY;
 const IOTA_KEY = process.env.IOTA_KEY;
+const WORLDCHAIN_API_KEY = process.env.WORLDCHAIN_API_KEY;
 const DEPLOYER_PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY;
 
 module.exports = {
@@ -89,7 +90,7 @@ module.exports = {
       // base: BASE_KEY,
       // iota: 'empty',
       // unichain_sepolia: 'empty'
-      somnia_testnet: "empty"
+      worldchain_testnet: WORLDCHAIN_API_KEY
     },
     customChains: [
       {
@@ -145,12 +146,12 @@ module.exports = {
         //   browserURL: "https://sepolia.uniscan.xyz/"  
         // },
 
-        network: "somnia_testnet",
-        chainId: 50312,
+        network: "worldchain_testnet",
+        chainId: 4801,
         urls: {
           enabled: true,
-          apiURL: "https://somnia-poc.w3us.site/api/v2",
-          browserURL: "https://shannon-explorer.somnia.network/"
+          apiURL: "https://api-sepolia.worldscan.org/api",
+          browserURL: "https://sepolia.worldscan.org/"
         },
       }
     ]
@@ -311,6 +312,12 @@ module.exports = {
       url: "https://dream-rpc.somnia.network",
       // gasPrice: 30000000000,
       timeout: 600000
+    },
+    worldchain_testnet: {
+      accounts: [DEPLOYER_PRIVATE_KEY],
+      chainId: 4801,
+      url: "https://nameless-cosmopolitan-sheet.worldchain-sepolia.quiknode.pro/2ee8b004de048ca37436abe795878f40c5342cf5",
+      gasPrice: 1000250
     }
   },
   namedAccounts: {
