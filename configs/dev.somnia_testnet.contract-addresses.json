@@ -1,0 +1,15 @@
+{
+    "somnia_testnet": {
+        "weth": "0xCc7283a00481de9AdBE379c3c2459691a6ee274a",
+        "factory": "0xdbB76E719C324c9b3BB7168FA229215926061E7e",
+        "routerV2": "0x985c7865d1C525B2937AcFF711A61A826bd01139",
+        "platform": "0x1043987a09D87C13d42c7a62A0b0f4546e60Fc8F",
+        "platformFee": "10000000000000000",
+        "feeAddr": "0x1043987a09D87C13d42c7a62A0b0f4546e60Fc8F",
+        "fee": "0",
+        "blockInterval": 1000,
+        "minCap": "100000000000000000",
+        "tokenFactory": "0x9b8AAb91ea36857763e9552916874ceA18F35b56",
+        "rocket": "0xce221120F145B456ba41b370F11D5E536eCD2BcB"
+    }
+}

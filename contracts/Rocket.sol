@@ -138,6 +138,7 @@ contract Rocket is
         uint256 fundDeposit; // Total ETH deposited for the lottery
         mapping(address => UserLottery) lotteryParticipants; // Requested number of batches for each participant
         address[] participants; // Array to track all participants
+        uint256 fundSurplus;
     }
 
     mapping(address => Pool) public pools;
@@ -1214,6 +1215,12 @@ contract Rocket is
             }
 
             emit LotteryWinner(poolAddress, winner, 1, amountETH);
+
+            if (lottery.fundDeposit < amountETH) {
+                lottery.fundSurplus = lottery.fundDeposit;
+                lottery.fundDeposit = 0;
+                return;
+            }
         }
     }
 }

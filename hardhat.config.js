@@ -81,14 +81,15 @@ module.exports = {
     ],
   },
 
+
   etherscan: {
-    // apiKey: "EAVMJDUUXV2BRJ2XV5TRVTD3HFBA2W11TJ",
     apiKey: {
-      base_sepolia: BASE_KEY,
+      // base_sepolia: BASE_KEY,
       // bartio: "bartio_testnet",
       // base: BASE_KEY,
       // iota: 'empty',
       // unichain_sepolia: 'empty'
+      somnia_testnet: "empty"
     },
     customChains: [
       {
@@ -99,17 +100,18 @@ module.exports = {
         //   browserURL: "https://basescan.org"
         // },
 
-        network: "base_sepolia",
-        chainId: 84532,
-        urls: {
-          apiURL: "https://api-sepolia.basescan.org/api", // https://api.basescan.org/api
-          browserURL: "https://sepolia.basescan.org"
-        },
+        // network: "base_sepolia",
+        // chainId: 84532,
+        // urls: {
+        //   apiURL: "https://api-sepolia.basescan.org/api", // https://api.basescan.org/api
+        //   browserURL: "https://sepolia.basescan.org"
+        // },
         // network: "monad_testnet",
         // chainId: 10143,
         // urls: {
-        //   apiUrl: "https://sourcify-api-monad.blockvision.org",
-        //   browserUrl: "https://testnet.monadexplorer.com/"
+        //   enabled: true,
+        //   apiURL: "https://sourcify-api-monad.blockvision.org",
+        //   browserURL: "https://testnet.monadexplorer.com"
         // },
         // network: "hyperliquid",
         // chainId: 998,
@@ -142,9 +144,18 @@ module.exports = {
         //   apiURL: "https://sepolia.unichain.org", 
         //   browserURL: "https://sepolia.uniscan.xyz/"  
         // },
+
+        network: "somnia_testnet",
+        chainId: 50312,
+        urls: {
+          enabled: true,
+          apiURL: "https://somnia-poc.w3us.site/api/v2",
+          browserURL: "https://shannon-explorer.somnia.network/"
+        },
       }
     ]
   },
+
 
   mocha: {
     timeout: 600000,
@@ -291,7 +302,14 @@ module.exports = {
       accounts: [DEPLOYER_PRIVATE_KEY],
       chainId: 10143,
       url: "https://testnet-rpc.monad.xyz",
-      gasPrice: 53000000000,
+      gasPrice: 50000000000,
+      timeout: 600000
+    },
+    somnia_testnet: {
+      accounts: [DEPLOYER_PRIVATE_KEY],
+      chainId: 50312,
+      url: "https://dream-rpc.somnia.network",
+      // gasPrice: 30000000000,
       timeout: 600000
     }
   },
