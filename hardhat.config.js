@@ -85,12 +85,12 @@ module.exports = {
 
   etherscan: {
     apiKey: {
-      // base_sepolia: BASE_KEY,
+      base_sepolia: BASE_KEY,
       // bartio: "bartio_testnet",
       // base: BASE_KEY,
       // iota: 'empty',
       // unichain_sepolia: 'empty'
-      worldchain_testnet: WORLDCHAIN_API_KEY
+      // worldchain_testnet: WORLDCHAIN_API_KEY
     },
     customChains: [
       {
@@ -101,12 +101,12 @@ module.exports = {
         //   browserURL: "https://basescan.org"
         // },
 
-        // network: "base_sepolia",
-        // chainId: 84532,
-        // urls: {
-        //   apiURL: "https://api-sepolia.basescan.org/api", // https://api.basescan.org/api
-        //   browserURL: "https://sepolia.basescan.org"
-        // },
+        network: "base_sepolia",
+        chainId: 84532,
+        urls: {
+          apiURL: "https://api-sepolia.basescan.org/api", // https://api.basescan.org/api
+          browserURL: "https://sepolia.basescan.org"
+        },
         // network: "monad_testnet",
         // chainId: 10143,
         // urls: {
@@ -146,13 +146,13 @@ module.exports = {
         //   browserURL: "https://sepolia.uniscan.xyz/"  
         // },
 
-        network: "worldchain_testnet",
-        chainId: 4801,
-        urls: {
-          enabled: true,
-          apiURL: "https://api-sepolia.worldscan.org/api",
-          browserURL: "https://sepolia.worldscan.org/"
-        },
+        // network: "worldchain_testnet",
+        // chainId: 4801,
+        // urls: {
+        //   enabled: true,
+        //   apiURL: "https://api-sepolia.worldscan.org/api",
+        //   browserURL: "https://sepolia.worldscan.org/"
+        // },
       }
     ]
   },
@@ -276,7 +276,7 @@ module.exports = {
     base_sepolia: {
       accounts: [DEPLOYER_PRIVATE_KEY],
       chainId: 84532,
-      url: "https://sepolia.base.org",
+      url: "https://nameless-cosmopolitan-sheet.base-sepolia.quiknode.pro/2ee8b004de048ca37436abe795878f40c5342cf5",
     },
     bartio: {
       accounts: [DEPLOYER_PRIVATE_KEY],
@@ -314,6 +314,12 @@ module.exports = {
       timeout: 600000
     },
     worldchain_testnet: {
+      accounts: [DEPLOYER_PRIVATE_KEY],
+      chainId: 4801,
+      url: "https://nameless-cosmopolitan-sheet.worldchain-sepolia.quiknode.pro/2ee8b004de048ca37436abe795878f40c5342cf5",
+      gasPrice: 1000250
+    },
+    gravity_devnet: {
       accounts: [DEPLOYER_PRIVATE_KEY],
       chainId: 4801,
       url: "https://nameless-cosmopolitan-sheet.worldchain-sepolia.quiknode.pro/2ee8b004de048ca37436abe795878f40c5342cf5",

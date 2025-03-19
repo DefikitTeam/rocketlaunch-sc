@@ -132,6 +132,7 @@ contract Rocket is
     struct UserLottery {
         uint256 ethAmount;
         address referrer;
+        uint256 ethSurplus;
     }
 
     struct Lottery {
@@ -337,7 +338,10 @@ contract Rocket is
         Pool storage pool = pools[poolAddress];
         Lottery storage lottery = lotteries[poolAddress];
         uint256 batchAvailable = getMaxBatchCurrent(poolAddress);
-        require(lottery.fundDeposit == 0, "Lottery is running, you can't buy bond");
+        require(
+            lottery.fundDeposit == 0,
+            "Lottery is running, you can't buy bond"
+        );
         require(
             batchAvailable > 0,
             "No batches available, you can deposit for lottery"
@@ -388,11 +392,13 @@ contract Rocket is
         Pool storage pool = pools[poolAddress];
         Lottery storage lottery = lotteries[poolAddress];
 
-        require(
-            block.timestamp >= pool.startTime &&
-                block.timestamp <= pool.startTime.add(pool.minDurationSell),
-            "Not in lottery period"
-        );
+        if (lottery.fundDeposit == 0) {
+            require(
+                block.timestamp >= pool.startTime &&
+                    block.timestamp <= pool.startTime.add(pool.minDurationSell),
+                "Not in lottery period"
+            );
+        }
 
         if (lottery.fundDeposit == 0) {
             uint256 batchAvailable = getMaxBatchCurrent(poolAddress);
@@ -438,11 +444,13 @@ contract Rocket is
         Lottery storage lottery = lotteries[poolAddress];
 
         require(lottery.participants.length > 0, "No participants");
-        require(
-            block.timestamp <= pool.startTime.add(pool.minDurationSell) &&
-                block.timestamp >= pool.startTime,
-            "Lottery period not ended"
-        );
+        if (lottery.fundDeposit == 0) {
+            require(
+                block.timestamp <= pool.startTime.add(pool.minDurationSell) &&
+                    block.timestamp >= pool.startTime,
+                "Lottery period not ended"
+            );
+        }
 
         // Get available batches
         uint256 availableBatches = getMaxBatchCurrent(poolAddress);
@@ -1134,93 +1142,105 @@ contract Rocket is
         address poolAddress,
         uint256 availableBatches
     ) internal {
-        Pool storage pool = pools[poolAddress];
-        Lottery storage lottery = lotteries[poolAddress];
-        // Process each available batch
-        for (uint256 i = 0; i < availableBatches; i++) {
-            uint256 seed = uint256(
-                keccak256(
-                    abi.encodePacked(
-                        block.timestamp,
-                        block.difficulty,
-                        block.number,
-                        lottery.fundDeposit,
-                        i
-                    )
-                )
-            );
+        uint256 remainingBatches = availableBatches;
 
-            // Select winner based on weighted probability
-            uint256 totalDeposit = lottery.fundDeposit;
-            uint256 randomNumber = seed % totalDeposit;
-            uint256 cumulativeAmount = 0;
-            address winner;
-
-            // Find winner based on their deposit amount weight
-            for (uint256 j = 0; j < lottery.participants.length; j++) {
-                address participant = lottery.participants[j];
-                UserLottery storage userLottery = lottery.lotteryParticipants[
-                    participant
-                ];
-
-                if (userLottery.ethAmount > 0) {
-                    cumulativeAmount = cumulativeAmount.add(
-                        userLottery.ethAmount
-                    );
-                    if (randomNumber < cumulativeAmount) {
-                        winner = participant;
-                        break;
-                    }
-                }
+        while (remainingBatches > 0) {
+            Pool storage pool = pools[poolAddress];
+            Lottery storage lottery = lotteries[poolAddress];
+            uint256 soldBatchNumber = remainingBatches / 2;
+            if (lottery.participants.length == 0 || lottery.fundDeposit == 0) {
+                break;
             }
-
-            if (winner == address(0)) {
+            if (soldBatchNumber == 0) {
+                soldBatchNumber = 1;
+            }
+            uint256 randomIndex = generateRandomIndexAlt(
+                lottery.participants.length,
+                remainingBatches
+            );
+            address winner = lottery.participants[randomIndex];
+            UserLottery storage userLottery = lottery.lotteryParticipants[
+                winner
+            ];
+            if (userLottery.ethAmount == 0) {
                 continue;
             }
-
-            // Calculate ETH amount for one batch
-            uint256 amountETH = getAmountIn(
-                1,
+            uint256 batchEstimate = getAmountOut(
+                userLottery.ethAmount,
                 pool.reserveETH,
                 pool.reserveBatch
             );
-
-            if (amountETH == 0) {
+            if (batchEstimate == 0) {
+                userLottery.ethSurplus = userLottery.ethAmount;
+                lottery.fundDeposit = lottery.fundDeposit.sub(
+                    userLottery.ethAmount
+                );
+                userLottery.ethAmount = 0;
+                lottery.participants[randomIndex] = lottery.participants[lottery.participants.length - 1];
+                lottery.participants.pop();
                 continue;
             }
-
-            if (amountETH > lottery.lotteryParticipants[winner].ethAmount) {
-                continue;
+            uint256 batchBuy = batchEstimate > soldBatchNumber
+                ? soldBatchNumber
+                : batchEstimate;
+            if (batchBuy == 0) {
+                break;
             }
-
-            // Execute buy for winner
+            uint256 amountETH = getAmountIn(
+                batchBuy,
+                pool.reserveETH,
+                pool.reserveBatch
+            );
             _buyBatch(
                 poolAddress,
                 winner,
-                1, // buy 1 batch
+                batchBuy,
                 amountETH,
-                lottery.lotteryParticipants[winner].referrer,
+                userLottery.referrer,
                 pool
             );
 
             // Update winner's lottery deposit
-            UserLottery storage winnerLottery = lottery.lotteryParticipants[
-                winner
-            ];
-            if (winnerLottery.ethAmount >= amountETH) {
-                winnerLottery.ethAmount = winnerLottery.ethAmount.sub(
-                    amountETH
-                );
-                lottery.fundDeposit = lottery.fundDeposit.sub(amountETH);
-            }
+            userLottery.ethAmount = userLottery.ethAmount.sub(amountETH);
+            lottery.fundDeposit = lottery.fundDeposit.sub(amountETH);
 
-            emit LotteryWinner(poolAddress, winner, 1, amountETH);
-
-            if (lottery.fundDeposit < amountETH) {
-                lottery.fundSurplus = lottery.fundDeposit;
-                lottery.fundDeposit = 0;
-                return;
-            }
+            remainingBatches = remainingBatches - batchBuy;
+            emit LotteryWinner(poolAddress, winner, batchBuy, amountETH);
         }
+    }
+
+    // Alternative randomness generation without keccak256
+    function generateRandomIndexAlt(
+        uint256 max,
+        uint256 seed
+    ) public view returns (uint256) {
+        require(max > 0, "Max must be greater than 0");
+
+        // Using keccak256 for randomness
+        uint256 randomFactor = uint256(
+            keccak256(
+                abi.encodePacked(
+                    block.timestamp,
+                    block.difficulty,
+                    block.number,
+                    seed
+                )
+            )
+        );
+
+        return randomFactor % max;
+    }
+
+    function getUserLottery(
+        address poolAddress,
+        address userAddress
+    ) public view returns (UserLottery memory) {
+        return lotteries[poolAddress].lotteryParticipants[userAddress];
+    }
+
+    function getLotteryParticipants(
+        address poolAddress
+    ) public view returns (address[] memory) {
+        return lotteries[poolAddress].participants;
     }
 }
