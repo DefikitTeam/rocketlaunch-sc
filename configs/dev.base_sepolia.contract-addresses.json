@@ -1,5 +1,7 @@
 {
     "base_sepolia": {
+        "factory": "0x8EAc446eE88eD24821f4966BC8E3cD0aDf53CA14",
+        "weth": "0xB49B3840A190244d80f4e1D668C0FCd29e60F0a3",
         "routerV2": "0x88d132628ad8ef76dac764bea6f638dd7ffeba4a",
         "platform": "0x1043987a09D87C13d42c7a62A0b0f4546e60Fc8F",
         "platformFee": "5000000000000000",
@@ -9,6 +11,7 @@
         "blockInterval": 20000,
         "rocket": "0x8BB2033C0874514eE39900c8aF3B94F5ac895968",
         "multisend": "0xd1adfa4be7b5064b4cbb7fee7e61b7b1fc98ce28",
-        "tokenFactory": "0x14924f76468353B09bFd7c17340fdd2EF831d262"
+        "tokenFactory": "0x14924f76468353B09bFd7c17340fdd2EF831d262",
+        "marislots": "0x3F5c7290904F5816Fc6606D0285336CCa3Ee29C2"
     }
 }
