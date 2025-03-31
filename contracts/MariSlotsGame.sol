@@ -36,6 +36,8 @@ contract MariSlotsGame is Initializable, ReentrancyGuardUpgradeable, PausableUpg
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
     address public platformAddress;
 
+    uint256 public funds; // Total pool of funds (all bets)
+
     // Events
     event BetPlaced(
         address indexed token,
@@ -60,6 +62,8 @@ contract MariSlotsGame is Initializable, ReentrancyGuardUpgradeable, PausableUpg
     event TokenWhitelisted(address indexed token, bool status);
     event MultipliersUpdated(address indexed token, uint256[8] multipliers);
     event HouseFeeUpdated(address indexed token, uint256 fee);
+    event FundsInjected(address indexed from, uint256 amount);
+    event FundsDeposited(address indexed from, uint256 amount);
 
     function initialize(
         address _uniswapRouter,
@@ -79,6 +83,7 @@ contract MariSlotsGame is Initializable, ReentrancyGuardUpgradeable, PausableUpg
         uniswapFactory = IUniswapV2Factory(_uniswapFactory);
         platformAddress = _platformAddress;
         WETH = _weth;
+        funds = 0;
     }
     
 
@@ -109,6 +114,9 @@ contract MariSlotsGame is Initializable, ReentrancyGuardUpgradeable, PausableUpg
             IERC20Upgradeable token = IERC20Upgradeable(_tokenAddress);
             require(token.transferFrom(msg.sender, address(this), totalBet), "Token transfer failed");
         }
+
+        // Add bet to total funds
+        funds = funds.add(totalBet);
 
         betUsers[_tokenAddress][msg.sender] = BetInfo({
             betValues: _betValues,
@@ -152,13 +160,14 @@ contract MariSlotsGame is Initializable, ReentrancyGuardUpgradeable, PausableUpg
     }
 
     /**
-     * @dev Claim rewards in game tokens
+     * @dev Claim rewards from fund pool - Swap ETH to tokens, then send to user
      * @param _tokenAddress Address of the token
      */
     function claimReward(address _tokenAddress) external nonReentrant {
         BetInfo storage betInfo = betUsers[_tokenAddress][msg.sender];
         require(betInfo.isSpun, "Not spun yet");
         require(betInfo.reward > 0, "No reward to claim");
+        require(funds >= betInfo.reward, "Insufficient funds in pool");
 
         uint256 reward = betInfo.reward;
         
@@ -167,16 +176,50 @@ contract MariSlotsGame is Initializable, ReentrancyGuardUpgradeable, PausableUpg
         betInfo.totalBet = 0;
         betInfo.betValues = [0, 0, 0, 0, 0, 0, 0, 0];
 
+        // Reduce funds by the reward amount
+        funds = funds.sub(reward);
+
+        // Swap ETH to tokens and send to user
         if (_tokenAddress == address(0)) {
-            _swapTokensForETH(reward, _tokenAddress);
+            // For native token, just send ETH
+            payable(msg.sender).transfer(reward);
         } else {
-            require(
-                IERC20Upgradeable(_tokenAddress).transfer(msg.sender, reward),
-                "Token transfer failed"
-            );
+            // First check if we have enough token balance
+            IERC20Upgradeable token = IERC20Upgradeable(_tokenAddress);
+            uint256 contractTokenBalance = token.balanceOf(address(this));
+            
+            if (contractTokenBalance >= reward) {
+                // If we have enough tokens, send directly
+                require(
+                    token.transfer(msg.sender, reward),
+                    "Token transfer failed"
+                );
+            } else {
+                // If not enough tokens, swap ETH for tokens then send
+                // First swap ETH for tokens
+                _swapETHForTokensAndSend(reward, _tokenAddress, msg.sender);
+            }
         }
 
         emit RewardClaimed(_tokenAddress, msg.sender, reward);
+    }
+
+    /**
+     * @dev Admin function to inject funds into the pool
+     */
+    function injectFund() external payable onlyRole(ADMIN_ROLE) {
+        require(msg.value > 0, "Must send ETH");
+        funds = funds.add(msg.value);
+        emit FundsInjected(msg.sender, msg.value);
+    }
+
+    /**
+     * @dev User function to deposit funds into the pool
+     */
+    function deposit() external payable whenNotPaused {
+        require(msg.value > 0, "Must send ETH");
+        funds = funds.add(msg.value);
+        emit FundsDeposited(msg.sender, msg.value);
     }
 
     /**
@@ -251,6 +294,22 @@ contract MariSlotsGame is Initializable, ReentrancyGuardUpgradeable, PausableUpg
             0, // Accept any amount of tokens
             path,
             address(this),
+            block.timestamp + 300 // 5 minute deadline
+        );
+    }
+
+    /**
+     * @dev Internal function to swap ETH for tokens and send to user
+     */
+    function _swapETHForTokensAndSend(uint256 _amount, address _token, address _to) internal {
+        address[] memory path = new address[](2);
+        path[0] = uniswapRouter.WETH();
+        path[1] = _token;
+
+        uniswapRouter.swapExactETHForTokens{value: _amount}(
+            0, // Accept any amount of tokens
+            path,
+            _to,
             block.timestamp + 300 // 5 minute deadline
         );
     }

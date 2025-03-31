@@ -13,6 +13,7 @@ describe("MariSlotsGame", function () {
 
     const INITIAL_SUPPLY = ethers.utils.parseEther("1000000");
     const BET_AMOUNT = ethers.utils.parseEther("1");
+    const FUND_AMOUNT = ethers.utils.parseEther("10");
 
     beforeEach(async function () {
         [owner, player, platform] = await ethers.getSigners();
@@ -122,6 +123,108 @@ describe("MariSlotsGame", function () {
 
             await mariGame.unpause();
             expect(await mariGame.paused()).to.be.false;
+        });
+    });
+
+    describe("Funds Management", function () {
+        it("Should initialize with zero funds", async function () {
+            expect(await mariGame.funds()).to.equal(0);
+        });
+
+        it("Should increase funds when placing bets", async function () {
+            const betValues = Array(8).fill(0);
+            betValues[0] = BET_AMOUNT;
+
+            await mariGame.connect(player).bet(mockToken.address, betValues);
+            expect(await mariGame.funds()).to.equal(BET_AMOUNT);
+
+            // Place another bet
+            await mariGame.connect(player).bet(mockToken.address, betValues);
+            expect(await mariGame.funds()).to.equal(BET_AMOUNT.mul(2));
+        });
+
+        it("Should allow admin to inject funds", async function () {
+            const initialFunds = await mariGame.funds();
+            
+            await expect(mariGame.injectFund({ value: FUND_AMOUNT }))
+                .to.emit(mariGame, "FundsInjected")
+                .withArgs(owner.address, FUND_AMOUNT);
+            
+            const finalFunds = await mariGame.funds();
+            expect(finalFunds).to.equal(initialFunds.add(FUND_AMOUNT));
+        });
+
+        it("Should reject fund injection with zero amount", async function () {
+            await expect(mariGame.injectFund({ value: 0 }))
+                .to.be.revertedWith("Must send ETH");
+        });
+
+        it("Should reject fund injection from non-admin", async function () {
+            await expect(mariGame.connect(player).injectFund({ value: FUND_AMOUNT }))
+                .to.be.reverted; // Access control error
+        });
+
+        it("Should allow users to deposit funds", async function () {
+            const initialFunds = await mariGame.funds();
+            
+            await expect(mariGame.connect(player).deposit({ value: FUND_AMOUNT }))
+                .to.emit(mariGame, "FundsDeposited")
+                .withArgs(player.address, FUND_AMOUNT);
+            
+            const finalFunds = await mariGame.funds();
+            expect(finalFunds).to.equal(initialFunds.add(FUND_AMOUNT));
+        });
+
+        it("Should reject deposit with zero amount", async function () {
+            await expect(mariGame.connect(player).deposit({ value: 0 }))
+                .to.be.revertedWith("Must send ETH");
+        });
+
+        it("Should not allow deposits when paused", async function () {
+            await mariGame.pause();
+            
+            await expect(mariGame.connect(player).deposit({ value: FUND_AMOUNT }))
+                .to.be.reverted; // Pausable error
+            
+            await mariGame.unpause();
+            await expect(mariGame.connect(player).deposit({ value: FUND_AMOUNT }))
+                .to.emit(mariGame, "FundsDeposited");
+        });
+
+        it("Should decrease funds when claiming rewards", async function () {
+            // Set up multipliers for testing
+            const multipliers = [2, 3, 4, 5, 6, 7, 8, 9];
+            await mariGame.updateTokenMultipliers(mockToken.address, multipliers);
+            
+            // Set house fee to 10%
+            await mariGame.updateHouseFee(mockToken.address, 10);
+            
+            // Place bet on slot 0
+            const betValues = Array(8).fill(0);
+            betValues[0] = BET_AMOUNT;
+            await mariGame.connect(player).bet(mockToken.address, betValues);
+            
+            // Initial funds from bet
+            const initialFunds = await mariGame.funds();
+            expect(initialFunds).to.equal(BET_AMOUNT);
+            
+            // Spin and get result
+            const spinTx = await mariGame.connect(player).spin(mockToken.address);
+            const receipt = await spinTx.wait();
+            
+            // Find SpinResult event
+            const spinEvent = receipt.events?.find(e => e.event === "SpinResult");
+            const reward = spinEvent.args.reward;
+            
+            // Only test claiming if there was a reward
+            if (reward.gt(0)) {
+                // Claim reward
+                await mariGame.connect(player).claimReward(mockToken.address);
+                
+                // Check funds were decreased by the reward amount
+                const finalFunds = await mariGame.funds();
+                expect(finalFunds).to.equal(initialFunds.sub(reward));
+            }
         });
     });
 
