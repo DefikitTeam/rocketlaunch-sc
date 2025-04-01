@@ -85,12 +85,13 @@ module.exports = {
 
   etherscan: {
     apiKey: {
-      base_sepolia: BASE_KEY,
+      // base_sepolia: BASE_KEY,
       // bartio: "bartio_testnet",
       // base: BASE_KEY,
       // iota: 'empty',
       // unichain_sepolia: 'empty'
       // worldchain_testnet: WORLDCHAIN_API_KEY
+      gravity_testnet: "abc",
     },
     customChains: [
       {
@@ -101,12 +102,12 @@ module.exports = {
         //   browserURL: "https://basescan.org"
         // },
 
-        network: "base_sepolia",
-        chainId: 84532,
-        urls: {
-          apiURL: "https://api-sepolia.basescan.org/api", // https://api.basescan.org/api
-          browserURL: "https://sepolia.basescan.org"
-        },
+        // network: "base_sepolia",
+        // chainId: 84532,
+        // urls: {
+        //   apiURL: "https://api-sepolia.basescan.org/api", // https://api.basescan.org/api
+        //   browserURL: "https://sepolia.basescan.org"
+        // },
         // network: "monad_testnet",
         // chainId: 10143,
         // urls: {
@@ -153,6 +154,16 @@ module.exports = {
         //   apiURL: "https://api-sepolia.worldscan.org/api",
         //   browserURL: "https://sepolia.worldscan.org/"
         // },
+
+        network: "gravity_testnet",
+        chainId: 13505,
+        urls: {
+          apiURL: "https://explorer-gravity-alpha-testnet-sepolia-3ggx92odhy.t.conduit.xyz/api",
+          browserURL: "https://rpc-sepolia.gravity.xyz",
+          // For Blockscout
+          // apiURL: "https://explorer.gravity.xyz/api",
+          // browserURL: "https://explorer.gravity.xyz",
+        },
       }
     ]
   },
@@ -319,12 +330,16 @@ module.exports = {
       url: "https://nameless-cosmopolitan-sheet.worldchain-sepolia.quiknode.pro/2ee8b004de048ca37436abe795878f40c5342cf5",
       gasPrice: 1000250
     },
-    gravity_devnet: {
+    gravity_testnet: {
       accounts: [DEPLOYER_PRIVATE_KEY],
-      chainId: 4801,
-      url: "https://nameless-cosmopolitan-sheet.worldchain-sepolia.quiknode.pro/2ee8b004de048ca37436abe795878f40c5342cf5",
-      gasPrice: 1000250
-    }
+      chainId: 13505,
+      url: "https://rpc-sepolia.gravity.xyz",
+    },
+    // gravity_devnet: {
+    //   accounts: [DEPLOYER_PRIVATE_KEY],
+    //   chainId: 7771625,
+    //   url: "https://rpc-devnet.gravity.xyz/"
+    // }
   },
   namedAccounts: {
     deployer: {

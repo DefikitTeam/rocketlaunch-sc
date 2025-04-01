@@ -30,7 +30,9 @@
     "deploy:dev_somnia_testnet": "NODE_ENV=dev hardhat run --network somnia_testnet",
     "verify:dev_somnia_testnet": "NODE_ENV=dev hardhat verify --network somnia_testnet",
     "deploy:dev_worldchain_testnet": "NODE_ENV=dev hardhat run --network worldchain_testnet",
-    "verify:dev_worldchain_testnet": "NODE_ENV=dev hardhat verify --network worldchain_testnet"
+    "verify:dev_worldchain_testnet": "NODE_ENV=dev hardhat verify --network worldchain_testnet",
+    "deploy:dev_gravity_testnet": "NODE_ENV=dev hardhat run --network gravity_testnet",
+    "verify:dev_gravity_testnet": "NODE_ENV=dev hardhat verify --network gravity_testnet"
   },
   "author": "DeFiKit",
   "license": "MIT",

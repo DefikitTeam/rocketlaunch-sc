@@ -23,10 +23,10 @@ async function main() {
   await saveContract(network, "factory", factory.address);
   console.log(`Deployed factory to ${factory.address}`);
   await sleep(10000);
-  // await hre.run("verify:verify", {
-  //   address: factory.address,
-  //   constructorArguments: [deployer.address],
-  // });
+  await hre.run("verify:verify", {
+    address: factory.address,
+    constructorArguments: [deployer.address],
+  });
   console.log("Completed!");
 }
 
