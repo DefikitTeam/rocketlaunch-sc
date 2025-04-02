@@ -10,6 +10,7 @@
         "blockInterval": 1000,
         "minCap": "100000000000000000",
         "tokenFactory": "0x9b8AAb91ea36857763e9552916874ceA18F35b56",
-        "rocket": "0xce221120F145B456ba41b370F11D5E536eCD2BcB"
+        "rocket": "0xce221120F145B456ba41b370F11D5E536eCD2BcB",
+        "tokenFactoryCommon": "0xe5C7ED15BB2684EbAc8A7FF1034DF32F0BeFD7F5"
     }
 }
