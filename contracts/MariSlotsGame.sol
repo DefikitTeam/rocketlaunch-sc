@@ -9,19 +9,25 @@ import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol"
 import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 import "./uniswapv2/interfaces/IUniswapV2Router02.sol";
 import "./uniswapv2/interfaces/IUniswapV2Factory.sol";
+
 /**
  * @title MariSlotsGame
  * @dev A decentralized slot game with Uniswap integration
  */
-contract MariSlotsGame is Initializable, ReentrancyGuardUpgradeable, PausableUpgradeable, AccessControlUpgradeable {
+contract MariSlotsGame is
+    Initializable,
+    ReentrancyGuardUpgradeable,
+    PausableUpgradeable,
+    AccessControlUpgradeable
+{
     using SafeMathUpgradeable for uint256;
-    
+
     // Structs
     struct BetInfo {
-        uint256[8] betValues;    // Slot bets in token amount
-        uint256 totalBet;        // Total bet amount
-        bool isSpun;             // Spin status
-        uint256 reward;          // Reward amount in token
+        uint256[8] betValues; // Slot bets in token amount
+        uint256 totalBet; // Total bet amount
+        bool isSpun; // Spin status
+        uint256 reward; // Reward amount in token
     }
 
     // State variables
@@ -37,6 +43,7 @@ contract MariSlotsGame is Initializable, ReentrancyGuardUpgradeable, PausableUpg
     address public platformAddress;
 
     uint256 public funds; // Total pool of funds (all bets)
+    uint256[8] public multipliers; // Per-token multipliers
 
     // Events
     event BetPlaced(
@@ -45,14 +52,14 @@ contract MariSlotsGame is Initializable, ReentrancyGuardUpgradeable, PausableUpg
         uint256[8] betValues,
         uint256 totalBet
     );
-    
+
     event SpinResult(
         address indexed token,
         address indexed player,
         uint256 winningSlot,
         uint256 reward
     );
-    
+
     event RewardClaimed(
         address indexed token,
         address indexed player,
@@ -60,7 +67,7 @@ contract MariSlotsGame is Initializable, ReentrancyGuardUpgradeable, PausableUpg
     );
 
     event TokenWhitelisted(address indexed token, bool status);
-    event MultipliersUpdated(address indexed token, uint256[8] multipliers);
+    event MultipliersUpdated(uint256[8] multipliers);
     event HouseFeeUpdated(address indexed token, uint256 fee);
     event FundsInjected(address indexed from, uint256 amount);
     event FundsDeposited(address indexed from, uint256 amount);
@@ -84,8 +91,8 @@ contract MariSlotsGame is Initializable, ReentrancyGuardUpgradeable, PausableUpg
         platformAddress = _platformAddress;
         WETH = _weth;
         funds = 0;
+        multipliers = [4, 6, 3, 12, 4, 6, 25, 3];
     }
-    
 
     /**
      * @dev Place bets on multiple slots
@@ -104,17 +111,9 @@ contract MariSlotsGame is Initializable, ReentrancyGuardUpgradeable, PausableUpg
         }
         require(totalBet > 0, "Bet amount must be greater than 0");
 
-        if (_tokenAddress == address(0)) {
-            // Native token bet
-            require(msg.value == totalBet, "Incorrect native token amount");
-            _swapETHForTokens(msg.value, _tokenAddress);
-        } else {
-            // ERC20 token bet
-            require(msg.value == 0, "Native token not accepted for token bet");
-            IERC20Upgradeable token = IERC20Upgradeable(_tokenAddress);
-            require(token.transferFrom(msg.sender, address(this), totalBet), "Token transfer failed");
-        }
-
+        // ERC20 token bet
+        require(msg.value >= totalBet, "token bet amount must be greater than total bet");
+        _swapETHForTokens(totalBet, _tokenAddress);
         // Add bet to total funds
         funds = funds.add(totalBet);
 
@@ -137,22 +136,23 @@ contract MariSlotsGame is Initializable, ReentrancyGuardUpgradeable, PausableUpg
         require(betInfo.totalBet > 0, "No active bet");
         require(!betInfo.isSpun, "Already spun");
 
-        uint256 winningSlot = uint256(keccak256(
-            abi.encodePacked(
-                block.timestamp,
-                block.difficulty,
-                msg.sender
+        uint256 winningSlot = uint256(
+            keccak256(
+                abi.encodePacked(block.timestamp, block.difficulty, msg.sender)
             )
-        )) % 8;
+        ) % 8;
 
         if (betInfo.betValues[winningSlot] > 0) {
-            uint256[8] memory multipliers = tokenMultipliers[_tokenAddress];
             uint256 houseFee = tokenHouseFees[_tokenAddress];
-            
-            uint256 grossReward = betInfo.betValues[winningSlot].mul(multipliers[winningSlot]);
+
+            uint256 grossReward = betInfo.betValues[winningSlot].mul(
+                multipliers[winningSlot]
+            );
             uint256 feeAmount = grossReward.mul(houseFee).div(100);
             betInfo.reward = grossReward.sub(feeAmount);
-            houseBalances[_tokenAddress] = houseBalances[_tokenAddress].add(feeAmount);
+            houseBalances[_tokenAddress] = houseBalances[_tokenAddress].add(
+                feeAmount
+            );
         }
 
         betInfo.isSpun = true;
@@ -170,7 +170,7 @@ contract MariSlotsGame is Initializable, ReentrancyGuardUpgradeable, PausableUpg
         require(funds >= betInfo.reward, "Insufficient funds in pool");
 
         uint256 reward = betInfo.reward;
-        
+
         // Reset all values in the bet struct
         betInfo.reward = 0;
         betInfo.totalBet = 0;
@@ -187,7 +187,7 @@ contract MariSlotsGame is Initializable, ReentrancyGuardUpgradeable, PausableUpg
             // First check if we have enough token balance
             IERC20Upgradeable token = IERC20Upgradeable(_tokenAddress);
             uint256 contractTokenBalance = token.balanceOf(address(this));
-            
+
             if (contractTokenBalance >= reward) {
                 // If we have enough tokens, send directly
                 require(
@@ -223,19 +223,6 @@ contract MariSlotsGame is Initializable, ReentrancyGuardUpgradeable, PausableUpg
     }
 
     /**
-     * @dev Update slot multipliers (owner only)
-     * @param _token Address of the token
-     * @param _multipliers Array of new multipliers for each slot
-     */
-    function updateTokenMultipliers(
-        address _token,
-        uint256[8] calldata _multipliers
-    ) external onlyRole(ADMIN_ROLE) {
-        tokenMultipliers[_token] = _multipliers;
-        emit MultipliersUpdated(_token, _multipliers);
-    }
-
-    /**
      * @dev Update house fee (owner only)
      * @param _token Address of the token
      * @param _fee New house fee percentage
@@ -253,9 +240,7 @@ contract MariSlotsGame is Initializable, ReentrancyGuardUpgradeable, PausableUpg
      * @dev Withdraw house fees (owner only)
      * @param _token Address of the token
      */
-    function withdrawHouseFees(
-        address _token
-    ) external onlyRole(ADMIN_ROLE) {
+    function withdrawHouseFees(address _token) external onlyRole(ADMIN_ROLE) {
         uint256 amount = houseBalances[_token];
         houseBalances[_token] = 0;
         if (_token == address(0)) {
@@ -282,6 +267,11 @@ contract MariSlotsGame is Initializable, ReentrancyGuardUpgradeable, PausableUpg
         _unpause();
     }
 
+    function updateMultipliers(uint256[8] calldata _multipliers) external onlyRole(ADMIN_ROLE) {
+        multipliers = _multipliers;
+        emit MultipliersUpdated(_multipliers);
+    }
+
     /**
      * @dev Internal function to swap ETH for tokens
      */
@@ -301,7 +291,11 @@ contract MariSlotsGame is Initializable, ReentrancyGuardUpgradeable, PausableUpg
     /**
      * @dev Internal function to swap ETH for tokens and send to user
      */
-    function _swapETHForTokensAndSend(uint256 _amount, address _token, address _to) internal {
+    function _swapETHForTokensAndSend(
+        uint256 _amount,
+        address _token,
+        address _to
+    ) internal {
         address[] memory path = new address[](2);
         path[0] = uniswapRouter.WETH();
         path[1] = _token;
@@ -318,7 +312,10 @@ contract MariSlotsGame is Initializable, ReentrancyGuardUpgradeable, PausableUpg
      * @dev Internal function to swap tokens for ETH
      */
     function _swapTokensForETH(uint256 _amount, address _token) internal {
-        require(IERC20Upgradeable(_token).approve(address(uniswapRouter), _amount), "Approve failed");
+        require(
+            IERC20Upgradeable(_token).approve(address(uniswapRouter), _amount),
+            "Approve failed"
+        );
 
         address[] memory path = new address[](2);
         path[0] = _token;
@@ -334,11 +331,16 @@ contract MariSlotsGame is Initializable, ReentrancyGuardUpgradeable, PausableUpg
     }
 
     function _validateToken(address _token) internal view {
-       require(_token != address(0), "Native token not accepted");
-       address pair = IUniswapV2Factory(uniswapFactory).getPair(_token, WETH);
-       require(pair != address(0), "Token not whitelisted");
+        require(_token != address(0), "Native token not accepted");
+        address pair = IUniswapV2Factory(uniswapFactory).getPair(_token, WETH);
+        require(pair != address(0), "Token not whitelisted");
     }
 
     // Function to receive ETH
     receive() external payable {}
+
+    function getBetValues(address _token, address _user) external view returns (uint256[8] memory) {
+        return betUsers[_token][_user].betValues;
+    }
+
 }

@@ -10,20 +10,24 @@ Get user's current bet information for a specific token.
 - **Returns:**
   ```typescript
   {
-    betValues: uint256[8], // Array of bet amounts for each slot
     totalBet: uint256,     // Total bet amount
     isSpun: boolean,       // Whether the bet has been spun
     reward: uint256        // Current reward amount (if won)
   }
   ```
 
-### 2. tokenMultipliers(address token) → uint256[8]
-Get the current multipliers for each slot for a specific token.
+### 2. getBetValues(address tokenAddress, address userAddress) → uint256[8]
+Get the bet amounts placed by a user on each slot for a specific token.
 - **Parameters:**
-  - `token`: Address of the token
-- **Returns:** Array of 8 multiplier values for each slot
+  - `tokenAddress`: Address of the token being used
+  - `userAddress`: Address of the user
+- **Returns:** Array of 8 values representing the bet amounts for each slot position
 
-### 3. paused() → boolean
+### 3. multipliers() → uint256[8]
+Get the current multipliers for each slot position.
+- **Returns:** Array of 8 multiplier values representing the payout multiplier for each slot position
+
+### 4. paused() → boolean
 Check if the game is currently paused.
 - **Returns:** True if game is paused, false otherwise
 

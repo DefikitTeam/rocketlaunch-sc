@@ -85,13 +85,13 @@ module.exports = {
 
   etherscan: {
     apiKey: {
-      // base_sepolia: BASE_KEY,
+      base_sepolia: BASE_KEY,
       // bartio: "bartio_testnet",
       // base: BASE_KEY,
       // iota: 'empty',
       // unichain_sepolia: 'empty'
       // worldchain_testnet: WORLDCHAIN_API_KEY
-      gravity_testnet: "abc",
+      // gravity_testnet: "abc",
     },
     customChains: [
       {
@@ -102,12 +102,12 @@ module.exports = {
         //   browserURL: "https://basescan.org"
         // },
 
-        // network: "base_sepolia",
-        // chainId: 84532,
-        // urls: {
-        //   apiURL: "https://api-sepolia.basescan.org/api", // https://api.basescan.org/api
-        //   browserURL: "https://sepolia.basescan.org"
-        // },
+        network: "base_sepolia",
+        chainId: 84532,
+        urls: {
+          apiURL: "https://api-sepolia.basescan.org/api", // https://api.basescan.org/api
+          browserURL: "https://sepolia.basescan.org"
+        },
         // network: "monad_testnet",
         // chainId: 10143,
         // urls: {
@@ -155,15 +155,15 @@ module.exports = {
         //   browserURL: "https://sepolia.worldscan.org/"
         // },
 
-        network: "gravity_testnet",
-        chainId: 13505,
-        urls: {
-          apiURL: "https://explorer-gravity-alpha-testnet-sepolia-3ggx92odhy.t.conduit.xyz/api",
-          browserURL: "https://rpc-sepolia.gravity.xyz",
-          // For Blockscout
-          // apiURL: "https://explorer.gravity.xyz/api",
-          // browserURL: "https://explorer.gravity.xyz",
-        },
+        // network: "gravity_testnet",
+        // chainId: 13505,
+        // urls: {
+        //   apiURL: "https://explorer-gravity-alpha-testnet-sepolia-3ggx92odhy.t.conduit.xyz/api",
+        //   browserURL: "https://rpc-sepolia.gravity.xyz",
+        //   // For Blockscout
+        //   // apiURL: "https://explorer.gravity.xyz/api",
+        //   // browserURL: "https://explorer.gravity.xyz",
+        // },
       }
     ]
   },
