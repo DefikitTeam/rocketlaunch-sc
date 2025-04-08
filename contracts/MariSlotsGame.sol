@@ -112,7 +112,10 @@ contract MariSlotsGame is
         require(totalBet > 0, "Bet amount must be greater than 0");
 
         // ERC20 token bet
-        require(msg.value >= totalBet, "token bet amount must be greater than total bet");
+        require(
+            msg.value >= totalBet,
+            "token bet amount must be greater than total bet"
+        );
         _swapETHForTokens(totalBet, _tokenAddress);
         // Add bet to total funds
         funds = funds.add(totalBet);
@@ -171,11 +174,6 @@ contract MariSlotsGame is
 
         uint256 reward = betInfo.reward;
 
-        // Reset all values in the bet struct
-        betInfo.reward = 0;
-        betInfo.totalBet = 0;
-        betInfo.betValues = [0, 0, 0, 0, 0, 0, 0, 0];
-
         // Reduce funds by the reward amount
         funds = funds.sub(reward);
 
@@ -201,6 +199,10 @@ contract MariSlotsGame is
             }
         }
 
+        // Reset all values in the bet struct
+        betInfo.reward = 0;
+        betInfo.totalBet = 0;
+        betInfo.betValues = [0, 0, 0, 0, 0, 0, 0, 0];
         emit RewardClaimed(_tokenAddress, msg.sender, reward);
     }
 
@@ -267,7 +269,9 @@ contract MariSlotsGame is
         _unpause();
     }
 
-    function updateMultipliers(uint256[8] calldata _multipliers) external onlyRole(ADMIN_ROLE) {
+    function updateMultipliers(
+        uint256[8] calldata _multipliers
+    ) external onlyRole(ADMIN_ROLE) {
         multipliers = _multipliers;
         emit MultipliersUpdated(_multipliers);
     }
@@ -339,8 +343,10 @@ contract MariSlotsGame is
     // Function to receive ETH
     receive() external payable {}
 
-    function getBetValues(address _token, address _user) external view returns (uint256[8] memory) {
+    function getBetValues(
+        address _token,
+        address _user
+    ) external view returns (uint256[8] memory) {
         return betUsers[_token][_user].betValues;
     }
-
 }
