@@ -7,24 +7,25 @@ async function main() {
   const network = hre.network.name;
   const contracts = await getContracts(network)[network];
 
-  const BexNew = await hre.ethers.getContractFactory("BexOperation");
-  const bex_operation = await upgrades.upgradeProxy(
-    contracts.bex_operation,
-    BexNew
+  const TrustPoint = await hre.ethers.getContractFactory("CollectionTrustPoint");
+  const trustpoint = await upgrades.upgradeProxy(
+    contracts.trustpoint,
+    TrustPoint
   );
-  await bex_operation.deployed();
-  await saveContract(network, "bex_operation", bex_operation.address);
-  console.log(`Deployed Rocket to ${bex_operation.address}`);
+  await trustpoint.deployed();
+  await saveContract(network, "trustpoint", trustpoint.address);
+  console.log(`Deployed Trustpoint to ${trustpoint.address}`);
   // Get the implementation contract address from the proxy
   const implementationAddress = await upgrades.erc1967.getImplementationAddress(
-    contracts.bex_operation
+    contracts.trustpoint
   );
   console.log("Implementation contract address:", implementationAddress);
   await sleep(10000)
   await hre.run("verify:verify", {
     address: implementationAddress,
     constructorArguments: [
-    ]
+    ],
+    contract: "contracts/CollectionTrustPoint.sol:CollectionTrustPoint"
   });
   console.log("Completed!");
 }

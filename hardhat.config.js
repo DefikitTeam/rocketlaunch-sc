@@ -85,8 +85,8 @@ module.exports = {
 
   etherscan: {
     apiKey: {
-      base_sepolia: BASE_KEY,
-      // bartio: "bartio_testnet",
+    //   base_sepolia: BASE_KEY,
+    bepolia: "62DU99P5D8J8DXBYY55GKPE2T83VD6N13E",
       // base: BASE_KEY,
       // iota: 'empty',
       // unichain_sepolia: 'empty'
@@ -102,12 +102,12 @@ module.exports = {
         //   browserURL: "https://basescan.org"
         // },
 
-        network: "base_sepolia",
-        chainId: 84532,
-        urls: {
-          apiURL: "https://api-sepolia.basescan.org/api", // https://api.basescan.org/api
-          browserURL: "https://sepolia.basescan.org"
-        },
+        // network: "base_sepolia",
+        // chainId: 84532,
+        // urls: {
+        //   apiURL: "https://api-sepolia.basescan.org/api", // https://api.basescan.org/api
+        //   browserURL: "https://sepolia.basescan.org"
+        // },
         // network: "monad_testnet",
         // chainId: 10143,
         // urls: {
@@ -124,12 +124,12 @@ module.exports = {
 
 
 
-        // network: "bartio",
-        // chainId: 80084,
-        // urls: {
-        //   apiURL: "https://api.routescan.io/v2/network/testnet/evm/80084/etherscan",
-        //   browserURL: "https://bartio.beratrail.io"
-        // },
+        network: "bepolia",
+        chainId: 80069,
+        urls: {
+          apiURL: "https://api.routescan.io/v2/network/testnet/evm/80069/etherscan",
+          browserURL: "https://bepolia.beratrail.io"
+        },
 
         // network: "iota",
         // chainId: 8822,
@@ -289,11 +289,10 @@ module.exports = {
       chainId: 84532,
       url: "https://nameless-cosmopolitan-sheet.base-sepolia.quiknode.pro/2ee8b004de048ca37436abe795878f40c5342cf5",
     },
-    bartio: {
+    bepolia: {
       accounts: [DEPLOYER_PRIVATE_KEY],
-      chainId: 80084,
-      url: "https://bartio.rpc.berachain.com/",
-      gasPrice: 150000000000
+      chainId: 80069,
+      url: "https://bepolia.rpc.berachain.com/"
     },
     berachain: {
       accounts: [DEPLOYER_PRIVATE_KEY],

@@ -10,26 +10,25 @@ async function main() {
   console.log("Deploying contracts with the account:", deployer.address);
 
   console.log("Account balance:", (await deployer.getBalance()).toString());
-  const RocketBase = await hre.ethers.getContractFactory("RocketBase");
-  const rocket = await upgrades.deployProxy(RocketBase, [
-    contracts.platform,
-    contracts.platformFee,
-    contracts.feeAddr,
-    contracts.fee,
-    contracts.routerV2,
-    contracts.blockInterval
+  const TrustPoint = await hre.ethers.getContractFactory("CollectionTrustPoint");
+  const trustpoint = await upgrades.deployProxy(TrustPoint, [
+   contracts.apiUrl,
+   contracts.minter_nft,
+   contracts.rocket,
+   contracts.initialPoints
   ]);
-  await rocket.deployed();
-  await saveContract(network, "rocket", rocket.address);
-  console.log("Rocket deployed to:", rocket.address);
+  await trustpoint.deployed();
+  await saveContract(network, "trustpoint", trustpoint.address);
+  console.log("Trustpoint deployed to:", trustpoint.address);
   const implementationAddress = await upgrades.erc1967.getImplementationAddress(
-    rocket.address
+    trustpoint.address
   );
   console.log("Implementation contract address:", implementationAddress);
-  await sleep(20000);
+  await sleep(10000);
   await hre.run("verify:verify", {
     address: implementationAddress,
-    constructorArguments: []
+    constructorArguments: [],
+    contract: "contracts/CollectionTrustPoint.sol:CollectionTrustPoint"
   });
 
   console.log("Completed!");

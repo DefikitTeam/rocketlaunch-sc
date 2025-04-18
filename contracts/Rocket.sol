@@ -116,6 +116,7 @@ contract Rocket is
         bool isDisable; // disable farm
     }
 
+    // Info of each user in pool.
     struct User {
         uint256 balance; // number batch bought
         uint256 balanceSold; // calculate 50% sold
@@ -142,11 +143,25 @@ contract Rocket is
         uint256 fundSurplus;
     }
 
+    struct Tokens {
+        address[] createdTokens;
+        address[] purchasedTokens;
+        mapping(address => bool) purchasedTokensByToken;
+    }
+
+    // key: pool address
     mapping(address => Pool) public pools;
+    // key: pool address
     mapping(address => PoolInfo) public poolInfos;
+    // key: pool address
     mapping(address => Farm) public farms;
+    // key: pool address, key: user address
     mapping(address => mapping(address => User)) public users;
+    // key: pool address
     mapping(address => Lottery) public lotteries; // Mapping to store lottery data for each pool
+
+    // key: user address
+    mapping(address => Tokens) internal tokensByUser;
 
     address internal routerV2;
     address internal platformAddress;
@@ -328,137 +343,6 @@ contract Rocket is
         minCap = _minCap;
     }
 
-    // Function to buy Token with ETH
-    function buy(
-        address poolAddress,
-        uint256 numberBatch,
-        uint256 maxAmountETH,
-        address referrer
-    ) public payable nonReentrant {
-        Pool storage pool = pools[poolAddress];
-        Lottery storage lottery = lotteries[poolAddress];
-        uint256 batchAvailable = getMaxBatchCurrent(poolAddress);
-        require(
-            lottery.fundDeposit == 0,
-            "Lottery is running, you can't buy bond"
-        );
-        require(
-            batchAvailable > 0,
-            "No batches available, you can deposit for lottery"
-        );
-        require(
-            numberBatch <= batchAvailable,
-            "Exceed max bond current, please wait for next bond"
-        );
-        require(numberBatch > 0, "Invalid number bond, can't be 0");
-        require(
-            numberBatch <= pool.maxRepeatPurchase,
-            "Exceed max repeat purchase"
-        );
-        require(
-            pool.status == StatusPool.ACTIVE,
-            "Pool not active or full or finished"
-        );
-        require(referrer != msg.sender, "Invalid referrer");
-        require(maxAmountETH == msg.value, "maxAmountETH != msg.value");
-
-        uint256 amountETH = getAmountIn(
-            numberBatch,
-            pool.reserveETH,
-            pool.reserveBatch
-        );
-
-        require(maxAmountETH >= amountETH, "Insufficient output ETH");
-
-        _buyBatch(
-            poolAddress,
-            msg.sender,
-            numberBatch,
-            amountETH,
-            referrer,
-            pool
-        );
-
-        if (maxAmountETH > amountETH) {
-            payable(msg.sender).transfer(maxAmountETH.sub(amountETH));
-        }
-    }
-
-    function depositForLottery(
-        address poolAddress,
-        uint256 amountETH,
-        address referrer
-    ) public payable nonReentrant {
-        Pool storage pool = pools[poolAddress];
-        Lottery storage lottery = lotteries[poolAddress];
-
-        if (lottery.fundDeposit == 0) {
-            require(
-                block.timestamp >= pool.startTime &&
-                    block.timestamp <= pool.startTime.add(pool.minDurationSell),
-                "Not in lottery period"
-            );
-        }
-
-        if (lottery.fundDeposit == 0) {
-            uint256 batchAvailable = getMaxBatchCurrent(poolAddress);
-            require(
-                batchAvailable == 0,
-                "There are batches available, you can buy bond"
-            );
-        }
-
-        require(amountETH == msg.value, "amountETH != msg.value");
-
-        UserLottery storage userLottery = lottery.lotteryParticipants[
-            msg.sender
-        ];
-
-        // Add participant to lottery
-        if (userLottery.ethAmount == 0) {
-            userLottery.referrer = referrer;
-            lottery.participants.push(msg.sender);
-        }
-        userLottery.ethAmount = userLottery.ethAmount.add(amountETH);
-        lottery.fundDeposit = lottery.fundDeposit.add(amountETH);
-
-        emit DepositForLottery(poolAddress, msg.sender, amountETH);
-    }
-
-    function claimFundLottery(address poolAddress) public nonReentrant {
-        Lottery storage lottery = lotteries[poolAddress];
-        // require(block.timestamp >= pool.startTime.add(pool.minDurationSell), "Not in lottery period");
-        require(lottery.fundDeposit > 0, "No fund to claim");
-        UserLottery storage userLottery = lottery.lotteryParticipants[
-            msg.sender
-        ];
-        require(userLottery.ethAmount > 0, "No deposit to claim");
-        payable(msg.sender).transfer(userLottery.ethAmount);
-        userLottery.ethAmount = 0;
-        lottery.fundDeposit = lottery.fundDeposit.sub(userLottery.ethAmount);
-        emit ClaimFundLottery(poolAddress, msg.sender, userLottery.ethAmount);
-    }
-
-    function spinLottery(address poolAddress) public nonReentrant {
-        Pool storage pool = pools[poolAddress];
-        Lottery storage lottery = lotteries[poolAddress];
-
-        require(lottery.participants.length > 0, "No participants");
-        if (lottery.fundDeposit == 0) {
-            require(
-                block.timestamp <= pool.startTime.add(pool.minDurationSell) &&
-                    block.timestamp >= pool.startTime,
-                "Lottery period not ended"
-            );
-        }
-
-        // Get available batches
-        uint256 availableBatches = getMaxBatchCurrent(poolAddress);
-        require(availableBatches > 0, "No batches available");
-
-        _processBatchWinners(poolAddress, availableBatches);
-    }
-
     struct LaunchPoolParams {
         // token
         string name;
@@ -596,6 +480,8 @@ contract Rocket is
         );
         // end active pool
 
+        _addCreatedToken(msg.sender, newToken);
+
         if (params.numberBatch == 0) {
             return;
         }
@@ -654,6 +540,138 @@ contract Rocket is
         if (params.maxAmountETH > amountETH) {
             payable(msg.sender).transfer(params.maxAmountETH.sub(amountETH));
         }
+        _addPurchasedToken(msg.sender, newToken);
+    }
+
+    // Function to buy Token with ETH
+    function buy(
+        address poolAddress,
+        uint256 numberBatch,
+        uint256 maxAmountETH,
+        address referrer
+    ) public payable nonReentrant {
+        Pool storage pool = pools[poolAddress];
+        Lottery storage lottery = lotteries[poolAddress];
+        uint256 batchAvailable = getMaxBatchCurrent(poolAddress);
+        require(
+            lottery.fundDeposit == 0,
+            "Lottery is running, you can't buy bond"
+        );
+        require(
+            batchAvailable > 0,
+            "No batches available, you can deposit for lottery"
+        );
+        require(
+            numberBatch <= batchAvailable,
+            "Exceed max bond current, please wait for next bond"
+        );
+        require(numberBatch > 0, "Invalid number bond, can't be 0");
+        require(
+            numberBatch <= pool.maxRepeatPurchase,
+            "Exceed max repeat purchase"
+        );
+        require(
+            pool.status == StatusPool.ACTIVE,
+            "Pool not active or full or finished"
+        );
+        require(referrer != msg.sender, "Invalid referrer");
+        require(maxAmountETH == msg.value, "maxAmountETH != msg.value");
+
+        uint256 amountETH = getAmountIn(
+            numberBatch,
+            pool.reserveETH,
+            pool.reserveBatch
+        );
+
+        require(maxAmountETH >= amountETH, "Insufficient output ETH");
+
+        _buyBatch(
+            poolAddress,
+            msg.sender,
+            numberBatch,
+            amountETH,
+            referrer,
+            pool
+        );
+
+        if (maxAmountETH > amountETH) {
+            payable(msg.sender).transfer(maxAmountETH.sub(amountETH));
+        }
+    }
+
+    function depositForLottery(
+        address poolAddress,
+        uint256 amountETH,
+        address referrer
+    ) public payable nonReentrant {
+        Pool storage pool = pools[poolAddress];
+        Lottery storage lottery = lotteries[poolAddress];
+
+        if (lottery.fundDeposit == 0) {
+            require(
+                block.timestamp >= pool.startTime &&
+                    block.timestamp <= pool.startTime.add(pool.minDurationSell),
+                "Not in lottery period"
+            );
+        }
+
+        if (lottery.fundDeposit == 0) {
+            uint256 batchAvailable = getMaxBatchCurrent(poolAddress);
+            require(
+                batchAvailable == 0,
+                "There are batches available, you can buy bond"
+            );
+        }
+
+        require(amountETH == msg.value, "amountETH != msg.value");
+
+        UserLottery storage userLottery = lottery.lotteryParticipants[
+            msg.sender
+        ];
+
+        // Add participant to lottery
+        if (userLottery.ethAmount == 0) {
+            userLottery.referrer = referrer;
+            lottery.participants.push(msg.sender);
+        }
+        userLottery.ethAmount = userLottery.ethAmount.add(amountETH);
+        lottery.fundDeposit = lottery.fundDeposit.add(amountETH);
+
+        emit DepositForLottery(poolAddress, msg.sender, amountETH);
+    }
+
+    function claimFundLottery(address poolAddress) public nonReentrant {
+        Lottery storage lottery = lotteries[poolAddress];
+        // require(block.timestamp >= pool.startTime.add(pool.minDurationSell), "Not in lottery period");
+        require(lottery.fundDeposit > 0, "No fund to claim");
+        UserLottery storage userLottery = lottery.lotteryParticipants[
+            msg.sender
+        ];
+        require(userLottery.ethAmount > 0, "No deposit to claim");
+        payable(msg.sender).transfer(userLottery.ethAmount);
+        userLottery.ethAmount = 0;
+        lottery.fundDeposit = lottery.fundDeposit.sub(userLottery.ethAmount);
+        emit ClaimFundLottery(poolAddress, msg.sender, userLottery.ethAmount);
+    }
+
+    function spinLottery(address poolAddress) public nonReentrant {
+        Pool storage pool = pools[poolAddress];
+        Lottery storage lottery = lotteries[poolAddress];
+
+        require(lottery.participants.length > 0, "No participants");
+        if (lottery.fundDeposit == 0) {
+            require(
+                block.timestamp <= pool.startTime.add(pool.minDurationSell) &&
+                    block.timestamp >= pool.startTime,
+                "Lottery period not ended"
+            );
+        }
+
+        // Get available batches
+        uint256 availableBatches = getMaxBatchCurrent(poolAddress);
+        require(availableBatches > 0, "No batches available");
+
+        _processBatchWinners(poolAddress, availableBatches);
     }
 
     // Function to sell Token for ETH
@@ -1106,6 +1124,8 @@ contract Rocket is
             if (reward > 0) {
                 user.rewardFarm = user.rewardFarm.add(reward);
             }
+        } else {
+            _addPurchasedToken(buyer, poolAddress);
         }
 
         // update pool info
@@ -1176,7 +1196,9 @@ contract Rocket is
                     userLottery.ethAmount
                 );
                 userLottery.ethAmount = 0;
-                lottery.participants[randomIndex] = lottery.participants[lottery.participants.length - 1];
+                lottery.participants[randomIndex] = lottery.participants[
+                    lottery.participants.length - 1
+                ];
                 lottery.participants.pop();
                 continue;
             }
@@ -1242,5 +1264,24 @@ contract Rocket is
         address poolAddress
     ) public view returns (address[] memory) {
         return lotteries[poolAddress].participants;
+    }
+
+    function getCreatedTokens(address user) public view returns (address[] memory) {
+        return tokensByUser[user].createdTokens;
+    }
+
+    function getPurchasedTokens(address user) public view returns (address[] memory) {
+        return tokensByUser[user].purchasedTokens;
+    }
+
+    function _addCreatedToken(address user, address token) internal {
+        tokensByUser[user].createdTokens.push(token);
+    }
+
+    function _addPurchasedToken(address user, address token) internal {
+        if (!tokensByUser[user].purchasedTokensByToken[token]) {
+            tokensByUser[user].purchasedTokens.push(token);
+            tokensByUser[user].purchasedTokensByToken[token] = true;
+        }
     }
 }

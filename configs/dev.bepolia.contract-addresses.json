@@ -1,0 +1,106 @@
+{
+    "bepolia": {
+        "factory": "0x5e705e184d233ff2a7cb1553793464a9d0c3028f",
+        "routerV2": "0xFE5E8C83FFE4d9627A75EaA7Fee864768dB989bD",
+        "platform": "0x1043987a09D87C13d42c7a62A0b0f4546e60Fc8F",
+        "platformFee": "10000000000000000",
+        "blockInterval": 20000,
+        "feeAddr": "0xB2B8904725eFcB1EEeb40e9FC02fFC3c1d619437",
+        "fee": "40000000000000000",
+        "weth": "0x6969696969696969696969696969696969696969",
+        "rocket": "0x9b8AAb91ea36857763e9552916874ceA18F35b56",
+        "multisend": "0xce221120F145B456ba41b370F11D5E536eCD2BcB",
+        "apiUrl": "https://mot-api.rocketlaunch.fun/nft/",
+        "minter_nft": "0x1043987a09D87C13d42c7a62A0b0f4546e60Fc8F",
+        "nft": "0x3B6dFC89760d5B6F64C043A74210ddF91264Beef",
+        "tokenFactory": "0xCc7283a00481de9AdBE379c3c2459691a6ee274a",
+        "minCap": "50000000000000000",
+        "initialPoints": [
+            {
+                "id": 1,
+                "multiplier": 2,
+                "description": "Login X",
+                "trustPointType": 0
+            },
+            {
+                "id": 2,
+                "multiplier": 3,
+                "description": "Initial token creation",
+                "trustPointType": 0
+            },
+            {
+                "id": 3,
+                "multiplier": 2,
+                "description": "Initial tokens purchase",
+                "trustPointType": 0
+            },
+            {
+                "id": 4,
+                "multiplier": 2,
+                "description": "Daily platform login",
+                "trustPointType": 0
+            },
+            {
+                "id": 5,
+                "multiplier": 2,
+                "description": "Token purchase quantity more than 10",
+                "trustPointType": 0
+            },
+            {
+                "id": 6,
+                "multiplier": 3,
+                "description": "Token purchase quantity more than 20",
+                "trustPointType": 0
+            },
+            {
+                "id": 7,
+                "multiplier": 1,
+                "description": "X connection",
+                "trustPointType": 1
+            },
+            {
+                "id": 8,
+                "multiplier": 2,
+                "description": "X followers more than 1k",
+                "trustPointType": 1
+            },
+            {
+                "id": 9,
+                "multiplier": 3,
+                "description": "X followers more than 5k",
+                "trustPointType": 1
+            },
+            {
+                "id": 10,
+                "multiplier": 4,
+                "description": "X followers more than 10k",
+                "trustPointType": 1
+            },
+            {
+                "id": 11,
+                "multiplier": 5,
+                "description": "X followers more than 20k",
+                "trustPointType": 1
+            },
+            {
+                "id": 12,
+                "multiplier": 2,
+                "description": "Completing Metadata",
+                "trustPointType": 1
+            },
+            {
+                "id": 13,
+                "multiplier": 2,
+                "description": "AI agent usage",
+                "trustPointType": 1
+            },
+            {
+                "id": 14,
+                "multiplier": 2,
+                "description": "Login & Verified Discord",
+                "trustPointType": 0
+            }
+        ],
+        "trustpoint": "0x3e3d551CAB18feca293b059B281f3b8D7C688A0A"
+    }
+}
