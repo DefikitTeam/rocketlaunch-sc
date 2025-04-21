@@ -165,13 +165,14 @@ contract CollectionTrustPoint is
 
     function mintInitialTokens() public {
         require(_checkInitialTokens(msg.sender), "NFT: Account does not have initial tokens");
-        require(_checkPurchasedTokens(msg.sender), "NFT: Account does not have purchased tokens");
+        require(balanceOf(msg.sender, 2) == 0, "NFT: Account already owns this token");
         _mint(msg.sender, 2, 1, ""); // token id 2 is initial tokens
         _updateTrustPoint(msg.sender, 2);
     }
 
     function mintPurchasedTokens() public {
         require(_checkPurchasedTokens(msg.sender), "NFT: Account does not have purchased tokens");
+        require(balanceOf(msg.sender, 3) == 0, "NFT: Account already owns this token");
         _mint(msg.sender, 3, 1, ""); // token id 3 is purchased tokens
         _updateTrustPoint(msg.sender, 3);
     }
