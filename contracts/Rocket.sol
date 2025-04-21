@@ -228,14 +228,6 @@ contract Rocket is
         uint256 receivedETH
     );
 
-    // Event for token refund
-    event Refund(
-        address indexed pool,
-        address indexed buyer,
-        uint256 amount,
-        uint256 receivedETH
-    );
-
     // Event for pool finalization
     event Finalized(address indexed pool);
 

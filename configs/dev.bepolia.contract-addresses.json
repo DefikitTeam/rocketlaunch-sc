@@ -15,6 +15,7 @@
         "nft": "0x3B6dFC89760d5B6F64C043A74210ddF91264Beef",
         "tokenFactory": "0xCc7283a00481de9AdBE379c3c2459691a6ee274a",
         "minCap": "50000000000000000",
+        "trustpoint": "0x3e3d551CAB18feca293b059B281f3b8D7C688A0A",
         "initialPoints": [
             {
                 "id": 1,
@@ -100,7 +101,6 @@
                 "description": "Login & Verified Discord",
                 "trustPointType": 0
             }
-        ],
-        "trustpoint": "0x3e3d551CAB18feca293b059B281f3b8D7C688A0A"
+        ]
     }
 }
