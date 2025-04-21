@@ -10,6 +10,11 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/cryptography/ECDSAUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/cryptography/EIP712Upgradeable.sol";
 
+interface IRocketLaunch {
+    function getCreatedTokens(address user) external view returns (address[] memory);
+    function getPurchasedTokens(address user) external view returns (address[] memory);
+}
+
 contract CollectionTrustPoint is
     Initializable,
     ERC1155Upgradeable,
@@ -158,6 +163,20 @@ contract CollectionTrustPoint is
         _updateTrustPoint(msg.sender, id);
     }
 
+    function mintInitialTokens() public {
+        require(_checkInitialTokens(msg.sender), "NFT: Account does not have initial tokens");
+        require(balanceOf(msg.sender, 2) == 0, "NFT: Account already owns this token");
+        _mint(msg.sender, 2, 1, ""); // token id 2 is initial tokens
+        _updateTrustPoint(msg.sender, 2);
+    }
+
+    function mintPurchasedTokens() public {
+        require(_checkPurchasedTokens(msg.sender), "NFT: Account does not have purchased tokens");
+        require(balanceOf(msg.sender, 3) == 0, "NFT: Account already owns this token");
+        _mint(msg.sender, 3, 1, ""); // token id 3 is purchased tokens
+        _updateTrustPoint(msg.sender, 3);
+    }
+
     function addNewTrustPoint(
         uint256 multiplier,
         string memory description,
@@ -228,5 +247,21 @@ contract CollectionTrustPoint is
         bytes memory data
     ) internal override {
         revert("Not allowed");
+    }
+
+    function _checkInitialTokens(address user) private view returns (bool) {
+        address[] memory createdTokens = IRocketLaunch(rocketLaunch).getCreatedTokens(user);
+        if (createdTokens.length > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    function _checkPurchasedTokens(address user) private view returns (bool) {
+        address[] memory purchasedTokens = IRocketLaunch(rocketLaunch).getPurchasedTokens(user);
+        if (purchasedTokens.length > 0) {
+            return true;
+        }
+        return false;
     }
 }
