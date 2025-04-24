@@ -13,7 +13,7 @@
         "apiUrl": "https://mot-api.rocketlaunch.fun/nft/",
         "minter_nft": "0x1043987a09D87C13d42c7a62A0b0f4546e60Fc8F",
         "nft": "0x3B6dFC89760d5B6F64C043A74210ddF91264Beef",
-        "tokenFactory": "0xCc7283a00481de9AdBE379c3c2459691a6ee274a",
+        "tokenFactory": "0x956A8817b836D2a8b724376AFb651832b7c364ed",
         "minCap": "50000000000000000",
         "trustpoint": "0x3e3d551CAB18feca293b059B281f3b8D7C688A0A",
         "initialPoints": [

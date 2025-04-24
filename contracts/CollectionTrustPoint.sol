@@ -11,8 +11,15 @@ import "@openzeppelin/contracts-upgradeable/utils/cryptography/ECDSAUpgradeable.
 import "@openzeppelin/contracts-upgradeable/utils/cryptography/EIP712Upgradeable.sol";
 
 interface IRocketLaunch {
-    function getCreatedTokens(address user) external view returns (address[] memory);
-    function getPurchasedTokens(address user) external view returns (address[] memory);
+    function getCreatedTokens(
+        address user
+    ) external view returns (address[] memory);
+
+    function getPurchasedTokens(
+        address user
+    ) external view returns (address[] memory);
+
+    function ownerToken(address token) external view returns (address);
 }
 
 contract CollectionTrustPoint is
@@ -163,16 +170,50 @@ contract CollectionTrustPoint is
         _updateTrustPoint(msg.sender, id);
     }
 
+    function mintTokenWithSignature(
+        uint256 id,
+        address token,
+        bytes memory signature
+    ) public {
+        require(
+            IRocketLaunch(rocketLaunch).ownerToken(token) == msg.sender,
+            "NFT: You are not the owner of the token"
+        );
+        require(trustPoints[id].isActive, "NFT: ID does not exist");
+        require(
+            balanceOf(token, id) == 0,
+            "NFT: Account already owns this token"
+        );
+        bytes32 digest = _hashTypedDataV4(
+            keccak256(abi.encode(MINT_TYPEHASH, id, token))
+        );
+        require(_checkSignature(signature, digest), "NFT: Invalid signature");
+        _mint(token, id, 1, "");
+        _updateTrustPoint(token, id);
+    }
+
     function mintInitialTokens() public {
-        require(_checkInitialTokens(msg.sender), "NFT: Account does not have initial tokens");
-        require(balanceOf(msg.sender, 2) == 0, "NFT: Account already owns this token");
+        require(
+            _checkInitialTokens(msg.sender),
+            "NFT: Account does not have initial tokens"
+        );
+        require(
+            balanceOf(msg.sender, 2) == 0,
+            "NFT: Account already owns this token"
+        );
         _mint(msg.sender, 2, 1, ""); // token id 2 is initial tokens
         _updateTrustPoint(msg.sender, 2);
     }
 
     function mintPurchasedTokens() public {
-        require(_checkPurchasedTokens(msg.sender), "NFT: Account does not have purchased tokens");
-        require(balanceOf(msg.sender, 3) == 0, "NFT: Account already owns this token");
+        require(
+            _checkPurchasedTokens(msg.sender),
+            "NFT: Account does not have purchased tokens"
+        );
+        require(
+            balanceOf(msg.sender, 3) == 0,
+            "NFT: Account already owns this token"
+        );
         _mint(msg.sender, 3, 1, ""); // token id 3 is purchased tokens
         _updateTrustPoint(msg.sender, 3);
     }
@@ -249,8 +290,27 @@ contract CollectionTrustPoint is
         revert("Not allowed");
     }
 
+    function checkInitialTokens(address user) public view returns (bool) {
+        address[] memory createdTokens = IRocketLaunch(rocketLaunch)
+            .getCreatedTokens(user);
+        if (createdTokens.length > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    function checkPurchasedTokens(address user) public view returns (bool) {
+        address[] memory purchasedTokens = IRocketLaunch(rocketLaunch)
+            .getPurchasedTokens(user);
+        if (purchasedTokens.length > 0) {
+            return true;
+        }
+        return false;
+    }
+
     function _checkInitialTokens(address user) private view returns (bool) {
-        address[] memory createdTokens = IRocketLaunch(rocketLaunch).getCreatedTokens(user);
+        address[] memory createdTokens = IRocketLaunch(rocketLaunch)
+            .getCreatedTokens(user);
         if (createdTokens.length > 0) {
             return true;
         }
@@ -258,7 +318,8 @@ contract CollectionTrustPoint is
     }
 
     function _checkPurchasedTokens(address user) private view returns (bool) {
-        address[] memory purchasedTokens = IRocketLaunch(rocketLaunch).getPurchasedTokens(user);
+        address[] memory purchasedTokens = IRocketLaunch(rocketLaunch)
+            .getPurchasedTokens(user);
         if (purchasedTokens.length > 0) {
             return true;
         }
