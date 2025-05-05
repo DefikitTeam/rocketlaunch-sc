@@ -550,10 +550,6 @@ contract Rocket is
                 lottery.fundDeposit == 0,
                 "Lottery is running, you can't buy bond"
             );
-            require(
-                batchAvailable > 0,
-                "No batches available, you can deposit for lottery"
-            );
             require(numberBatch > 0, "Invalid number bond, can't be 0");
             require(
                 pool.status == StatusPool.ACTIVE,
@@ -647,9 +643,9 @@ contract Rocket is
             msg.sender
         ];
         require(amountETH <= userLottery.ethAmount, "Exceed deposit");
-        payable(msg.sender).transfer(amountETH);
         userLottery.ethAmount = userLottery.ethAmount.sub(amountETH);
         lottery.fundDeposit = lottery.fundDeposit.sub(amountETH);
+        payable(msg.sender).transfer(amountETH);
         emit WithdrawFundLottery(poolAddress, msg.sender, amountETH);
     }
 
