@@ -8,14 +8,14 @@
         "feeAddr": "0xB2B8904725eFcB1EEeb40e9FC02fFC3c1d619437",
         "fee": "40000000000000000",
         "weth": "0x6969696969696969696969696969696969696969",
-        "rocket": "0x9b8AAb91ea36857763e9552916874ceA18F35b56",
+        "rocket": "0x5cfa1b91c488129d98B6fF3Bbc1dc6f3E1A6793B",
         "multisend": "0xce221120F145B456ba41b370F11D5E536eCD2BcB",
         "apiUrl": "https://mot-api.rocketlaunch.fun/nft/",
         "minter_nft": "0x1043987a09D87C13d42c7a62A0b0f4546e60Fc8F",
         "nft": "0x3B6dFC89760d5B6F64C043A74210ddF91264Beef",
         "tokenFactory": "0x956A8817b836D2a8b724376AFb651832b7c364ed",
         "minCap": "50000000000000000",
-        "trustpoint": "0x3e3d551CAB18feca293b059B281f3b8D7C688A0A",
+        "trustpoint": "0x4c48ef0E863C8D171EbD73C54C2f73213f61003A",
         "initialPoints": [
             {
                 "id": 1,
@@ -38,7 +38,7 @@
             {
                 "id": 4,
                 "multiplier": 2,
-                "description": "Daily platform login",
+                "description": "Daily active onchain",
                 "trustPointType": 0
             },
             {
