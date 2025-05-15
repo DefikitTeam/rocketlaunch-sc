@@ -3,7 +3,7 @@
         "routerV2": "0xd91dd58387Ccd9B66B390ae2d7c66dBD46BC6022",
         "platform": "0x242572d685fE1a73760aD288621Ab42dBA77e8A9",
         "platformFee": "100000000000000000",
-        "blockInterval": 2,
+        "blockInterval": 20000,
         "feeAddr": "0x42e9d46d0ac951f301a1587844e9269d1701bcba",
         "fee": "1000000000000000000",
         "minCap": "100000000000000000000",
@@ -12,12 +12,101 @@
         "poolIdx_bex": 36000,
         "airdropWallet": "0xEDd3d787C7abecDE82c066b0C99b4d5B3aA69DA4",
         "weth": "0x6969696969696969696969696969696969696969",
-        "rocket": "0xCa2B4a5aA18CCaf46e4E98c45AfF74A325fB4c6a",
+        "rocket": "0x96F85622F2a1Cdcbe6b901A4166E1C8888Bf82b0",
         "bex_operation": "",
         "multisend": "0x3e4CC9C491033EB5c1C4306675E349bB3c78d067",
         "apiUrl": "https://api.berabear.io/api/v1/nft/",
+        "apiUrl_trustpoint": "https://mot-api.rocketlaunch.fun/nft/",
         "minter_nft": "0x94c50adE2758ce8b8b70CFC7B0a9901494a35E3A",
+        "minter_nft_trustpoint": "0x242572d685fE1a73760aD288621Ab42dBA77e8A9",
         "nft": "0x05A100890DdBe49F1b2eDBc90a02cFFe2512e344",
-        "tokenFactory": "0x73251eb0Da229e01e7A1741473120F7aEcd6DF38"
+        "tokenFactory": "0xad497dcdCbE51ad527f556C509e38c7dE29A24B9",
+        "trustpoint": "0x6Ead0fAb7D0DcD9AFC3cc26a5c50eF051850a4b0",
+        "initialPoints": [
+            {
+                "id": 1,
+                "multiplier": 2,
+                "description": "Login X",
+                "trustPointType": 0
+            },
+            {
+                "id": 2,
+                "multiplier": 3,
+                "description": "Initial token creation",
+                "trustPointType": 0
+            },
+            {
+                "id": 3,
+                "multiplier": 2,
+                "description": "Initial tokens purchase",
+                "trustPointType": 0
+            },
+            {
+                "id": 4,
+                "multiplier": 2,
+                "description": "Daily active onchain",
+                "trustPointType": 0
+            },
+            {
+                "id": 5,
+                "multiplier": 2,
+                "description": "Token purchase quantity more than 10",
+                "trustPointType": 0
+            },
+            {
+                "id": 6,
+                "multiplier": 3,
+                "description": "Token purchase quantity more than 20",
+                "trustPointType": 0
+            },
+            {
+                "id": 7,
+                "multiplier": 1,
+                "description": "X connection",
+                "trustPointType": 1
+            },
+            {
+                "id": 8,
+                "multiplier": 2,
+                "description": "X followers more than 1k",
+                "trustPointType": 1
+            },
+            {
+                "id": 9,
+                "multiplier": 3,
+                "description": "X followers more than 5k",
+                "trustPointType": 1
+            },
+            {
+                "id": 10,
+                "multiplier": 4,
+                "description": "X followers more than 10k",
+                "trustPointType": 1
+            },
+            {
+                "id": 11,
+                "multiplier": 5,
+                "description": "X followers more than 20k",
+                "trustPointType": 1
+            },
+            {
+                "id": 12,
+                "multiplier": 2,
+                "description": "Completing Metadata",
+                "trustPointType": 1
+            },
+            {
+                "id": 13,
+                "multiplier": 2,
+                "description": "AI agent usage",
+                "trustPointType": 1
+            },
+            {
+                "id": 14,
+                "multiplier": 2,
+                "description": "Login & Verified Discord",
+                "trustPointType": 0
+            }
+        ]
     }
 }

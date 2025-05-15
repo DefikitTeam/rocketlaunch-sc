@@ -555,11 +555,14 @@ contract Rocket is
                 pool.status == StatusPool.ACTIVE,
                 "Pool not active or full or finished"
             );
+            uint256 buyBatch = numberBatch > batchAvailable
+                ? batchAvailable
+                : numberBatch;
             require(referrer != msg.sender, "Invalid referrer");
             require(maxAmountETH == msg.value, "maxAmountETH != msg.value");
 
             amountBuyInETH = getAmountIn(
-                numberBatch,
+                buyBatch,
                 pool.reserveETH,
                 pool.reserveBatch
             );
@@ -569,7 +572,7 @@ contract Rocket is
             _buyBatch(
                 poolAddress,
                 msg.sender,
-                numberBatch,
+                buyBatch,
                 amountBuyInETH,
                 referrer,
                 pool
@@ -594,6 +597,73 @@ contract Rocket is
         } else {
             if (maxAmountETH > amountBuyInETH) {
                 payable(msg.sender).transfer(maxAmountETH.sub(amountBuyInETH));
+            }
+        }
+    }
+
+    function buyWithBera(
+        address poolAddress,
+        uint256 amountBera,
+        address referrer
+    ) public payable nonReentrant {
+        Pool storage pool = pools[poolAddress];
+        Lottery storage lottery = lotteries[poolAddress];
+        uint256 batchAvailable = getMaxBatchCurrent(poolAddress);
+        uint256 batchReceive = estimateBuyWithBera(poolAddress, amountBera);
+        bool isDepositLottery = batchReceive > batchAvailable;
+        require(block.timestamp < pool.endTime, "Pool is over time");
+        uint256 amountBuyInETH = 0;
+        if (batchAvailable > 0) {
+            require(
+                lottery.fundDeposit == 0,
+                "Lottery is running, you can't buy bond"
+            );
+            require(
+                pool.status == StatusPool.ACTIVE,
+                "Pool not active or full or finished"
+            );
+            require(referrer != msg.sender, "Invalid referrer");
+
+            uint256 buyBatch = batchReceive > batchAvailable
+                ? batchAvailable
+                : batchReceive;
+
+            amountBuyInETH = getAmountIn(
+                buyBatch,
+                pool.reserveETH,
+                pool.reserveBatch
+            );
+
+            require(amountBera >= amountBuyInETH, "Insufficient output ETH");
+
+            _buyBatch(
+                poolAddress,
+                msg.sender,
+                buyBatch,
+                amountBuyInETH,
+                referrer,
+                pool
+            );
+        }
+
+        if (isDepositLottery) {
+            uint256 amountDepositETH = amountBera.sub(amountBuyInETH);
+            UserLottery storage userLottery = lottery.lotteryParticipants[
+                msg.sender
+            ];
+
+            // Add participant to lottery
+            if (userLottery.ethAmount == 0) {
+                userLottery.referrer = referrer;
+                lottery.participants.push(msg.sender);
+            }
+            userLottery.ethAmount = userLottery.ethAmount.add(amountDepositETH);
+            lottery.fundDeposit = lottery.fundDeposit.add(amountDepositETH);
+
+            emit DepositForLottery(poolAddress, msg.sender, amountDepositETH);
+        } else {
+            if (amountBera > amountBuyInETH) {
+                payable(msg.sender).transfer(amountBera.sub(amountBuyInETH));
             }
         }
     }
@@ -965,6 +1035,14 @@ contract Rocket is
     ) public view returns (uint) {
         Pool storage pool = pools[poolAddress];
         return getAmountIn(batchNumber, pool.reserveETH, pool.reserveBatch);
+    }
+
+    function estimateBuyWithBera(
+        address poolAddress,
+        uint256 amountBera
+    ) public view returns (uint) {
+        Pool storage pool = pools[poolAddress];
+        return getAmountOut(amountBera, pool.reserveETH, pool.reserveBatch);
     }
 
     function estimateSell(
