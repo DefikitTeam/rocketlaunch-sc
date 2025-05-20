@@ -604,16 +604,22 @@ contract Rocket is
     function buyWithBera(
         address poolAddress,
         uint256 amountBera,
+        uint256 batchReceivedMin,
         address referrer
     ) public payable nonReentrant {
         Pool storage pool = pools[poolAddress];
-        Lottery storage lottery = lotteries[poolAddress];
-        uint256 batchAvailable = getMaxBatchCurrent(poolAddress);
-        uint256 batchReceive = estimateBuyWithBera(poolAddress, amountBera);
-        bool isDepositLottery = batchReceive > batchAvailable;
         require(block.timestamp < pool.endTime, "Pool is over time");
+        Lottery storage lottery = lotteries[poolAddress];
+        (uint256 batchReceive, uint256 beraDepositAmount) = estimateBuyWithBera(
+            poolAddress,
+            amountBera
+        );
+        require(
+            batchReceivedMin <= batchReceive,
+            "Batch received is less than minimum batch received, please try again"
+        );
         uint256 amountBuyInETH = 0;
-        if (batchAvailable > 0) {
+        if (batchReceive > 0) {
             require(
                 lottery.fundDeposit == 0,
                 "Lottery is running, you can't buy bond"
@@ -624,12 +630,8 @@ contract Rocket is
             );
             require(referrer != msg.sender, "Invalid referrer");
 
-            uint256 buyBatch = batchReceive > batchAvailable
-                ? batchAvailable
-                : batchReceive;
-
             amountBuyInETH = getAmountIn(
-                buyBatch,
+                batchReceive,
                 pool.reserveETH,
                 pool.reserveBatch
             );
@@ -639,14 +641,14 @@ contract Rocket is
             _buyBatch(
                 poolAddress,
                 msg.sender,
-                buyBatch,
+                batchReceive,
                 amountBuyInETH,
                 referrer,
                 pool
             );
         }
 
-        if (isDepositLottery) {
+        if (beraDepositAmount > 0) {
             uint256 amountDepositETH = amountBera.sub(amountBuyInETH);
             UserLottery storage userLottery = lottery.lotteryParticipants[
                 msg.sender
@@ -1040,9 +1042,29 @@ contract Rocket is
     function estimateBuyWithBera(
         address poolAddress,
         uint256 amountBera
-    ) public view returns (uint) {
+    )
+        public
+        view
+        returns (uint256 batchesReceivable, uint256 beraDepositAmount)
+    {
         Pool storage pool = pools[poolAddress];
-        return getAmountOut(amountBera, pool.reserveETH, pool.reserveBatch);
+        uint256 batchEst = getAmountOut(
+            amountBera,
+            pool.reserveETH,
+            pool.reserveBatch
+        );
+        uint256 batchAvailable = getMaxBatchCurrent(poolAddress);
+        if (batchEst > batchAvailable) {
+            batchesReceivable = batchAvailable;
+            uint256 amountBeraBought = getAmountIn(
+                batchesReceivable,
+                pool.reserveBatch,
+                pool.reserveETH
+            );
+            beraDepositAmount = amountBera.sub(amountBeraBought);
+        } else {
+            batchesReceivable = batchEst;
+        }
     }
 
     function estimateSell(
