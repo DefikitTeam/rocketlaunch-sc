@@ -102,6 +102,7 @@
                 "trustPointType": 0
             }
         ],
-        "trustpoint": "0x76911DebB06f4FbD11300d76215Dd6148Ee1AC9e"
+        "trustpoint": "0x76911DebB06f4FbD11300d76215Dd6148Ee1AC9e",
+        "multisend": "0x4c48ef0E863C8D171EbD73C54C2f73213f61003A"
     }
 }
