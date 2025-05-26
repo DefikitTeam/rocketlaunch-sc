@@ -21,12 +21,12 @@ async function main() {
   );
   console.log("Implementation contract address:", implementationAddress);
   await sleep(10000)
-  await hre.run("verify:verify", {
-    address: implementationAddress,
-    constructorArguments: [
-    ],
-    contract: "contracts/CollectionTrustPoint.sol:CollectionTrustPoint"
-  });
+//   await hre.run("verify:verify", {
+//     address: implementationAddress,
+//     constructorArguments: [
+//     ],
+//     contract: "contracts/CollectionTrustPoint.sol:CollectionTrustPoint"
+//   });
   console.log("Completed!");
 }
 

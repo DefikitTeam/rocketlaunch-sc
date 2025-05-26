@@ -12,8 +12,8 @@ async function main() {
   console.log("Account balance:", (await deployer.getBalance()).toString());
   const TrustPoint = await hre.ethers.getContractFactory("CollectionTrustPoint");
   const trustpoint = await upgrades.deployProxy(TrustPoint, [
-   contracts.apiUrl,
-   contracts.minter_nft,
+   contracts.apiUrl_trustpoint,
+   contracts.minter_nft_trustpoint,
    contracts.rocket,
    contracts.initialPoints
   ]);
@@ -24,12 +24,12 @@ async function main() {
     trustpoint.address
   );
   console.log("Implementation contract address:", implementationAddress);
-  await sleep(10000);
-  await hre.run("verify:verify", {
-    address: implementationAddress,
-    constructorArguments: [],
-    contract: "contracts/CollectionTrustPoint.sol:CollectionTrustPoint"
-  });
+//   await sleep(10000);
+//   await hre.run("verify:verify", {
+//     address: implementationAddress,
+//     constructorArguments: [],
+//     contract: "contracts/CollectionTrustPoint.sol:CollectionTrustPoint"
+//   });
 
   console.log("Completed!");
 }

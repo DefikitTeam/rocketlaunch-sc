@@ -16,17 +16,17 @@ async function main() {
   await saveContract(network, "rocket", rocket.address);
   console.log(`Deployed Rocket to ${rocket.address}`);
   // Get the implementation contract address from the proxy
-  const implementationAddress = await upgrades.erc1967.getImplementationAddress(
-    contracts.rocket
-  );
-  console.log("Implementation contract address:", implementationAddress);
-  await sleep(10000)
-  await hre.run("verify:verify", {
-    address: implementationAddress,
-    constructorArguments: [
-    ],
-    contract: "contracts/Rocket.sol:Rocket"
-  });
+//   const implementationAddress = await upgrades.erc1967.getImplementationAddress(
+//     contracts.rocket
+//   );
+//   console.log("Implementation contract address:", implementationAddress);
+//   await sleep(10000)
+//   await hre.run("verify:verify", {
+//     address: implementationAddress,
+//     constructorArguments: [
+//     ],
+//     contract: "contracts/Rocket.sol:Rocket"
+//   });
   console.log("Completed!");
 }
 
