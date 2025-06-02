@@ -50,6 +50,10 @@ contract DistributionRFA is
      * @notice Each parameters should be set carefully since it's not modifiable for each round
      */
     function initialize(address _operator) public initializer {
+        require(
+            _operator != address(0),
+            "DistributionRFA: Invalid operator address"
+        );
         __Ownable_init();
         nonce = 0; // Start at 0 so first campaign is nonce 1
         operator = _operator;
