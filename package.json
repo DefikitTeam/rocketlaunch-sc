@@ -60,6 +60,8 @@
     "hardhat-gas-reporter": "^1.0.8",
     "hardhat-log-remover": "^2.0.2",
     "hardhat-typechain": "^0.3.5",
+    "keccak256": "^1.0.6",
+    "merkletreejs": "^0.5.2",
     "ohm-js": "^17.1.0",
     "shelljs": "^0.8.5",
     "ts-node": "^10.8.1",
