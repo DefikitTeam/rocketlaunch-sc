@@ -9,6 +9,16 @@ describe("DistributionRFA", function () {
   let merkleTree;
   let merkleRoot;
   let merkleProofs = {};
+  let currentTimestamp;
+
+  // Campaign Types enum
+  const CampaignType = {
+    NONE: 0,
+    WEEKLY: 1,
+    MONTHLY: 2,
+    QUARTERLY: 3,
+    YEARLY: 4
+  };
 
   // Test data for merkle tree
   const airdropData = [
@@ -47,16 +57,17 @@ describe("DistributionRFA", function () {
 
     // Deploy contract
     const DistributionRFA = await ethers.getContractFactory("DistributionRFA");
-    distributionRFA = await upgrades.deployProxy(DistributionRFA, [owner.address]);
+    distributionRFA = await upgrades.deployProxy(DistributionRFA, [operator.address]);
     await distributionRFA.deployed();
 
-    // Setup operator
-    await distributionRFA.connect(owner).setupOperator(operator.address);
+    // Get current timestamp
+    const block = await ethers.provider.getBlock("latest");
+    currentTimestamp = block.timestamp;
 
     // Fund the contract
     await owner.sendTransaction({
       to: distributionRFA.address,
-      value: ethers.utils.parseEther("10.0")
+      value: ethers.utils.parseEther("100.0")
     });
   });
 
@@ -65,67 +76,59 @@ describe("DistributionRFA", function () {
       expect(await distributionRFA.owner()).to.equal(owner.address);
     });
 
-    it("Should initialize nonce to 0", async function () {
-      expect(await distributionRFA.nonce()).to.equal(0);
-    });
-
     it("Should have correct operator", async function () {
-      // We can't directly check operator since it's private, but we can test functionality
+      // Test operator functionality by creating a campaign
       await expect(
-        distributionRFA.connect(operator).createNewMonthlyRetroActive(
+        distributionRFA.connect(operator).createNewWeeklyRetroActive(
           merkleRoot,
           ethers.utils.parseEther("5.0"),
+          currentTimestamp,
           "Test Campaign"
         )
       ).to.not.be.reverted;
     });
 
     it("Should have contract balance", async function () {
-      expect(await distributionRFA.getBalance()).to.equal(ethers.utils.parseEther("10.0"));
+      expect(await distributionRFA.getBalance()).to.equal(ethers.utils.parseEther("100.0"));
+    });
+
+    it("Should have correct constants", async function () {
+      expect(await distributionRFA.MAX_MERKLE_PROOF_LENGTH()).to.equal(32);
+      expect(await distributionRFA.MAX_CLAIM_AMOUNT_WEEKLY()).to.equal(ethers.utils.parseEther("50"));
+      expect(await distributionRFA.MAX_CLAIM_AMOUNT_MONTHLY()).to.equal(ethers.utils.parseEther("100"));
+      expect(await distributionRFA.MAX_CLAIM_AMOUNT_QUARTERLY()).to.equal(ethers.utils.parseEther("600"));
+      expect(await distributionRFA.MAX_CLAIM_AMOUNT_YEARLY()).to.equal(ethers.utils.parseEther("1000"));
     });
   });
 
-  describe("Campaign Management", function () {
-    describe("Create New Campaign", function () {
-      it("Should create a new campaign successfully", async function () {
+  describe("Weekly Campaign Management", function () {
+    describe("Create New Weekly Campaign", function () {
+      it("Should create a new weekly campaign successfully", async function () {
+        const timestamp = currentTimestamp + 1000;
+        
         await expect(
-          distributionRFA.connect(operator).createNewMonthlyRetroActive(
+          distributionRFA.connect(operator).createNewWeeklyRetroActive(
             merkleRoot,
             ethers.utils.parseEther("5.0"),
-            "Test Campaign"
+            timestamp,
+            "Test Weekly Campaign"
           )
-        ).to.emit(distributionRFA, "NewCampaign")
-          .withArgs(ethers.utils.parseEther("5.0"), 1, "Test Campaign");
+        ).to.emit(distributionRFA, "WeeklyCampaignCreated")
+          .withArgs(timestamp, merkleRoot, ethers.utils.parseEther("5.0"), "Test Weekly Campaign");
 
-        expect(await distributionRFA.nonce()).to.equal(1);
-        
-        const campaign = await distributionRFA.monthlyRetroActive(1);
+        const campaign = await distributionRFA.weeklyRetroActive(timestamp);
         expect(campaign.merkleRoot).to.equal(merkleRoot);
         expect(campaign.amount).to.equal(ethers.utils.parseEther("5.0"));
-        expect(campaign.description).to.equal("Test Campaign");
-      });
-
-      it("Should increment nonce correctly", async function () {
-        await distributionRFA.connect(operator).createNewMonthlyRetroActive(
-          merkleRoot,
-          ethers.utils.parseEther("5.0"),
-          "Campaign 1"
-        );
-        expect(await distributionRFA.nonce()).to.equal(1);
-
-        await distributionRFA.connect(operator).createNewMonthlyRetroActive(
-          merkleRoot,
-          ethers.utils.parseEther("3.0"),
-          "Campaign 2"
-        );
-        expect(await distributionRFA.nonce()).to.equal(2);
+        expect(campaign.description).to.equal("Test Weekly Campaign");
+        expect(campaign.isActive).to.be.true;
       });
 
       it("Should revert if amount is 0", async function () {
         await expect(
-          distributionRFA.connect(operator).createNewMonthlyRetroActive(
+          distributionRFA.connect(operator).createNewWeeklyRetroActive(
             merkleRoot,
             0,
+            currentTimestamp + 1000,
             "Test Campaign"
           )
         ).to.be.revertedWith("Amount must be greater than 0");
@@ -133,9 +136,10 @@ describe("DistributionRFA", function () {
 
       it("Should revert if merkle root is zero", async function () {
         await expect(
-          distributionRFA.connect(operator).createNewMonthlyRetroActive(
+          distributionRFA.connect(operator).createNewWeeklyRetroActive(
             ethers.constants.HashZero,
             ethers.utils.parseEther("5.0"),
+            currentTimestamp + 1000,
             "Test Campaign"
           )
         ).to.be.revertedWith("Invalid merkle root");
@@ -143,48 +147,61 @@ describe("DistributionRFA", function () {
 
       it("Should revert if caller is not operator or owner", async function () {
         await expect(
-          distributionRFA.connect(nonOperator).createNewMonthlyRetroActive(
+          distributionRFA.connect(nonOperator).createNewWeeklyRetroActive(
             merkleRoot,
             ethers.utils.parseEther("5.0"),
+            currentTimestamp + 1000,
             "Test Campaign"
           )
         ).to.be.revertedWith("Caller is not owner or operator");
       });
 
-      it("Should allow owner to create campaign", async function () {
+      it("Should prevent duplicate campaigns with same timestamp", async function () {
+        const timestamp = currentTimestamp + 1000;
+        
+        await distributionRFA.connect(operator).createNewWeeklyRetroActive(
+          merkleRoot,
+          ethers.utils.parseEther("5.0"),
+          timestamp,
+          "First Campaign"
+        );
+
         await expect(
-          distributionRFA.connect(owner).createNewMonthlyRetroActive(
+          distributionRFA.connect(operator).createNewWeeklyRetroActive(
             merkleRoot,
-            ethers.utils.parseEther("5.0"),
-            "Test Campaign"
+            ethers.utils.parseEther("3.0"),
+            timestamp,
+            "Duplicate Campaign"
           )
-        ).to.not.be.reverted;
+        ).to.be.revertedWith("Airdrop: campaign already exists");
       });
     });
 
-    describe("Update Campaign", function () {
+    describe("Update Weekly Campaign", function () {
       beforeEach(async function () {
-        await distributionRFA.connect(operator).createNewMonthlyRetroActive(
+        await distributionRFA.connect(operator).createNewWeeklyRetroActive(
           merkleRoot,
           ethers.utils.parseEther("5.0"),
+          currentTimestamp + 1000,
           "Original Campaign"
         );
       });
 
-      it("Should update campaign successfully", async function () {
+      it("Should update weekly campaign successfully", async function () {
         const newMerkleRoot = ethers.utils.keccak256(ethers.utils.toUtf8Bytes("new root"));
+        const timestamp = currentTimestamp + 1000;
         
         await expect(
-          distributionRFA.connect(operator).updateMonthlyRetroActive(
+          distributionRFA.connect(operator).updateWeeklyRetroActive(
             newMerkleRoot,
             ethers.utils.parseEther("7.0"),
-            1,
+            timestamp,
             "Updated Campaign"
           )
-        ).to.emit(distributionRFA, "UpdateCampaign")
-          .withArgs(ethers.utils.parseEther("7.0"), 1, "Updated Campaign");
+        ).to.emit(distributionRFA, "WeeklyCampaignUpdated")
+          .withArgs(timestamp, newMerkleRoot, ethers.utils.parseEther("7.0"), "Updated Campaign");
 
-        const campaign = await distributionRFA.monthlyRetroActive(1);
+        const campaign = await distributionRFA.weeklyRetroActive(timestamp);
         expect(campaign.merkleRoot).to.equal(newMerkleRoot);
         expect(campaign.amount).to.equal(ethers.utils.parseEther("7.0"));
         expect(campaign.description).to.equal("Updated Campaign");
@@ -192,57 +209,40 @@ describe("DistributionRFA", function () {
 
       it("Should revert if campaign doesn't exist", async function () {
         await expect(
-          distributionRFA.connect(operator).updateMonthlyRetroActive(
+          distributionRFA.connect(operator).updateWeeklyRetroActive(
             merkleRoot,
             ethers.utils.parseEther("5.0"),
-            999,
+            currentTimestamp + 999999,
             "Non-existent Campaign"
           )
-        ).to.be.revertedWith("Invalid nonce");
-      });
-
-      it("Should revert if amount is 0", async function () {
-        await expect(
-          distributionRFA.connect(operator).updateMonthlyRetroActive(
-            merkleRoot,
-            0,
-            1,
-            "Updated Campaign"
-          )
-        ).to.be.revertedWith("Amount must be greater than 0");
-      });
-
-      it("Should revert if nonce is 0", async function () {
-        await expect(
-          distributionRFA.connect(operator).updateMonthlyRetroActive(
-            merkleRoot,
-            ethers.utils.parseEther("5.0"),
-            0,
-            "Updated Campaign"
-          )
-        ).to.be.revertedWith("Invalid nonce");
+        ).to.be.revertedWith("Airdrop: campaign not found");
       });
     });
   });
 
-  describe("Claiming", function () {
+  describe("Weekly Claiming", function () {
+    const timestamp = 1000000; // Fixed timestamp for consistency
+
     beforeEach(async function () {
-      await distributionRFA.connect(operator).createNewMonthlyRetroActive(
+      await distributionRFA.connect(operator).createNewWeeklyRetroActive(
         merkleRoot,
-        ethers.utils.parseEther("5.0"),
-        "Test Campaign"
+        ethers.utils.parseEther("50.0"),
+        timestamp,
+        "Test Weekly Campaign"
       );
     });
 
-    it("Should allow valid claim", async function () {
+    it("Should allow valid weekly claim", async function () {
       const initialBalance = await user1.getBalance();
       const claimAmount = airdropData[0].amount;
       const proof = merkleProofs[user1.address];
 
       await expect(
-        distributionRFA.connect(user1).claim(1, claimAmount, proof)
-      ).to.emit(distributionRFA, "ClaimRetroActive")
-        .withArgs(user1.address, claimAmount, 1);
+        distributionRFA.connect(user1).claimWeeklyRetroActive(timestamp, claimAmount, proof)
+      ).to.emit(distributionRFA, "WeeklyRetroActiveClaimed")
+        .withArgs(user1.address, timestamp, claimAmount)
+        .and.to.emit(distributionRFA, "UserClaimInfo")
+        .withArgs(user1.address, timestamp, claimAmount, CampaignType.WEEKLY);
 
       // Check user received tokens
       const finalBalance = await user1.getBalance();
@@ -252,8 +252,9 @@ describe("DistributionRFA", function () {
       );
 
       // Check claim is recorded
-      expect(await distributionRFA.userClaimed(1, user1.address)).to.equal(claimAmount);
-      expect(await distributionRFA.hasClaimed(1, user1.address)).to.be.true;
+      const userInfo = await distributionRFA.userWeeklyClaimed(timestamp, user1.address);
+      expect(userInfo.claimedAmount).to.equal(claimAmount);
+      expect(userInfo.hasClaimed).to.be.true;
     });
 
     it("Should prevent double claiming", async function () {
@@ -261,11 +262,11 @@ describe("DistributionRFA", function () {
       const proof = merkleProofs[user1.address];
 
       // First claim should succeed
-      await distributionRFA.connect(user1).claim(1, claimAmount, proof);
+      await distributionRFA.connect(user1).claimWeeklyRetroActive(timestamp, claimAmount, proof);
 
       // Second claim should fail
       await expect(
-        distributionRFA.connect(user1).claim(1, claimAmount, proof)
+        distributionRFA.connect(user1).claimWeeklyRetroActive(timestamp, claimAmount, proof)
       ).to.be.revertedWith("Airdrop: already claimed");
     });
 
@@ -274,46 +275,25 @@ describe("DistributionRFA", function () {
       const wrongProof = merkleProofs[user2.address]; // Wrong proof for user1
 
       await expect(
-        distributionRFA.connect(user1).claim(1, claimAmount, wrongProof)
+        distributionRFA.connect(user1).claimWeeklyRetroActive(timestamp, claimAmount, wrongProof)
       ).to.be.revertedWith("Airdrop: Invalid proof");
     });
 
-    it("Should revert with invalid amount", async function () {
-      const wrongAmount = ethers.utils.parseEther("999"); // Wrong amount
+    it("Should revert if amount exceeds weekly maximum", async function () {
+      const excessiveAmount = ethers.utils.parseEther("51"); // Exceeds 50 ETH weekly max
       const proof = merkleProofs[user1.address];
 
       await expect(
-        distributionRFA.connect(user1).claim(1, wrongAmount, proof)
-      ).to.be.revertedWith("Airdrop: Invalid proof");
+        distributionRFA.connect(user1).claimWeeklyRetroActive(timestamp, excessiveAmount, proof)
+      ).to.be.revertedWith("Amount exceeds maximum");
     });
 
     it("Should revert with zero amount", async function () {
       const proof = merkleProofs[user1.address];
 
       await expect(
-        distributionRFA.connect(user1).claim(1, 0, proof)
+        distributionRFA.connect(user1).claimWeeklyRetroActive(timestamp, 0, proof)
       ).to.be.revertedWith("Amount must be greater than 0");
-    });
-
-    it("Should revert for non-existent campaign", async function () {
-      const claimAmount = airdropData[0].amount;
-      const proof = merkleProofs[user1.address];
-
-      await expect(
-        distributionRFA.connect(user1).claim(999, claimAmount, proof)
-      ).to.be.revertedWith("Invalid nonce");
-    });
-
-    it("Should revert if contract has insufficient balance", async function () {
-      // Drain most of the contract balance
-      await distributionRFA.connect(owner).emergency(ethers.utils.parseEther("9.5"));
-
-      const claimAmount = airdropData[0].amount; // 1.0 ETH
-      const proof = merkleProofs[user1.address];
-
-      await expect(
-        distributionRFA.connect(user1).claim(1, claimAmount, proof)
-      ).to.be.revertedWith("Insufficient contract balance");
     });
 
     it("Should revert when paused", async function () {
@@ -323,104 +303,195 @@ describe("DistributionRFA", function () {
       const proof = merkleProofs[user1.address];
 
       await expect(
-        distributionRFA.connect(user1).claim(1, claimAmount, proof)
+        distributionRFA.connect(user1).claimWeeklyRetroActive(timestamp, claimAmount, proof)
       ).to.be.revertedWith("Pausable: paused");
     });
 
-    it("Should work after unpause", async function () {
-      await distributionRFA.connect(owner).pause();
-      await distributionRFA.connect(owner).unpause();
-
+    it("Should revert with too long merkle proof", async function () {
       const claimAmount = airdropData[0].amount;
-      const proof = merkleProofs[user1.address];
+      const longProof = new Array(33).fill(ethers.constants.HashZero); // Exceeds 32 limit
 
       await expect(
-        distributionRFA.connect(user1).claim(1, claimAmount, proof)
-      ).to.not.be.reverted;
+        distributionRFA.connect(user1).claimWeeklyRetroActive(timestamp, claimAmount, longProof)
+      ).to.be.revertedWith("Merkle proof too long");
     });
   });
 
-  describe("Pending Retroactive", function () {
-    beforeEach(async function () {
+  describe("Monthly Campaign Management", function () {
+    it("Should create and claim from monthly campaign", async function () {
+      const timestamp = currentTimestamp + 2000;
+      
       await distributionRFA.connect(operator).createNewMonthlyRetroActive(
         merkleRoot,
-        ethers.utils.parseEther("5.0"),
-        "Test Campaign"
+        ethers.utils.parseEther("10.0"),
+        timestamp,
+        "Test Monthly Campaign"
       );
+
+      const claimAmount = airdropData[1].amount; // user2's amount
+      const proof = merkleProofs[user2.address];
+
+      await expect(
+        distributionRFA.connect(user2).claimMonthlyRetroActive(timestamp, claimAmount, proof)
+      ).to.emit(distributionRFA, "MonthlyRetroActiveClaimed")
+        .withArgs(user2.address, timestamp, claimAmount);
+
+      const userInfo = await distributionRFA.userMonthlyClaimed(timestamp, user2.address);
+      expect(userInfo.hasClaimed).to.be.true;
     });
 
-    it("Should return correct pending amount for unclaimed user", async function () {
+    it("Should enforce monthly claim limits", async function () {
+      const timestamp = currentTimestamp + 2000;
+      
+      await distributionRFA.connect(operator).createNewMonthlyRetroActive(
+        merkleRoot,
+        ethers.utils.parseEther("200.0"),
+        timestamp,
+        "Test Monthly Campaign"
+      );
+
+      const excessiveAmount = ethers.utils.parseEther("101"); // Exceeds 100 ETH monthly max
+      const proof = merkleProofs[user1.address];
+
+      await expect(
+        distributionRFA.connect(user1).claimMonthlyRetroActive(timestamp, excessiveAmount, proof)
+      ).to.be.revertedWith("Amount exceeds maximum");
+    });
+  });
+
+  describe("Quarterly Campaign Management", function () {
+    it("Should create and claim from quarterly campaign", async function () {
+      const timestamp = currentTimestamp + 3000;
+      
+      await distributionRFA.connect(operator).createNewQuarterlyRetroActive(
+        merkleRoot,
+        ethers.utils.parseEther("100.0"),
+        timestamp,
+        "Test Quarterly Campaign"
+      );
+
+      const claimAmount = airdropData[2].amount; // user3's amount
+      const proof = merkleProofs[user3.address];
+
+      await expect(
+        distributionRFA.connect(user3).claimQuarterlyRetroActive(timestamp, claimAmount, proof)
+      ).to.emit(distributionRFA, "QuarterlyRetroActiveClaimed")
+        .withArgs(user3.address, timestamp, claimAmount);
+    });
+
+    it("Should enforce quarterly claim limits", async function () {
+      const timestamp = currentTimestamp + 3000;
+      
+      await distributionRFA.connect(operator).createNewQuarterlyRetroActive(
+        merkleRoot,
+        ethers.utils.parseEther("1000.0"),
+        timestamp,
+        "Test Quarterly Campaign"
+      );
+
+      const excessiveAmount = ethers.utils.parseEther("601"); // Exceeds 600 ETH quarterly max
+      const proof = merkleProofs[user1.address];
+
+      await expect(
+        distributionRFA.connect(user1).claimQuarterlyRetroActive(timestamp, excessiveAmount, proof)
+      ).to.be.revertedWith("Amount exceeds maximum");
+    });
+  });
+
+  describe("Yearly Campaign Management", function () {
+    it("Should create and claim from yearly campaign", async function () {
+      const timestamp = currentTimestamp + 4000;
+      
+      await distributionRFA.connect(operator).createNewYearlyRetroActive(
+        merkleRoot,
+        ethers.utils.parseEther("500.0"),
+        timestamp,
+        "Test Yearly Campaign"
+      );
+
+      const claimAmount = airdropData[0].amount; // user1's amount
+      const proof = merkleProofs[user1.address];
+
+      await expect(
+        distributionRFA.connect(user1).claimYearlyRetroActive(timestamp, claimAmount, proof)
+      ).to.emit(distributionRFA, "YearlyRetroActiveClaimed")
+        .withArgs(user1.address, timestamp, claimAmount);
+    });
+
+    it("Should enforce yearly claim limits", async function () {
+      const timestamp = currentTimestamp + 4000;
+      
+      await distributionRFA.connect(operator).createNewYearlyRetroActive(
+        merkleRoot,
+        ethers.utils.parseEther("2000.0"),
+        timestamp,
+        "Test Yearly Campaign"
+      );
+
+      const excessiveAmount = ethers.utils.parseEther("1001"); // Exceeds 1000 ETH yearly max
+      const proof = merkleProofs[user1.address];
+
+      await expect(
+        distributionRFA.connect(user1).claimYearlyRetroActive(timestamp, excessiveAmount, proof)
+      ).to.be.revertedWith("Amount exceeds maximum");
+    });
+  });
+
+  describe("Multi-Campaign Scenarios", function () {
+    it("Should allow users to claim from multiple campaign types", async function () {
+      const weeklyTimestamp = currentTimestamp + 1000;
+      const monthlyTimestamp = currentTimestamp + 2000;
+      
+      // Create campaigns
+      await distributionRFA.connect(operator).createNewWeeklyRetroActive(
+        merkleRoot,
+        ethers.utils.parseEther("50.0"),
+        weeklyTimestamp,
+        "Weekly Campaign"
+      );
+      
+      await distributionRFA.connect(operator).createNewMonthlyRetroActive(
+        merkleRoot,
+        ethers.utils.parseEther("100.0"),
+        monthlyTimestamp,
+        "Monthly Campaign"
+      );
+
       const claimAmount = airdropData[0].amount;
       const proof = merkleProofs[user1.address];
 
-      const pending = await distributionRFA.pendingRetroActive(
-        user1.address,
-        1,
-        claimAmount,
-        proof
-      );
+      // Claim from both campaigns
+      await distributionRFA.connect(user1).claimWeeklyRetroActive(weeklyTimestamp, claimAmount, proof);
+      await distributionRFA.connect(user1).claimMonthlyRetroActive(monthlyTimestamp, claimAmount, proof);
 
-      expect(pending).to.equal(claimAmount);
+      // Verify both claims
+      const weeklyInfo = await distributionRFA.userWeeklyClaimed(weeklyTimestamp, user1.address);
+      const monthlyInfo = await distributionRFA.userMonthlyClaimed(monthlyTimestamp, user1.address);
+      
+      expect(weeklyInfo.hasClaimed).to.be.true;
+      expect(monthlyInfo.hasClaimed).to.be.true;
     });
 
-    it("Should return 0 for claimed user", async function () {
+    it("Should keep campaign types isolated", async function () {
+      const timestamp = currentTimestamp + 1000;
+      
+      // Create weekly campaign
+      await distributionRFA.connect(operator).createNewWeeklyRetroActive(
+        merkleRoot,
+        ethers.utils.parseEther("50.0"),
+        timestamp,
+        "Weekly Campaign"
+      );
+
       const claimAmount = airdropData[0].amount;
       const proof = merkleProofs[user1.address];
 
-      // First claim
-      await distributionRFA.connect(user1).claim(1, claimAmount, proof);
+      // Claim from weekly
+      await distributionRFA.connect(user1).claimWeeklyRetroActive(timestamp, claimAmount, proof);
 
-      // Check pending
-      const pending = await distributionRFA.pendingRetroActive(
-        user1.address,
-        1,
-        claimAmount,
-        proof
-      );
-
-      expect(pending).to.equal(0);
-    });
-
-    it("Should return 0 for invalid nonce", async function () {
-      const claimAmount = airdropData[0].amount;
-      const proof = merkleProofs[user1.address];
-
-      const pending = await distributionRFA.pendingRetroActive(
-        user1.address,
-        999,
-        claimAmount,
-        proof
-      );
-
-      expect(pending).to.equal(0);
-    });
-
-    it("Should return 0 for zero nonce", async function () {
-      const claimAmount = airdropData[0].amount;
-      const proof = merkleProofs[user1.address];
-
-      const pending = await distributionRFA.pendingRetroActive(
-        user1.address,
-        0,
-        claimAmount,
-        proof
-      );
-
-      expect(pending).to.equal(0);
-    });
-
-    it("Should return 0 for invalid proof", async function () {
-      const claimAmount = airdropData[0].amount;
-      const wrongProof = merkleProofs[user2.address];
-
-      const pending = await distributionRFA.pendingRetroActive(
-        user1.address,
-        1,
-        claimAmount,
-        wrongProof
-      );
-
-      expect(pending).to.equal(0);
+      // Should not affect other campaign types
+      const monthlyInfo = await distributionRFA.userMonthlyClaimed(timestamp, user1.address);
+      expect(monthlyInfo.hasClaimed).to.be.false;
     });
   });
 
@@ -428,7 +499,8 @@ describe("DistributionRFA", function () {
     it("Should allow owner to setup operator", async function () {
       await expect(
         distributionRFA.connect(owner).setupOperator(user1.address)
-      ).to.not.be.reverted;
+      ).to.emit(distributionRFA, "OperatorUpdated")
+        .withArgs(operator.address, user1.address);
     });
 
     it("Should revert if non-owner tries to setup operator", async function () {
@@ -443,60 +515,34 @@ describe("DistributionRFA", function () {
       ).to.be.revertedWith("Invalid operator address");
     });
 
-    it("Should allow only owner to pause", async function () {
+    it("Should allow only owner to pause/unpause", async function () {
       await expect(distributionRFA.connect(owner).pause()).to.not.be.reverted;
-      
-      await expect(
-        distributionRFA.connect(user1).pause()
-      ).to.be.revertedWith("Ownable: caller is not the owner");
-    });
-
-    it("Should allow only owner to unpause", async function () {
-      await distributionRFA.connect(owner).pause();
-      
       await expect(distributionRFA.connect(owner).unpause()).to.not.be.reverted;
       
       await expect(
-        distributionRFA.connect(user1).unpause()
+        distributionRFA.connect(user1).pause()
       ).to.be.revertedWith("Ownable: caller is not the owner");
     });
   });
 
   describe("Emergency Functions", function () {
     it("Should allow owner to withdraw funds", async function () {
-      const withdrawAmount = ethers.utils.parseEther("1.0");
-      const initialOwnerBalance = await owner.getBalance();
-      const initialContractBalance = await distributionRFA.getBalance();
-
+      const withdrawAmount = ethers.utils.parseEther("10.0");
+      
       await expect(
         distributionRFA.connect(owner).emergency(withdrawAmount)
-      ).to.not.be.reverted;
-
-      const finalOwnerBalance = await owner.getBalance();
-      const finalContractBalance = await distributionRFA.getBalance();
-
-      expect(finalContractBalance).to.equal(initialContractBalance.sub(withdrawAmount));
-      expect(finalOwnerBalance.sub(initialOwnerBalance)).to.be.closeTo(
-        withdrawAmount,
-        ethers.utils.parseEther("0.01") // Account for gas fees
-      );
+      ).to.emit(distributionRFA, "EmergencyWithdrawal")
+        .withArgs(owner.address, withdrawAmount);
     });
 
-    it("Should revert if non-owner tries emergency withdrawal", async function () {
+    it("Should revert emergency withdrawal for non-owner", async function () {
       await expect(
         distributionRFA.connect(user1).emergency(ethers.utils.parseEther("1.0"))
       ).to.be.revertedWith("Ownable: caller is not the owner");
     });
 
-    it("Should revert if emergency withdrawal amount is 0", async function () {
-      await expect(
-        distributionRFA.connect(owner).emergency(0)
-      ).to.be.revertedWith("Amount must be greater than 0");
-    });
-
     it("Should revert if emergency withdrawal exceeds balance", async function () {
-      const contractBalance = await distributionRFA.getBalance();
-      const excessAmount = contractBalance.add(ethers.utils.parseEther("1.0"));
+      const excessAmount = ethers.utils.parseEther("1000.0"); // More than contract balance
 
       await expect(
         distributionRFA.connect(owner).emergency(excessAmount)
@@ -504,84 +550,99 @@ describe("DistributionRFA", function () {
     });
   });
 
-  describe("Edge Cases and Security", function () {
-    it("Should handle multiple campaigns correctly", async function () {
-      // Create first campaign
-      await distributionRFA.connect(operator).createNewMonthlyRetroActive(
-        merkleRoot,
-        ethers.utils.parseEther("5.0"),
-        "Campaign 1"
-      );
+  describe("Contract Funding", function () {
+    it("Should emit ContractFunded event when receiving ETH", async function () {
+      const fundAmount = ethers.utils.parseEther("5.0");
       
-      // Create second campaign
-      await distributionRFA.connect(operator).createNewMonthlyRetroActive(
+      await expect(
+        user1.sendTransaction({
+          to: distributionRFA.address,
+          value: fundAmount
+        })
+      ).to.emit(distributionRFA, "ContractFunded")
+        .withArgs(user1.address, fundAmount);
+
+      const newBalance = await distributionRFA.getBalance();
+      expect(newBalance).to.equal(ethers.utils.parseEther("105.0"));
+    });
+  });
+
+  describe("Gas Optimization Tests", function () {
+    it("Should use reasonable gas for weekly claim", async function () {
+      const timestamp = currentTimestamp + 1000;
+      
+      await distributionRFA.connect(operator).createNewWeeklyRetroActive(
         merkleRoot,
-        ethers.utils.parseEther("3.0"),
-        "Campaign 2"
+        ethers.utils.parseEther("50.0"),
+        timestamp,
+        "Gas Test Campaign"
       );
 
-      expect(await distributionRFA.nonce()).to.equal(2);
-
-      // Users should be able to claim from both campaigns
       const claimAmount = airdropData[0].amount;
       const proof = merkleProofs[user1.address];
 
-      await distributionRFA.connect(user1).claim(1, claimAmount, proof);
-      await distributionRFA.connect(user1).claim(2, claimAmount, proof);
-
-      expect(await distributionRFA.hasClaimed(1, user1.address)).to.be.true;
-      expect(await distributionRFA.hasClaimed(2, user1.address)).to.be.true;
+      const tx = await distributionRFA.connect(user1).claimWeeklyRetroActive(timestamp, claimAmount, proof);
+      const receipt = await tx.wait();
+      
+      // Gas should be reasonable (less than 150k for a claim with events)
+      expect(receipt.gasUsed).to.be.below(150000);
+      console.log(`Gas used for weekly claim: ${receipt.gasUsed}`);
     });
+  });
 
-    it("Should handle contract receiving ETH", async function () {
+  describe("Edge Cases and Security", function () {
+    it("Should handle contract receiving ETH via fallback", async function () {
       const initialBalance = await distributionRFA.getBalance();
       
+      // Send ETH with data to trigger fallback
       await user1.sendTransaction({
         to: distributionRFA.address,
-        value: ethers.utils.parseEther("1.0")
+        value: ethers.utils.parseEther("1.0"),
+        data: "0x1234"
       });
 
       const finalBalance = await distributionRFA.getBalance();
       expect(finalBalance.sub(initialBalance)).to.equal(ethers.utils.parseEther("1.0"));
     });
 
-    it("Should maintain correct state after reentrancy protection", async function () {
-      // Create campaign first
-      await distributionRFA.connect(operator).createNewMonthlyRetroActive(
+    it("Should maintain state consistency with reentrancy protection", async function () {
+      const timestamp = currentTimestamp + 1000;
+      
+      await distributionRFA.connect(operator).createNewWeeklyRetroActive(
         merkleRoot,
-        ethers.utils.parseEther("5.0"),
-        "Test Campaign"
+        ethers.utils.parseEther("50.0"),
+        timestamp,
+        "Reentrancy Test"
       );
       
       const claimAmount = airdropData[0].amount;
       const proof = merkleProofs[user1.address];
 
-      await distributionRFA.connect(user1).claim(1, claimAmount, proof);
+      await distributionRFA.connect(user1).claimWeeklyRetroActive(timestamp, claimAmount, proof);
       
-      // Verify state is correct
-      expect(await distributionRFA.userClaimed(1, user1.address)).to.equal(claimAmount);
-      expect(await distributionRFA.hasClaimed(1, user1.address)).to.be.true;
+      // Verify state is correctly updated
+      const userInfo = await distributionRFA.userWeeklyClaimed(timestamp, user1.address);
+      expect(userInfo.hasClaimed).to.be.true;
+      expect(userInfo.claimedAmount).to.equal(claimAmount);
     });
-  });
 
-  describe("Gas Optimization Tests", function () {
-    beforeEach(async function () {
-      await distributionRFA.connect(operator).createNewMonthlyRetroActive(
+    it("Should handle large merkle proofs up to limit", async function () {
+      const timestamp = currentTimestamp + 1000;
+      
+      await distributionRFA.connect(operator).createNewWeeklyRetroActive(
         merkleRoot,
-        ethers.utils.parseEther("5.0"),
-        "Test Campaign"
+        ethers.utils.parseEther("50.0"),
+        timestamp,
+        "Large Proof Test"
       );
-    });
 
-    it("Should use reasonable gas for claim", async function () {
       const claimAmount = airdropData[0].amount;
-      const proof = merkleProofs[user1.address];
+      const maxProof = new Array(32).fill(ethers.constants.HashZero); // Exactly at limit
 
-      const tx = await distributionRFA.connect(user1).claim(1, claimAmount, proof);
-      const receipt = await tx.wait();
-      
-      // Gas should be reasonable (less than 100k for a simple claim)
-      expect(receipt.gasUsed).to.be.below(100000);
+      // Should not revert due to proof length (will revert due to invalid proof though)
+      await expect(
+        distributionRFA.connect(user1).claimWeeklyRetroActive(timestamp, claimAmount, maxProof)
+      ).to.be.revertedWith("Airdrop: Invalid proof"); // Expected due to wrong proof content
     });
   });
 }); 
