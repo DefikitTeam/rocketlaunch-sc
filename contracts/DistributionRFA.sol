@@ -463,7 +463,50 @@ contract DistributionRFA is
         );
     }
 
-    // claim tokens from Weekly Campaign
+    // claim tokens from Weekly Campaign for token
+    function claimWeeklyRetroActiveForToken(
+        uint256 _timestamp,
+        uint256 _amount,
+        address _token,
+        bytes32[] calldata _merkleProof
+    ) external nonReentrant whenNotPaused onlyOperator {
+        require(_amount > 0, "Amount must be greater than 0");
+        require(_amount <= MAX_CLAIM_AMOUNT_WEEKLY, "Amount exceeds maximum");
+        require(
+            _merkleProof.length <= MAX_MERKLE_PROOF_LENGTH,
+            "Merkle proof too long"
+        );
+        require(
+            weeklyRetroActive[_timestamp].isActive == true,
+            "Campaign does not exist"
+        );
+        UserInfo storage userInfo = userWeeklyClaimed[_timestamp][_token];
+        require(userInfo.hasClaimed == false, "Airdrop: already claimed");
+        require(
+            MerkleProofUpgradeable.verify(
+                _merkleProof,
+                weeklyRetroActive[_timestamp].merkleRoot,
+                _leaf(_amount, _token)
+            ),
+            "Airdrop: Invalid proof"
+        );
+        require(
+            address(this).balance >= _amount,
+            "Insufficient contract balance"
+        );
+
+        // Update user info
+        userInfo.claimedAmount = _amount;
+        userInfo.claimTimestamp = block.timestamp;
+        userInfo.hasClaimed = true;
+
+        // Send Bera to user
+        payable(msg.sender).transfer(_amount);
+        emit WeeklyRetroActiveClaimed(_token, _timestamp, _amount);
+        emit UserClaimInfo(_token, _timestamp, _amount, CampaignType.WEEKLY);
+    }
+
+    // claim tokens from Weekly Campaign for Wallet
     function claimWeeklyRetroActive(
         uint256 _timestamp,
         uint256 _amount,
@@ -510,7 +553,50 @@ contract DistributionRFA is
         );
     }
 
-    // claim tokens from Monthly Campaign
+    // claim tokens from Monthly Campaign for token
+    function claimMonthlyRetroActiveForToken(
+        uint256 _timestamp,
+        uint256 _amount,
+        address _token,
+        bytes32[] calldata _merkleProof
+    ) external nonReentrant whenNotPaused onlyOperator {
+        require(_amount > 0, "Amount must be greater than 0");
+        require(_amount <= MAX_CLAIM_AMOUNT_MONTHLY, "Amount exceeds maximum");
+        require(
+            _merkleProof.length <= MAX_MERKLE_PROOF_LENGTH,
+            "Merkle proof too long"
+        );
+        require(
+            monthlyRetroActive[_timestamp].isActive == true,
+            "Campaign does not exist"
+        );
+        UserInfo storage userInfo = userMonthlyClaimed[_timestamp][_token];
+        require(userInfo.hasClaimed == false, "Airdrop: already claimed");
+        require(
+            MerkleProofUpgradeable.verify(
+                _merkleProof,
+                monthlyRetroActive[_timestamp].merkleRoot,
+                _leaf(_amount, _token)
+            ),
+            "Airdrop: Invalid proof"
+        );
+        require(
+            address(this).balance >= _amount,
+            "Insufficient contract balance"
+        );
+
+        // Update user info
+        userInfo.claimedAmount = _amount;
+        userInfo.claimTimestamp = block.timestamp;
+        userInfo.hasClaimed = true;
+
+        // Send Bera to user
+        payable(msg.sender).transfer(_amount);
+        emit MonthlyRetroActiveClaimed(_token, _timestamp, _amount);
+        emit UserClaimInfo(_token, _timestamp, _amount, CampaignType.MONTHLY);
+    }
+
+    // claim tokens from Monthly Campaign for Wallet
     function claimMonthlyRetroActive(
         uint256 _timestamp,
         uint256 _amount,
@@ -554,6 +640,57 @@ contract DistributionRFA is
             _timestamp,
             _amount,
             CampaignType.MONTHLY
+        );
+    }
+
+    // claim tokens from Quarterly Campaign for token
+    function claimQuarterlyRetroActiveForToken(
+        uint256 _timestamp,
+        uint256 _amount,
+        address _token,
+        bytes32[] calldata _merkleProof
+    ) external nonReentrant whenNotPaused {
+        require(_amount > 0, "Amount must be greater than 0");
+        require(
+            _amount <= MAX_CLAIM_AMOUNT_QUARTERLY,
+            "Amount exceeds maximum"
+        );
+        require(
+            _merkleProof.length <= MAX_MERKLE_PROOF_LENGTH,
+            "Merkle proof too long"
+        );
+        require(
+            quarterlyRetroActive[_timestamp].isActive == true,
+            "Campaign does not exist"
+        );
+        UserInfo storage userInfo = userQuarterlyClaimed[_timestamp][_token];
+        require(userInfo.hasClaimed == false, "Airdrop: already claimed");
+        require(
+            MerkleProofUpgradeable.verify(
+                _merkleProof,
+                quarterlyRetroActive[_timestamp].merkleRoot,
+                _leaf(_amount, _token)
+            ),
+            "Airdrop: Invalid proof"
+        );
+        require(
+            address(this).balance >= _amount,
+            "Insufficient contract balance"
+        );
+
+        // Update user info
+        userInfo.claimedAmount = _amount;
+        userInfo.claimTimestamp = block.timestamp;
+        userInfo.hasClaimed = true;
+
+        // Send Bera to user
+        payable(msg.sender).transfer(_amount);
+        emit QuarterlyRetroActiveClaimed(_token, _timestamp, _amount);
+        emit UserClaimInfo(
+            _token,
+            _timestamp,
+            _amount,
+            CampaignType.QUARTERLY
         );
     }
 
