@@ -18,6 +18,7 @@
         "tokenFactory": "0x956A8817b836D2a8b724376AFb651832b7c364ed",
         "minCap": "50000000000000000",
         "trustpoint": "0x4c48ef0E863C8D171EbD73C54C2f73213f61003A",
+        "distributionRFA": "0xB07b4b71e6581440c3DC978A38AAbA4fa13cb7C8",
         "initialPoints": [
             {
                 "id": 1,

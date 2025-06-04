@@ -85,14 +85,14 @@ module.exports = {
 
   etherscan: {
     apiKey: {
-    //   base_sepolia: BASE_KEY,
-    // bepolia: "62DU99P5D8J8DXBYY55GKPE2T83VD6N13E",
+      //   base_sepolia: BASE_KEY,
+      bepolia: "62DU99P5D8J8DXBYY55GKPE2T83VD6N13E",
       // base: BASE_KEY,
       // iota: 'empty',
       // unichain_sepolia: 'empty'
       // worldchain_testnet: WORLDCHAIN_API_KEY
       // gravity_testnet: "abc",
-      somnia_testnet: ETHERSCAN_API_KEY,
+      //   somnia_testnet: ETHERSCAN_API_KEY,
     },
     customChains: [
       {
@@ -125,12 +125,12 @@ module.exports = {
 
 
 
-        // network: "bepolia",
-        // chainId: 80069,
-        // urls: {
-        //   apiURL: "https://api.routescan.io/v2/network/testnet/evm/80069/etherscan",
-        //   browserURL: "https://bepolia.beratrail.io"
-        // },
+        network: "bepolia",
+        chainId: 80069,
+        urls: {
+          apiURL: "https://api.routescan.io/v2/network/testnet/evm/80069/etherscan",
+          browserURL: "https://bepolia.beratrail.io"
+        },
 
         // network: "iota",
         // chainId: 8822,
@@ -166,12 +166,12 @@ module.exports = {
         //   // browserURL: "https://explorer.gravity.xyz",
         // },
 
-            network: "somnia_testnet",
-            chainId: 50312,
-            urls: {
-              apiURL: "https://shannon-explorer.somnia.network/api",
-              browserURL: "https://shannon-explorer.somnia.network",
-            },
+        // network: "somnia_testnet",
+        // chainId: 50312,
+        // urls: {
+        //   apiURL: "https://shannon-explorer.somnia.network/api",
+        //   browserURL: "https://shannon-explorer.somnia.network",
+        // },
       }
     ]
   },
